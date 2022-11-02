@@ -10,6 +10,7 @@ import java.util.TreeMap;
 import static org.hamcrest.collection.IsMapContaining.hasEntry;
 import static org.hamcrest.core.IsAnything.anything;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class IsMapContainingTest extends AbstractMatcherTest {
 
@@ -36,7 +37,7 @@ public class IsMapContainingTest extends AbstractMatcherTest {
 
         assertMatches("matcherA", hasEntry(equalTo("a"), equalTo(1)), map);
         assertMatches("matcherB", hasEntry(equalTo("b"), equalTo(2)), map);
-        assertFalse("matcherC", hasEntry(equalTo("c"), equalTo(3)).matches(map)); // working around generics problem
+        assertFalse(hasEntry(equalTo("c"), equalTo(3)).matches(map), "matcherC"); // working around generics problem
     }
 
     public void testDoesNotMatchNull() {

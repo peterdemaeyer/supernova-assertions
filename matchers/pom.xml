@@ -11,6 +11,9 @@
     <artifactId>matchers</artifactId>
     <name>Supernova Matchers - Main</name>
     <description>Supernova Matchers main project which produces the release artifacts.</description>
+    <properties>
+        <jacoco.coverage.minimum>0.37</jacoco.coverage.minimum>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>su.pernova</groupId>

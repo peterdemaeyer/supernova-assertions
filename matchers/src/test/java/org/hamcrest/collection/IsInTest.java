@@ -1,5 +1,7 @@
 package org.hamcrest.collection;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.hamcrest.AbstractMatcherTest;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;

@@ -1,8 +1,10 @@
 package org.hamcrest;
 
-import org.junit.Test;
+import static org.hamcrest.AbstractMatcherTest.assertDoesNotMatch;
+import static org.hamcrest.AbstractMatcherTest.assertMatches;
+import static org.hamcrest.AbstractMatcherTest.assertMismatchDescription;
 
-import static org.hamcrest.AbstractMatcherTest.*;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Steve Freeman 2016 http://www.hamcrest.com
@@ -10,7 +12,8 @@ import static org.hamcrest.AbstractMatcherTest.*;
 @SuppressWarnings("WeakerAccess")
 public class TypeSafeDiagnosingMatcherTest {
 
-    @Test public void
+    @Test
+    public void
     describesMismatches() {
         assertMismatchDescription("was null", STRING_MATCHER, null);
         assertMismatchDescription("was Character \"c\"", STRING_MATCHER, 'c');

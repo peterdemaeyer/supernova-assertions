@@ -1,7 +1,7 @@
 package org.hamcrest.core;
 
 import org.hamcrest.Matcher;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
@@ -41,4 +41,3 @@ public final class EveryTest {
         assertMismatchDescription("an item was \"BXB\"", matcher, singletonList("BXB"));
     }
 }
-

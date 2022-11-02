@@ -1,7 +1,8 @@
 package org.hamcrest.text;
 
 import org.hamcrest.Matcher;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.AbstractMatcherTest.*;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
@@ -41,9 +42,9 @@ public final class IsEqualIgnoringCaseTest {
         assertDoesNotMatch(matcher, null);
     }
 
-    @Test(expected=IllegalArgumentException.class) public void
+    @Test public void
     canOnlyBeConstructedAboutANonNullString() {
-        equalToIgnoringCase(null);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> equalToIgnoringCase(null));
     }
 
 

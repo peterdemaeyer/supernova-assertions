@@ -1,14 +1,15 @@
 package org.hamcrest.number;
 
 import org.hamcrest.Matcher;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.AbstractMatcherTest.*;
 import static org.hamcrest.number.IsNaN.notANumber;
 
 public final class IsNanTest {
 
-    @Test public void
+    @Test
+    public void
     copesWithNullsAndUnknownTypes() {
         Matcher<Double> matcher = notANumber();
         

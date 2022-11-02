@@ -1,23 +1,30 @@
 package org.hamcrest.core;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeDiagnosingMatcher;
-import org.junit.Test;
+import static java.util.Arrays.asList;
+
+import static org.hamcrest.AbstractMatcherTest.assertDescription;
+import static org.hamcrest.AbstractMatcherTest.assertDoesNotMatch;
+import static org.hamcrest.AbstractMatcherTest.assertMatches;
+import static org.hamcrest.AbstractMatcherTest.assertMismatchDescription;
+import static org.hamcrest.AbstractMatcherTest.assertNullSafe;
+import static org.hamcrest.AbstractMatcherTest.assertUnknownTypeSafe;
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.hamcrest.core.IsIterableContaining.hasItem;
+import static org.hamcrest.core.IsIterableContaining.hasItems;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import static java.util.Arrays.asList;
-import static org.hamcrest.AbstractMatcherTest.*;
-import static org.hamcrest.core.IsIterableContaining.hasItem;
-import static org.hamcrest.core.IsIterableContaining.hasItems;
-import static org.hamcrest.core.IsEqual.equalTo;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeDiagnosingMatcher;
+import org.junit.jupiter.api.Test;
 
 public final class IsIterableContainingTest {
     
-    @Test public void
+    @Test
+    public void
     copesWithNullsAndUnknownTypes() {
         Matcher<?> matcher = hasItem(equalTo("irrelevant"));
         
@@ -104,4 +111,3 @@ public final class IsIterableContainingTest {
         };
     }
 }
-

@@ -1,7 +1,7 @@
 package org.hamcrest.beans;
 
 import org.hamcrest.Matcher;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.AbstractMatcherTest.*;
 import static org.hamcrest.beans.HasProperty.hasProperty;
