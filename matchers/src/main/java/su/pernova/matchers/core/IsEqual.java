@@ -1,8 +1,7 @@
 package su.pernova.matchers.core;
 
-import su.pernova.matchers.BaseMatcher;
-import su.pernova.matchers.Description;
 import su.pernova.matchers.Matcher;
+import su.pernova.matchers.Description;
 
 import java.lang.reflect.Array;
 
@@ -11,7 +10,7 @@ import java.lang.reflect.Array;
  * Is the value equal to another value, as tested by the
  * {@link java.lang.Object#equals} invokedMethod?
  */
-public class IsEqual<T> extends BaseMatcher<T> {
+public class IsEqual<T> extends Matcher<T> {
     private final Object expectedValue;
 
     public IsEqual(T equalArg) {

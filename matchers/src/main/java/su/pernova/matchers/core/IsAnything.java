@@ -1,14 +1,12 @@
 package su.pernova.matchers.core;
 
-import su.pernova.matchers.BaseMatcher;
-import su.pernova.matchers.Description;
 import su.pernova.matchers.Matcher;
-
+import su.pernova.matchers.Description;
 
 /**
  * A matcher that always returns <code>true</code>.
  */
-public class IsAnything<T> extends BaseMatcher<T> {
+public class IsAnything<T> extends Matcher<T> {
 
     private final String message;
 

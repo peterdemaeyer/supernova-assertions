@@ -1,15 +1,14 @@
 package su.pernova.matchers.core;
 
-import su.pernova.matchers.BaseMatcher;
-import su.pernova.matchers.Description;
 import su.pernova.matchers.Matcher;
+import su.pernova.matchers.Description;
 
 import static su.pernova.matchers.core.IsNot.not;
 
 /**
  * Is the value null?
  */
-public class IsNull<T> extends BaseMatcher<T> {
+public class IsNull<T> extends Matcher<T> {
     @Override
     public boolean matches(Object o) {
         return o == null;

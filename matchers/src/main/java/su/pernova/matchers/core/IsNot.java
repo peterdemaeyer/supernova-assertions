@@ -1,8 +1,7 @@
 package su.pernova.matchers.core;
 
-import su.pernova.matchers.BaseMatcher;
-import su.pernova.matchers.Description;
 import su.pernova.matchers.Matcher;
+import su.pernova.matchers.Description;
 
 import static su.pernova.matchers.core.IsEqual.equalTo;
 
@@ -10,7 +9,7 @@ import static su.pernova.matchers.core.IsEqual.equalTo;
 /**
  * Calculates the logical negation of a matcher.
  */
-public class IsNot<T> extends BaseMatcher<T>  {
+public class IsNot<T> extends Matcher<T> {
     private final Matcher<T> matcher;
 
     public IsNot(Matcher<T> matcher) {

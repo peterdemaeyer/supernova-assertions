@@ -1,8 +1,7 @@
 package su.pernova.matchers.core;
 
-import su.pernova.matchers.BaseMatcher;
-import su.pernova.matchers.Description;
 import su.pernova.matchers.Matcher;
+import su.pernova.matchers.Description;
 
 import java.util.regex.Pattern;
 
@@ -11,7 +10,7 @@ import static java.lang.Integer.parseInt;
 /**
  * Provides a custom description to another matcher.
  */
-public class DescribedAs<T> extends BaseMatcher<T> {
+public class DescribedAs<T> extends Matcher<T> {
     private final String descriptionTemplate;
     private final Matcher<T> matcher;
     private final Object[] values;
@@ -46,8 +45,8 @@ public class DescribedAs<T> extends BaseMatcher<T> {
     }
     
     @Override
-    public void describeMismatch(Object item, Description description) {
-        matcher.describeMismatch(item, description);
+    public void describeMismatch(Object actual, Description description) {
+        matcher.describeMismatch(actual, description);
     }
 
     /**

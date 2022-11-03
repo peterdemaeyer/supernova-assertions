@@ -2,66 +2,72 @@ package su.pernova.matchers;
 
 /**
  * <p>
- * A matcher over acceptable values.
- * A matcher is able to describe itself to give feedback when it fails.
- * </p>
- * <p>
- * Matcher implementations should <b>NOT directly implement this interface</b>.
- * Instead, <b>extend</b> the {@link BaseMatcher} abstract class,
- * which will ensure that the Matcher API can grow to support
- * new features and remain compatible with all Matcher implementations.
- * </p>
- * <p>
- * When using Hamcrest, there is no guarantee as to how often <code>matches()</code> or
- * <code>describeMismatch()</code> will be called, so the objects passed as
- * <code>actual</code> arguments should not change when referenced. If you're testing a
- * stream, a good practice is to collect the contents of the stream before matching.
- * </p>
- * <p>
- * N.B. Well designed matchers should be immutable.
+ * This abstract superclass defines an expectation to evaluate an actual value against.
+ * Concrete subclasses are provided as an essential part of this library.
+ * These can be complemented by the user's custom concrete subclasses, which is another essential part of this library.
  * </p>
  *
- * @see BaseMatcher
+ * <p>
+ * A matcher is self-describing such that it can report upon mismatch.
+ * </p>
+ *
+ * <p>
+ * <b>Properties of good matchers</b>
+ * <ul>
+ *     <li>
+ *         Matchers should not modify the state of the actual parameter.
+ *         When comparing streams for example, it is good practice to compare stream suppliers (or factories)
+ *         rather than the streams themselves.
+ *     </li>
+ *     <li>Matchers should be immutable.</li>
+ * </ul>
+ * </p>
+ *
  */
-public interface Matcher<T> extends SelfDescribing {
+public abstract class Matcher<T> implements SelfDescribing {
 
     /**
-     * Evaluates the matcher for argument <var>item</var>.
+     * Matches against a given actual value, which is possibly {@code null}.
      *
-     * This method matches against Object, instead of the generic type T. This is
-     * because the caller of the Matcher does not know at runtime what the type is
-     * (because of type erasure with Java generics). It is down to the implementations
-     * to check the correct type.
+     * <p>
+     *     This method has a parameter of type {@code Object} rather than the generic type {@code T} because the caller
+     *     does not knw the runtime type (because of type erasure with Java generics).
+     *     It is down to the implementations to check the correct type.
+     * </p>
      *
-     * @param actual the object against which the matcher is evaluated.
-     * @return <code>true</code> if <var>item</var> matches, otherwise <code>false</code>.
-     *
-     * @see BaseMatcher
+     * @param actual a given actual value to match against, possibly {@code null}.
+     * @return {@code true} upon match, {@code false} upon mismatch.
      */
-    boolean matches(Object actual);
-    
-    /**
-     * Generate a description of why the matcher has not accepted the item.
-     * The description will be part of a larger description of why a matching
-     * failed, so it should be concise. 
-     * This method assumes that <code>matches(item)</code> is false, but 
-     * will not check this.
-     *
-     * @param actual The item that the Matcher has rejected.
-     * @param mismatchDescription
-     *     The description to be built or appended to.
-     */
-    void describeMismatch(Object actual, Description mismatchDescription);
+    public abstract boolean matches(Object actual);
 
     /**
-     * This method simply acts a friendly reminder not to implement Matcher directly and
-     * instead extend BaseMatcher. It's easy to ignore JavaDoc, but a bit harder to ignore
-     * compile errors .
+     * Describes the mismatch of a given item to a given description.
+     * The description will be part of a larger description of a mismatch, so it should be concise.
+     * This method assumes that {@link #matches} is {@code false}, but does will not check this.
      *
-     * @see Matcher for reasons why.
-     * @see BaseMatcher
-     * @deprecated to make
+     * @param actual the actual object that mismatches, possibly {@code null}.
+     * @param description a description to be built or appended to, never {@code null}.
      */
-    @Deprecated
-    void _dont_implement_Matcher___instead_extend_BaseMatcher_();
+    public void describeMismatch(Object actual, Description description) {
+        description.appendText("was ").appendValue(actual);
+    }
+
+    @Override
+    public String toString() {
+        return StringDescription.toString(this);
+    }
+
+    /**
+     * Useful null-check method. Writes a mismatch description if the actual object is null
+     * @param actual the object to check
+     * @param mismatch where to write the mismatch description, if any
+     * @return false iff the actual object is null
+     */
+    protected static boolean isNotNull(Object actual, Description mismatch) {
+        if (actual == null) {
+            mismatch.appendText("was null");
+            return false;
+        }
+        return true;
+    }
 }

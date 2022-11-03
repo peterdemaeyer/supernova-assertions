@@ -4,12 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-public final class BaseMatcherTest {
+public final class MatcherTest {
 
     @Test
     public void
     describesItselfWithToStringMethod() {
-        Matcher<Object> someMatcher = new BaseMatcher<Object>() {
+        Matcher<Object> someMatcher = new Matcher<Object>() {
             @Override
             public boolean matches(Object item) {
                 throw new UnsupportedOperationException();

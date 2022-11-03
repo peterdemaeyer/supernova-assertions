@@ -1,14 +1,12 @@
 package su.pernova.matchers.core;
 
-import su.pernova.matchers.BaseMatcher;
-import su.pernova.matchers.Description;
 import su.pernova.matchers.Matcher;
-
+import su.pernova.matchers.Description;
 
 /**
  * Is the value the same object as another value?
  */
-public class IsSame<T> extends BaseMatcher<T> {
+public class IsSame<T> extends Matcher<T> {
     private final T object;
     
     public IsSame(T object) {

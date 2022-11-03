@@ -66,7 +66,7 @@ public final class MatcherAssertionsTest {
 	@Test
 	public void
 	includesMismatchDescription() {
-		Matcher<String> matcherWithCustomMismatchDescription = new BaseMatcher<String>() {
+		Matcher<String> matcherWithCustomMismatchDescription = new Matcher<String>() {
 			@Override
 			public boolean matches(Object item) {
 				return false;
@@ -78,7 +78,7 @@ public final class MatcherAssertionsTest {
 			}
 
 			@Override
-			public void describeMismatch(Object item, Description mismatchDescription) {
+			public void describeMismatch(Object actual, Description mismatchDescription) {
 				mismatchDescription.appendText("Not cool");
 			}
 		};

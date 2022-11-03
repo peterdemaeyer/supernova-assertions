@@ -5,7 +5,7 @@ package su.pernova.matchers;
  *
  * @param <T>
  */
-public abstract class DiagnosingMatcher<T> extends BaseMatcher<T> {
+public abstract class DiagnosingMatcher<T> extends Matcher<T> {
 
     @Override
     public final boolean matches(Object item) {
@@ -13,8 +13,8 @@ public abstract class DiagnosingMatcher<T> extends BaseMatcher<T> {
     }
 
     @Override
-    public final void describeMismatch(Object item, Description mismatchDescription) {
-        matches(item, mismatchDescription);
+    public final void describeMismatch(Object actual, Description mismatchDescription) {
+        matches(actual, mismatchDescription);
     }
 
     protected abstract boolean matches(Object item, Description mismatchDescription);

@@ -1,13 +1,12 @@
 package su.pernova.matchers.collection;
 
-import su.pernova.matchers.BaseMatcher;
-import su.pernova.matchers.Description;
 import su.pernova.matchers.Matcher;
+import su.pernova.matchers.Description;
 
 import java.util.Arrays;
 import java.util.Collection;
 
-public class IsIn<T> extends BaseMatcher<T> {
+public class IsIn<T> extends Matcher<T> {
     private final Collection<T> collection;
 
     public IsIn(Collection<T> collection) {

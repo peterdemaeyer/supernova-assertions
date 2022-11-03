@@ -14,7 +14,7 @@ import su.pernova.matchers.internal.ReflectiveTypeFinder;
  * @author Nat Pryce
  * @author Steve Freeman
  */
-public abstract class TypeSafeDiagnosingMatcher<T> extends BaseMatcher<T> {
+public abstract class TypeSafeDiagnosingMatcher<T> extends Matcher<T> {
     private static final ReflectiveTypeFinder TYPE_FINDER = new ReflectiveTypeFinder("matchesSafely", 2, 0); 
     private final Class<?> expectedType;
 
@@ -59,16 +59,16 @@ public abstract class TypeSafeDiagnosingMatcher<T> extends BaseMatcher<T> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public final void describeMismatch(Object item, Description mismatchDescription) {
-      if (item == null) {
+    public final void describeMismatch(Object actual, Description mismatchDescription) {
+      if (actual == null) {
         mismatchDescription.appendText("was null");
-    } else if (!expectedType.isInstance(item)) {
+    } else if (!expectedType.isInstance(actual)) {
       mismatchDescription.appendText("was ")
-            .appendText(item.getClass().getSimpleName())
+            .appendText(actual.getClass().getSimpleName())
             .appendText(" ")
-            .appendValue(item);
+            .appendValue(actual);
     } else {
-        matchesSafely((T) item, mismatchDescription);
+        matchesSafely((T) actual, mismatchDescription);
       }
     }
 }

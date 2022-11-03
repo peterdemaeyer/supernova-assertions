@@ -20,7 +20,7 @@ package su.pernova.matchers;
  *  want to use.
  * @param <T> The type of object being matched.
  */
-public abstract class CustomMatcher<T> extends BaseMatcher<T> {
+public abstract class CustomMatcher<T> extends Matcher<T> {
     private final String fixedDescription;
 
     public CustomMatcher(String description) {

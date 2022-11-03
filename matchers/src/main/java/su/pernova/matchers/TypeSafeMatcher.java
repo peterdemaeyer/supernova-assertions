@@ -10,7 +10,7 @@ import su.pernova.matchers.internal.ReflectiveTypeFinder;
  * @author Steve Freeman
  * @author Nat Pryce
  */
-public abstract class TypeSafeMatcher<T> extends BaseMatcher<T> {
+public abstract class TypeSafeMatcher<T> extends Matcher<T> {
     private static final ReflectiveTypeFinder TYPE_FINDER = new ReflectiveTypeFinder("matchesSafely", 1, 0);
     
     final private Class<?> expectedType;
@@ -57,7 +57,7 @@ public abstract class TypeSafeMatcher<T> extends BaseMatcher<T> {
     /**
      * Methods made final to prevent accidental override.
      * If you need to override this, there's no point on extending TypeSafeMatcher.
-     * Instead, extend the {@link BaseMatcher}.
+     * Instead, extend the {@link Matcher}.
      */
     @Override
     @SuppressWarnings({"unchecked"})
@@ -69,17 +69,17 @@ public abstract class TypeSafeMatcher<T> extends BaseMatcher<T> {
     
     @SuppressWarnings("unchecked")
     @Override
-    final public void describeMismatch(Object item, Description description) {
-        if (item == null) {
+    final public void describeMismatch(Object actual, Description description) {
+        if (actual == null) {
             super.describeMismatch(null, description);
-        } else if (! expectedType.isInstance(item)) {
+        } else if (! expectedType.isInstance(actual)) {
             description.appendText("was a ")
-                       .appendText(item.getClass().getName())
+                       .appendText(actual.getClass().getName())
                        .appendText(" (")
-                       .appendValue(item)
+                       .appendValue(actual)
                        .appendText(")");
         } else {
-            describeMismatchSafely((T)item, description);
+            describeMismatchSafely((T) actual, description);
         }
     }
 }

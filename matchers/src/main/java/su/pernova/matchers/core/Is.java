@@ -1,8 +1,7 @@
 package su.pernova.matchers.core;
 
-import su.pernova.matchers.BaseMatcher;
-import su.pernova.matchers.Description;
 import su.pernova.matchers.Matcher;
+import su.pernova.matchers.Description;
 
 import static su.pernova.matchers.core.IsEqual.equalTo;
 
@@ -13,7 +12,7 @@ import static su.pernova.matchers.core.IsEqual.equalTo;
  * For example:  assertThat(cheese, equalTo(smelly))
  *          vs.  assertThat(cheese, is(equalTo(smelly)))
  */
-public class Is<T> extends BaseMatcher<T> {
+public class Is<T> extends Matcher<T> {
     private final Matcher<T> matcher;
 
     public Is(Matcher<T> matcher) {
@@ -31,8 +30,8 @@ public class Is<T> extends BaseMatcher<T> {
     }
 
     @Override
-    public void describeMismatch(Object item, Description mismatchDescription) {
-        matcher.describeMismatch(item, mismatchDescription);
+    public void describeMismatch(Object actual, Description mismatchDescription) {
+        matcher.describeMismatch(actual, mismatchDescription);
     }
 
     /**

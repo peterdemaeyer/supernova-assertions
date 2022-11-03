@@ -1,10 +1,9 @@
 package su.pernova.matchers.core;
 
-import su.pernova.matchers.BaseMatcher;
-import su.pernova.matchers.Description;
 import su.pernova.matchers.Matcher;
+import su.pernova.matchers.Description;
 
-abstract class ShortcutCombination<T> extends BaseMatcher<T> {
+abstract class ShortcutCombination<T> extends Matcher<T> {
 
     private final Iterable<Matcher<? super T>> matchers;
 

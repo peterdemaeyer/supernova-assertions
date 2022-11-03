@@ -1,9 +1,8 @@
 package su.pernova.matchers.collection;
 
 import su.pernova.matchers.AbstractMatcherTest;
-import su.pernova.matchers.BaseMatcher;
-import su.pernova.matchers.Description;
 import su.pernova.matchers.Matcher;
+import su.pernova.matchers.Description;
 
 import static su.pernova.matchers.collection.IsArray.array;
 import static su.pernova.matchers.core.IsEqual.equalTo;
@@ -47,10 +46,10 @@ public class IsArrayTest extends AbstractMatcherTest {
     }
     
     public void testHasAReadableMismatchDescriptionUsingCustomMatchers() {
-        final BaseMatcher<String> m = new BaseMatcher<String>() {
+        final Matcher<String> m = new Matcher<String>() {
             @Override public boolean matches(Object item) { return false; }
             @Override public void describeTo(Description description) { description.appendText("c"); }
-            @Override public void describeMismatch(Object item, Description description) {
+            @Override public void describeMismatch(Object actual, Description description) {
                 description.appendText("didn't match");
             }
         };
