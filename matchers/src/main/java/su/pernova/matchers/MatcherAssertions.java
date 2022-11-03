@@ -1,7 +1,12 @@
 package su.pernova.matchers;
 
 
-public class MatcherAssert {
+public class MatcherAssertions {
+
+    private MatcherAssertions() {
+        // Prevent instantiation.
+    }
+
     public static <T> void assertThat(T actual, Matcher<? super T> matcher) {
         assertThat("", actual, matcher);
     }

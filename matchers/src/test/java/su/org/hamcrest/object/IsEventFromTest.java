@@ -5,7 +5,7 @@ import su.pernova.matchers.Matcher;
 
 import java.util.EventObject;
 
-import static su.pernova.matchers.MatcherAssert.assertThat;
+import static su.pernova.matchers.MatcherAssertions.assertThat;
 import static su.pernova.matchers.object.IsEventFrom.eventFrom;
 
 

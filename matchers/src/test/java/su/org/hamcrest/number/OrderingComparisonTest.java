@@ -5,7 +5,7 @@ import su.pernova.matchers.Matcher;
 
 import java.math.BigDecimal;
 
-import static su.pernova.matchers.MatcherAssert.assertThat;
+import static su.pernova.matchers.MatcherAssertions.assertThat;
 import static su.pernova.matchers.core.IsNot.not;
 import static su.pernova.matchers.number.OrderingComparison.*;
 

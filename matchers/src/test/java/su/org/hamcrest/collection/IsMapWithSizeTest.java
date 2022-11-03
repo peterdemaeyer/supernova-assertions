@@ -2,7 +2,7 @@ package su.pernova.matchers.collection;
 
 import su.pernova.matchers.AbstractMatcherTest;
 import su.pernova.matchers.Matcher;
-import su.pernova.matchers.MatcherAssert;
+import su.pernova.matchers.MatcherAssertions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -69,7 +69,7 @@ public final class IsMapWithSizeTest extends AbstractMatcherTest {
     
     public void testCompilesWithATypedMap() {
       Map<String, Integer> arrayList = new HashMap<String, Integer>();
-      MatcherAssert.assertThat(arrayList, aMapWithSize(0));
+      MatcherAssertions.assertThat(arrayList, aMapWithSize(0));
     }
     
     private static <K, V> Map<K, V> mapWithKeys(K... keys) {

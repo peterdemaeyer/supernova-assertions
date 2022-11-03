@@ -3,7 +3,7 @@ package su.pernova.matchers.object;
 import su.pernova.matchers.AbstractMatcherTest;
 import su.pernova.matchers.Matcher;
 
-import static su.pernova.matchers.MatcherAssert.assertThat;
+import static su.pernova.matchers.MatcherAssertions.assertThat;
 import static su.pernova.matchers.object.IsCompatibleType.typeCompatibleWith;
 
 public class IsCompatibleTypeTest extends AbstractMatcherTest {

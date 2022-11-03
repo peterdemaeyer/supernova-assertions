@@ -1,6 +1,6 @@
 package su.pernova.matchers;
 
-import static su.pernova.matchers.MatcherAssert.assertThat;
+import static su.pernova.matchers.MatcherAssertions.assertThat;
 import static su.pernova.matchers.core.IsEqual.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
 
-public final class MatcherAssertTest {
+public final class MatcherAssertionsTest {
 
 	@Test
 	public void

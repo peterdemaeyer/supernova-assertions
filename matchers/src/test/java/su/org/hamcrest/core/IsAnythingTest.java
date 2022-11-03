@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static su.pernova.matchers.AbstractMatcherTest.assertDescription;
 import static su.pernova.matchers.AbstractMatcherTest.assertMatches;
-import static su.pernova.matchers.MatcherAssert.assertThat;
+import static su.pernova.matchers.MatcherAssertions.assertThat;
 import static su.pernova.matchers.core.Is.is;
 import static su.pernova.matchers.core.IsAnything.anything;
 

@@ -2,7 +2,7 @@ package su.pernova.matchers.collection;
 
 import su.pernova.matchers.AbstractMatcherTest;
 import su.pernova.matchers.Matcher;
-import su.pernova.matchers.MatcherAssert;
+import su.pernova.matchers.MatcherAssertions;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -72,6 +72,6 @@ public class IsCollectionWithSizeTest extends AbstractMatcherTest {
     public void testCompilesWithATypedCollection() {
       // To prove Issue 43
       ArrayList<String> arrayList = new ArrayList<String>();
-      MatcherAssert.assertThat(arrayList, hasSize(0));
+      MatcherAssertions.assertThat(arrayList, hasSize(0));
     }
 }

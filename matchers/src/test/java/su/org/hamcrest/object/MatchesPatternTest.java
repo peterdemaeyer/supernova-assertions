@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.util.regex.Pattern;
 
 import static su.pernova.matchers.AbstractMatcherTest.*;
-import static su.pernova.matchers.MatcherAssert.assertThat;
+import static su.pernova.matchers.MatcherAssertions.assertThat;
 
 public class MatchesPatternTest {
     @Test

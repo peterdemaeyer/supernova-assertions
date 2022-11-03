@@ -7,7 +7,7 @@ import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.beans.SimpleBeanInfo;
 
-import static su.pernova.matchers.MatcherAssert.assertThat;
+import static su.pernova.matchers.MatcherAssertions.assertThat;
 import static su.pernova.matchers.Matchers.is;
 import static su.pernova.matchers.beans.HasPropertyWithValue.hasProperty;
 import static su.pernova.matchers.beans.HasPropertyWithValue.hasPropertyAtPath;

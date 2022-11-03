@@ -4,7 +4,7 @@ import su.pernova.matchers.Matcher;
 import org.junit.jupiter.api.Test;
 
 import static su.pernova.matchers.AbstractMatcherTest.*;
-import static su.pernova.matchers.MatcherAssert.assertThat;
+import static su.pernova.matchers.MatcherAssertions.assertThat;
 import static su.pernova.matchers.core.AllOf.allOf;
 import static su.pernova.matchers.core.Is.is;
 import static su.pernova.matchers.core.IsEqual.equalTo;

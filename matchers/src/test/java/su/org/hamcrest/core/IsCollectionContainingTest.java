@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
-import static su.pernova.matchers.MatcherAssert.assertThat;
+import static su.pernova.matchers.MatcherAssertions.assertThat;
 import static su.pernova.matchers.core.IsCollectionContaining.hasItem;
 import static su.pernova.matchers.core.IsCollectionContaining.hasItems;
 import static su.pernova.matchers.core.IsEqual.equalTo;
