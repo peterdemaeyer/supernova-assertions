@@ -54,8 +54,8 @@ public class ComparatorMatcherTest extends AbstractMatcherTest {
     }
 
     public void testAllowsForInclusiveComparisons() {
-        assertThat("less", 1, lessThanOrEqualTo(1));
-        assertThat("greater", 1, greaterThanOrEqualTo(1));
+        assertThat(1, lessThanOrEqualTo(1), "less");
+        assertThat(1, greaterThanOrEqualTo(1), "greater");
     }
 
     public void testSupportsDifferentTypesOfComparableObjects() {

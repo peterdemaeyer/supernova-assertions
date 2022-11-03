@@ -76,8 +76,8 @@ public class ComparatorMatcherBuilderTest extends AbstractMatcherTest {
     }
 
     public void testAllowsForInclusiveComparisons() {
-        assertThat("less", 1, integerComparatorMatcherBuilder.lessThanOrEqualTo(1));
-        assertThat("greater", 1, integerComparatorMatcherBuilder.greaterThanOrEqualTo(1));
+        assertThat(1, integerComparatorMatcherBuilder.lessThanOrEqualTo(1), "less");
+        assertThat(1, integerComparatorMatcherBuilder.greaterThanOrEqualTo(1), "greater");
     }
 
     public void testSupportsDifferentTypesOfComparableObjects() {

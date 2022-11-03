@@ -8,10 +8,10 @@ public class MatcherAssertions {
     }
 
     public static <T> void assertThat(T actual, Matcher<? super T> matcher) {
-        assertThat("", actual, matcher);
+        assertThat(actual, matcher, "");
     }
     
-    public static <T> void assertThat(String reason, T actual, Matcher<? super T> matcher) {
+    public static <T> void assertThat(T actual, Matcher<? super T> matcher, String reason) {
         if (!matcher.matches(actual)) {
             Description description = new StringDescription();
             description.appendText(reason)
@@ -26,7 +26,7 @@ public class MatcherAssertions {
         }
     }
     
-    public static void assertThat(String reason, boolean assertion) {
+    public static void assertThat(boolean assertion, String reason) {
         if (!assertion) {
             throw new AssertionError(reason);
         }

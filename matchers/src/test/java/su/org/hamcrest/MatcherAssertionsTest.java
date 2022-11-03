@@ -20,7 +20,7 @@ public final class MatcherAssertionsTest {
 		String expectedMessage = "identifier" + endLine + "Expected: \"expected\"" + endLine + "     but: was \"actual\"";
 
 		try {
-			assertThat("identifier", actual, equalTo(expected));
+			assertThat(actual, equalTo(expected), "identifier");
 		} catch (AssertionError e) {
 			assertTrue(e.getMessage().startsWith(expectedMessage));
 			return;
@@ -51,10 +51,10 @@ public final class MatcherAssertionsTest {
 	@Test
 	public void
 	canTestBooleanDirectly() {
-		assertThat("success reason message", true);
+		assertThat(true, "success reason message");
 
 		try {
-			assertThat("failing reason message", false);
+			assertThat(false, "failing reason message");
 		} catch (AssertionError e) {
 			assertEquals("failing reason message", e.getMessage());
 			return;
