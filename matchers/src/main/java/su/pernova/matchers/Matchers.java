@@ -1,22 +1,78 @@
 package su.pernova.matchers;
 
+import su.pernova.matchers.beans.HasProperty;
+import su.pernova.matchers.beans.HasPropertyWithValue;
+import su.pernova.matchers.beans.SamePropertyValuesAs;
 import su.pernova.matchers.collection.ArrayMatching;
+import su.pernova.matchers.collection.IsArray;
+import su.pernova.matchers.collection.IsArrayWithSize;
+import su.pernova.matchers.collection.IsCollectionWithSize;
+import su.pernova.matchers.collection.IsEmptyCollection;
+import su.pernova.matchers.collection.IsEmptyIterable;
+import su.pernova.matchers.collection.IsIn;
+import su.pernova.matchers.collection.IsIterableContainingInAnyOrder;
+import su.pernova.matchers.collection.IsIterableContainingInOrder;
+import su.pernova.matchers.collection.IsIterableContainingInRelativeOrder;
+import su.pernova.matchers.collection.IsIterableWithSize;
+import su.pernova.matchers.collection.IsMapContaining;
+import su.pernova.matchers.collection.IsMapWithSize;
+import su.pernova.matchers.core.AllOf;
+import su.pernova.matchers.core.AnyOf;
+import su.pernova.matchers.core.CombinableMatcher;
+import su.pernova.matchers.core.DescribedAs;
+import su.pernova.matchers.core.Every;
+import su.pernova.matchers.core.Is;
+import su.pernova.matchers.core.IsAnything;
+import su.pernova.matchers.core.IsEqual;
+import su.pernova.matchers.core.IsInstanceOf;
 import su.pernova.matchers.core.IsIterableContaining;
+import su.pernova.matchers.core.IsNot;
+import su.pernova.matchers.core.IsNull;
+import su.pernova.matchers.core.IsSame;
+import su.pernova.matchers.core.StringContains;
+import su.pernova.matchers.core.StringEndsWith;
 import su.pernova.matchers.core.StringRegularExpression;
+import su.pernova.matchers.core.StringStartsWith;
+import su.pernova.matchers.number.BigDecimalCloseTo;
+import su.pernova.matchers.number.IsCloseTo;
+import su.pernova.matchers.number.IsNaN;
+import su.pernova.matchers.number.OrderingComparison;
+import su.pernova.matchers.object.HasToString;
+import su.pernova.matchers.object.IsCompatibleType;
+import su.pernova.matchers.object.IsEventFrom;
+import su.pernova.matchers.text.CharSequenceLength;
+import su.pernova.matchers.text.IsBlankString;
+import su.pernova.matchers.text.IsEmptyString;
 import su.pernova.matchers.text.IsEqualCompressingWhiteSpace;
+import su.pernova.matchers.text.IsEqualIgnoringCase;
+import su.pernova.matchers.text.MatchesPattern;
+import su.pernova.matchers.text.StringContainsInOrder;
+import su.pernova.matchers.xml.HasXPath;
 
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.EventObject;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
+import javax.xml.namespace.NamespaceContext;
+
+import org.w3c.dom.Node;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class Matchers {
 
+  private Matchers() {
+    // Prevent instantiation.
+  }
+
   /**
    * Creates a matcher that matches if the examined object matches <b>ALL</b> of the specified matchers.
    * For example:
    * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
    */
-  public static <T> su.pernova.matchers.Matcher<T> allOf(java.lang.Iterable<su.pernova.matchers.Matcher<? super T>> matchers) {
-    return su.pernova.matchers.core.AllOf.allOf(matchers);
+  public static <T> Matcher<T> allOf(Iterable<Matcher<? super T>> matchers) {
+    return AllOf.allOf(matchers);
   }
 
   /**
@@ -25,8 +81,8 @@ public class Matchers {
    * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
    */
   @SafeVarargs
-  public static <T> su.pernova.matchers.Matcher<T> allOf(su.pernova.matchers.Matcher<? super T>... matchers) {
-    return su.pernova.matchers.core.AllOf.allOf(matchers);
+  public static <T> Matcher<T> allOf(Matcher<? super T>... matchers) {
+    return AllOf.allOf(matchers);
   }
 
   /**
@@ -34,8 +90,8 @@ public class Matchers {
    * For example:
    * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
    */
-  public static <T> su.pernova.matchers.Matcher<T> allOf(su.pernova.matchers.Matcher<? super T> first, su.pernova.matchers.Matcher<? super T> second) {
-    return su.pernova.matchers.core.AllOf.allOf(first, second);
+  public static <T> Matcher<T> allOf(Matcher<? super T> first, Matcher<? super T> second) {
+    return AllOf.allOf(first, second);
   }
 
   /**
@@ -43,8 +99,8 @@ public class Matchers {
    * For example:
    * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
    */
-  public static <T> su.pernova.matchers.Matcher<T> allOf(su.pernova.matchers.Matcher<? super T> first, su.pernova.matchers.Matcher<? super T> second, su.pernova.matchers.Matcher<? super T> third) {
-    return su.pernova.matchers.core.AllOf.allOf(first, second, third);
+  public static <T> Matcher<T> allOf(Matcher<? super T> first, Matcher<? super T> second, Matcher<? super T> third) {
+    return AllOf.allOf(first, second, third);
   }
 
   /**
@@ -52,8 +108,8 @@ public class Matchers {
    * For example:
    * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
    */
-  public static <T> su.pernova.matchers.Matcher<T> allOf(su.pernova.matchers.Matcher<? super T> first, su.pernova.matchers.Matcher<? super T> second, su.pernova.matchers.Matcher<? super T> third, su.pernova.matchers.Matcher<? super T> fourth) {
-    return su.pernova.matchers.core.AllOf.allOf(first, second, third, fourth);
+  public static <T> Matcher<T> allOf(Matcher<? super T> first, Matcher<? super T> second, Matcher<? super T> third, Matcher<? super T> fourth) {
+    return AllOf.allOf(first, second, third, fourth);
   }
 
   /**
@@ -61,8 +117,8 @@ public class Matchers {
    * For example:
    * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
    */
-  public static <T> su.pernova.matchers.Matcher<T> allOf(su.pernova.matchers.Matcher<? super T> first, su.pernova.matchers.Matcher<? super T> second, su.pernova.matchers.Matcher<? super T> third, su.pernova.matchers.Matcher<? super T> fourth, su.pernova.matchers.Matcher<? super T> fifth) {
-    return su.pernova.matchers.core.AllOf.allOf(first, second, third, fourth, fifth);
+  public static <T> Matcher<T> allOf(Matcher<? super T> first, Matcher<? super T> second, Matcher<? super T> third, Matcher<? super T> fourth, Matcher<? super T> fifth) {
+    return AllOf.allOf(first, second, third, fourth, fifth);
   }
 
   /**
@@ -70,8 +126,8 @@ public class Matchers {
    * For example:
    * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
    */
-  public static <T> su.pernova.matchers.Matcher<T> allOf(su.pernova.matchers.Matcher<? super T> first, su.pernova.matchers.Matcher<? super T> second, su.pernova.matchers.Matcher<? super T> third, su.pernova.matchers.Matcher<? super T> fourth, su.pernova.matchers.Matcher<? super T> fifth, su.pernova.matchers.Matcher<? super T> sixth) {
-    return su.pernova.matchers.core.AllOf.allOf(first, second, third, fourth, fifth, sixth);
+  public static <T> Matcher<T> allOf(Matcher<? super T> first, Matcher<? super T> second, Matcher<? super T> third, Matcher<? super T> fourth, Matcher<? super T> fifth, Matcher<? super T> sixth) {
+    return AllOf.allOf(first, second, third, fourth, fifth, sixth);
   }
 
   /**
@@ -79,8 +135,8 @@ public class Matchers {
    * For example:
    * <pre>assertThat("myValue", anyOf(startsWith("foo"), containsString("Val")))</pre>
    */
-  public static <T> su.pernova.matchers.core.AnyOf<T> anyOf(java.lang.Iterable<su.pernova.matchers.Matcher<? super T>> matchers) {
-    return su.pernova.matchers.core.AnyOf.anyOf(matchers);
+  public static <T> AnyOf<T> anyOf(Iterable<Matcher<? super T>> matchers) {
+    return AnyOf.anyOf(matchers);
   }
 
   /**
@@ -89,8 +145,8 @@ public class Matchers {
    * <pre>assertThat("myValue", anyOf(startsWith("foo"), containsString("Val")))</pre>
    */
   @SafeVarargs
-  public static <T> su.pernova.matchers.core.AnyOf<T> anyOf(su.pernova.matchers.Matcher<? super T>... matchers) {
-    return su.pernova.matchers.core.AnyOf.anyOf(matchers);
+  public static <T> AnyOf<T> anyOf(Matcher<? super T>... matchers) {
+    return AnyOf.anyOf(matchers);
   }
 
   /**
@@ -98,8 +154,8 @@ public class Matchers {
    * For example:
    * <pre>assertThat("myValue", anyOf(startsWith("foo"), containsString("Val")))</pre>
    */
-  public static <T> su.pernova.matchers.core.AnyOf<T> anyOf(su.pernova.matchers.Matcher<? super T> first, su.pernova.matchers.Matcher<? super T> second) {
-    return su.pernova.matchers.core.AnyOf.anyOf(first, second);
+  public static <T> AnyOf<T> anyOf(Matcher<? super T> first, Matcher<? super T> second) {
+    return AnyOf.anyOf(first, second);
   }
 
   /**
@@ -107,8 +163,8 @@ public class Matchers {
    * For example:
    * <pre>assertThat("myValue", anyOf(startsWith("foo"), containsString("Val")))</pre>
    */
-  public static <T> su.pernova.matchers.core.AnyOf<T> anyOf(su.pernova.matchers.Matcher<? super T> first, su.pernova.matchers.Matcher<? super T> second, su.pernova.matchers.Matcher<? super T> third) {
-    return su.pernova.matchers.core.AnyOf.anyOf(first, second, third);
+  public static <T> AnyOf<T> anyOf(Matcher<? super T> first, Matcher<? super T> second, Matcher<? super T> third) {
+    return AnyOf.anyOf(first, second, third);
   }
 
   /**
@@ -116,8 +172,8 @@ public class Matchers {
    * For example:
    * <pre>assertThat("myValue", anyOf(startsWith("foo"), containsString("Val")))</pre>
    */
-  public static <T> su.pernova.matchers.core.AnyOf<T> anyOf(su.pernova.matchers.Matcher<? super T> first, su.pernova.matchers.Matcher<? super T> second, su.pernova.matchers.Matcher<? super T> third, su.pernova.matchers.Matcher<? super T> fourth) {
-    return su.pernova.matchers.core.AnyOf.anyOf(first, second, third, fourth);
+  public static <T> AnyOf<T> anyOf(Matcher<? super T> first, Matcher<? super T> second, Matcher<? super T> third, Matcher<? super T> fourth) {
+    return AnyOf.anyOf(first, second, third, fourth);
   }
 
   /**
@@ -125,8 +181,8 @@ public class Matchers {
    * For example:
    * <pre>assertThat("myValue", anyOf(startsWith("foo"), containsString("Val")))</pre>
    */
-  public static <T> su.pernova.matchers.core.AnyOf<T> anyOf(su.pernova.matchers.Matcher<? super T> first, su.pernova.matchers.Matcher<? super T> second, su.pernova.matchers.Matcher<? super T> third, su.pernova.matchers.Matcher<? super T> fourth, su.pernova.matchers.Matcher<? super T> fifth) {
-    return su.pernova.matchers.core.AnyOf.anyOf(first, second, third, fourth, fifth);
+  public static <T> AnyOf<T> anyOf(Matcher<? super T> first, Matcher<? super T> second, Matcher<? super T> third, Matcher<? super T> fourth, Matcher<? super T> fifth) {
+    return AnyOf.anyOf(first, second, third, fourth, fifth);
   }
 
   /**
@@ -134,8 +190,8 @@ public class Matchers {
    * For example:
    * <pre>assertThat("myValue", anyOf(startsWith("foo"), containsString("Val")))</pre>
    */
-  public static <T> su.pernova.matchers.core.AnyOf<T> anyOf(su.pernova.matchers.Matcher<? super T> first, su.pernova.matchers.Matcher<? super T> second, su.pernova.matchers.Matcher<? super T> third, su.pernova.matchers.Matcher<? super T> fourth, su.pernova.matchers.Matcher<? super T> fifth, su.pernova.matchers.Matcher<? super T> sixth) {
-    return su.pernova.matchers.core.AnyOf.anyOf(first, second, third, fourth, fifth, sixth);
+  public static <T> AnyOf<T> anyOf(Matcher<? super T> first, Matcher<? super T> second, Matcher<? super T> third, Matcher<? super T> fourth, Matcher<? super T> fifth, Matcher<? super T> sixth) {
+    return AnyOf.anyOf(first, second, third, fourth, fifth, sixth);
   }
 
   /**
@@ -143,8 +199,8 @@ public class Matchers {
    * For example:
    * <pre>assertThat("fab", both(containsString("a")).and(containsString("b")))</pre>
    */
-  public static <LHS> su.pernova.matchers.core.CombinableMatcher.CombinableBothMatcher<LHS> both(su.pernova.matchers.Matcher<? super LHS> matcher) {
-    return su.pernova.matchers.core.CombinableMatcher.both(matcher);
+  public static <LHS> CombinableMatcher.CombinableBothMatcher<LHS> both(Matcher<? super LHS> matcher) {
+    return CombinableMatcher.both(matcher);
   }
 
   /**
@@ -152,8 +208,8 @@ public class Matchers {
    * For example:
    * <pre>assertThat("fan", either(containsString("a")).or(containsString("b")))</pre>
    */
-  public static <LHS> su.pernova.matchers.core.CombinableMatcher.CombinableEitherMatcher<LHS> either(su.pernova.matchers.Matcher<? super LHS> matcher) {
-    return su.pernova.matchers.core.CombinableMatcher.either(matcher);
+  public static <LHS> CombinableMatcher.CombinableEitherMatcher<LHS> either(Matcher<? super LHS> matcher) {
+    return CombinableMatcher.either(matcher);
   }
 
   /**
@@ -169,8 +225,8 @@ public class Matchers {
    * @param values
    *     optional values to insert into the tokenized description
    */
-  public static <T> su.pernova.matchers.Matcher<T> describedAs(java.lang.String description, su.pernova.matchers.Matcher<T> matcher, java.lang.Object... values) {
-    return su.pernova.matchers.core.DescribedAs.describedAs(description, matcher, values);
+  public static <T> Matcher<T> describedAs(String description, Matcher<T> matcher, Object... values) {
+    return DescribedAs.describedAs(description, matcher, values);
   }
 
   /**
@@ -183,8 +239,8 @@ public class Matchers {
    * @param itemMatcher
    *     the matcher to apply to every item provided by the examined {@link Iterable}
    */
-  public static <U> su.pernova.matchers.Matcher<java.lang.Iterable<? extends U>> everyItem(su.pernova.matchers.Matcher<U> itemMatcher) {
-    return su.pernova.matchers.core.Every.everyItem(itemMatcher);
+  public static <U> Matcher<Iterable<? extends U>> everyItem(Matcher<U> itemMatcher) {
+    return Every.everyItem(itemMatcher);
   }
 
   /**
@@ -195,8 +251,8 @@ public class Matchers {
    * instead of:
    * <pre>assertThat(cheese, equalTo(smelly))</pre>
    */
-  public static <T> su.pernova.matchers.Matcher<T> is(su.pernova.matchers.Matcher<T> matcher) {
-    return su.pernova.matchers.core.Is.is(matcher);
+  public static <T> Matcher<T> is(Matcher<T> matcher) {
+    return Is.is(matcher);
   }
 
   /**
@@ -206,8 +262,8 @@ public class Matchers {
    * instead of:
    * <pre>assertThat(cheese, is(equalTo(smelly)))</pre>
    */
-  public static <T> su.pernova.matchers.Matcher<T> is(T value) {
-    return su.pernova.matchers.core.Is.is(value);
+  public static <T> Matcher<T> is(T value) {
+    return Is.is(value);
   }
 
   /**
@@ -217,15 +273,15 @@ public class Matchers {
    * instead of:
    * <pre>assertThat(cheese, is(instanceOf(Cheddar.class)))</pre>
    */
-  public static <T> su.pernova.matchers.Matcher<T> isA(java.lang.Class<?> type) {
-    return su.pernova.matchers.core.Is.isA(type);
+  public static <T> Matcher<T> isA(Class<?> type) {
+    return Is.isA(type);
   }
 
   /**
    * Creates a matcher that always matches, regardless of the examined object.
    */
-  public static su.pernova.matchers.Matcher<java.lang.Object> anything() {
-    return su.pernova.matchers.core.IsAnything.anything();
+  public static Matcher<Object> anything() {
+    return IsAnything.anything();
   }
 
   /**
@@ -235,8 +291,8 @@ public class Matchers {
    * @param description
    *     a meaningful {@link String} used when describing itself
    */
-  public static su.pernova.matchers.Matcher<java.lang.Object> anything(java.lang.String description) {
-    return su.pernova.matchers.core.IsAnything.anything(description);
+  public static Matcher<Object> anything(String description) {
+    return IsAnything.anything(description);
   }
 
   /**
@@ -250,7 +306,7 @@ public class Matchers {
    * @param itemMatcher
    *     the matcher to apply to items provided by the examined {@link Iterable}
    */
-  public static <T> su.pernova.matchers.Matcher<java.lang.Iterable<? super T>> hasItem(su.pernova.matchers.Matcher<? super T> itemMatcher) {
+  public static <T> Matcher<Iterable<? super T>> hasItem(Matcher<? super T> itemMatcher) {
     return IsIterableContaining.hasItem(itemMatcher);
   }
 
@@ -265,7 +321,7 @@ public class Matchers {
    * @param item
    *     the item to compare against the items provided by the examined {@link Iterable}
    */
-  public static <T> su.pernova.matchers.Matcher<java.lang.Iterable<? super T>> hasItem(T item) {
+  public static <T> Matcher<Iterable<? super T>> hasItem(T item) {
     return IsIterableContaining.hasItem(item);
   }
 
@@ -281,7 +337,7 @@ public class Matchers {
    *     the matchers to apply to items provided by the examined {@link Iterable}
    */
   @SafeVarargs
-  public static <T> su.pernova.matchers.Matcher<java.lang.Iterable<T>> hasItems(su.pernova.matchers.Matcher<? super T>... itemMatchers) {
+  public static <T> Matcher<Iterable<T>> hasItems(Matcher<? super T>... itemMatchers) {
     return IsIterableContaining.hasItems(itemMatchers);
   }
 
@@ -297,13 +353,13 @@ public class Matchers {
    *     the items to compare against the items provided by the examined {@link Iterable}
    */
   @SafeVarargs
-  public static <T> su.pernova.matchers.Matcher<java.lang.Iterable<T>> hasItems(T... items) {
+  public static <T> Matcher<Iterable<T>> hasItems(T... items) {
     return IsIterableContaining.hasItems(items);
   }
 
   /**
    * Creates a matcher that matches when the examined object is logically equal to the specified
-   * <code>operand</code>, as determined by calling the {@link java.lang.Object#equals} method on
+   * <code>operand</code>, as determined by calling the {@link Object#equals} method on
    * the <b>examined</b> object.
    * 
    * <p>If the specified operand is <code>null</code> then the created matcher will only match if
@@ -322,21 +378,21 @@ public class Matchers {
    * assertThat(new String[] {"foo", "bar"}, equalTo(new String[] {"foo", "bar"}));
    * </pre>
    */
-  public static <T> su.pernova.matchers.Matcher<T> equalTo(T operand) {
-    return su.pernova.matchers.core.IsEqual.equalTo(operand);
+  public static <T> Matcher<T> equalTo(T operand) {
+    return IsEqual.equalTo(operand);
   }
 
   /**
-   * Creates an {@link su.pernova.matchers.core.IsEqual} matcher that does not enforce the values being
+   * Creates an {@link IsEqual} matcher that does not enforce the values being
    * compared to be of the same static type.
    */
-  public static su.pernova.matchers.Matcher<java.lang.Object> equalToObject(java.lang.Object operand) {
-    return su.pernova.matchers.core.IsEqual.equalToObject(operand);
+  public static Matcher<Object> equalToObject(Object operand) {
+    return IsEqual.equalToObject(operand);
   }
 
   /**
    * Creates a matcher that matches when the examined object is an instance of the specified <code>type</code>,
-   * as determined by calling the {@link java.lang.Class#isInstance(Object)} method on that type, passing the
+   * as determined by calling the {@link Class#isInstance(Object)} method on that type, passing the
    * the examined object.
    * 
    * <p>The created matcher forces a relationship between specified type and the examined object, and should be
@@ -345,21 +401,21 @@ public class Matchers {
    * For example:
    * <pre>assertThat(new Canoe(), instanceOf(Canoe.class));</pre>
    */
-  public static <T> su.pernova.matchers.Matcher<T> any(java.lang.Class<T> type) {
-    return su.pernova.matchers.core.IsInstanceOf.any(type);
+  public static <T> Matcher<T> any(Class<T> type) {
+    return IsInstanceOf.any(type);
   }
 
   /**
    * Creates a matcher that matches when the examined object is an instance of the specified <code>type</code>,
-   * as determined by calling the {@link java.lang.Class#isInstance(Object)} method on that type, passing the
+   * as determined by calling the {@link Class#isInstance(Object)} method on that type, passing the
    * the examined object.
    * 
    * <p>The created matcher assumes no relationship between specified type and the examined object.</p>
    * For example:
    * <pre>assertThat(new Canoe(), instanceOf(Paddlable.class));</pre>
    */
-  public static <T> su.pernova.matchers.Matcher<T> instanceOf(java.lang.Class<?> type) {
-    return su.pernova.matchers.core.IsInstanceOf.instanceOf(type);
+  public static <T> Matcher<T> instanceOf(Class<?> type) {
+    return IsInstanceOf.instanceOf(type);
   }
 
   /**
@@ -371,8 +427,8 @@ public class Matchers {
    * @param matcher
    *     the matcher whose sense should be inverted
    */
-  public static <T> su.pernova.matchers.Matcher<T> not(su.pernova.matchers.Matcher<T> matcher) {
-    return su.pernova.matchers.core.IsNot.not(matcher);
+  public static <T> Matcher<T> not(Matcher<T> matcher) {
+    return IsNot.not(matcher);
   }
 
   /**
@@ -385,8 +441,8 @@ public class Matchers {
    * @param value
    *     the value that any examined object should <b>not</b> equal
    */
-  public static <T> su.pernova.matchers.Matcher<T> not(T value) {
-    return su.pernova.matchers.core.IsNot.not(value);
+  public static <T> Matcher<T> not(T value) {
+    return IsNot.not(value);
   }
 
   /**
@@ -396,8 +452,8 @@ public class Matchers {
    * instead of:
    * <pre>assertThat(cheese, is(not(nullValue())))</pre>
    */
-  public static su.pernova.matchers.Matcher<java.lang.Object> notNullValue() {
-    return su.pernova.matchers.core.IsNull.notNullValue();
+  public static Matcher<Object> notNullValue() {
+    return IsNull.notNullValue();
   }
 
   /**
@@ -411,8 +467,8 @@ public class Matchers {
    * @param type
    *     dummy parameter used to infer the generic type of the returned matcher
    */
-  public static <T> su.pernova.matchers.Matcher<T> notNullValue(java.lang.Class<T> type) {
-    return su.pernova.matchers.core.IsNull.notNullValue(type);
+  public static <T> Matcher<T> notNullValue(Class<T> type) {
+    return IsNull.notNullValue(type);
   }
 
   /**
@@ -420,8 +476,8 @@ public class Matchers {
    * For example:
    * <pre>assertThat(cheese, is(nullValue())</pre>
    */
-  public static su.pernova.matchers.Matcher<java.lang.Object> nullValue() {
-    return su.pernova.matchers.core.IsNull.nullValue();
+  public static Matcher<Object> nullValue() {
+    return IsNull.nullValue();
   }
 
   /**
@@ -433,8 +489,8 @@ public class Matchers {
    * @param type
    *     dummy parameter used to infer the generic type of the returned matcher
    */
-  public static <T> su.pernova.matchers.Matcher<T> nullValue(java.lang.Class<T> type) {
-    return su.pernova.matchers.core.IsNull.nullValue(type);
+  public static <T> Matcher<T> nullValue(Class<T> type) {
+    return IsNull.nullValue(type);
   }
 
   /**
@@ -444,8 +500,8 @@ public class Matchers {
    * @param target
    *     the target instance against which others should be assessed
    */
-  public static <T> su.pernova.matchers.Matcher<T> sameInstance(T target) {
-    return su.pernova.matchers.core.IsSame.sameInstance(target);
+  public static <T> Matcher<T> sameInstance(T target) {
+    return IsSame.sameInstance(target);
   }
 
   /**
@@ -455,8 +511,8 @@ public class Matchers {
    * @param target
    *     the target instance against which others should be assessed
    */
-  public static <T> su.pernova.matchers.Matcher<T> theInstance(T target) {
-    return su.pernova.matchers.core.IsSame.theInstance(target);
+  public static <T> Matcher<T> theInstance(T target) {
+    return IsSame.theInstance(target);
   }
   
   /**
@@ -468,8 +524,8 @@ public class Matchers {
    * @param substring
    *     the substring that the returned matcher will expect to find within any examined string
    */
-  public static Matcher<java.lang.String> containsString(java.lang.String substring) {
-    return su.pernova.matchers.core.StringContains.containsString(substring);
+  public static Matcher<String> containsString(String substring) {
+    return StringContains.containsString(substring);
   }
 
   /**
@@ -481,8 +537,8 @@ public class Matchers {
    * @param substring
    *     the substring that the returned matcher will expect to find within any examined string
    */
-  public static Matcher<java.lang.String> containsStringIgnoringCase(java.lang.String substring) {
-    return su.pernova.matchers.core.StringContains.containsStringIgnoringCase(substring);
+  public static Matcher<String> containsStringIgnoringCase(String substring) {
+    return StringContains.containsStringIgnoringCase(substring);
   }
 
   /**
@@ -496,8 +552,8 @@ public class Matchers {
    * @param prefix
    *      the substring that the returned matcher will expect at the start of any examined string
    */
-  public static Matcher<java.lang.String> startsWith(java.lang.String prefix) {
-    return su.pernova.matchers.core.StringStartsWith.startsWith(prefix);
+  public static Matcher<String> startsWith(String prefix) {
+    return StringStartsWith.startsWith(prefix);
   }
 
   /**
@@ -511,8 +567,8 @@ public class Matchers {
    * @param prefix
    *      the substring that the returned matcher will expect at the start of any examined string
    */
-  public static Matcher<java.lang.String> startsWithIgnoringCase(java.lang.String prefix) {
-    return su.pernova.matchers.core.StringStartsWith.startsWithIgnoringCase(prefix);
+  public static Matcher<String> startsWithIgnoringCase(String prefix) {
+    return StringStartsWith.startsWithIgnoringCase(prefix);
   }
 
   /**
@@ -524,8 +580,8 @@ public class Matchers {
    * @param suffix
    *      the substring that the returned matcher will expect at the end of any examined string
    */
-  public static Matcher<java.lang.String> endsWith(java.lang.String suffix) {
-    return su.pernova.matchers.core.StringEndsWith.endsWith(suffix);
+  public static Matcher<String> endsWith(String suffix) {
+    return StringEndsWith.endsWith(suffix);
   }
 
   /**
@@ -537,12 +593,12 @@ public class Matchers {
    * @param suffix
    *      the substring that the returned matcher will expect at the end of any examined string
    */
-  public static Matcher<java.lang.String> endsWithIgnoringCase(java.lang.String suffix) {
-    return su.pernova.matchers.core.StringEndsWith.endsWithIgnoringCase(suffix);
+  public static Matcher<String> endsWithIgnoringCase(String suffix) {
+    return StringEndsWith.endsWithIgnoringCase(suffix);
   }
 
   /**
-   * Validate a string with a {@link java.util.regex.Pattern}.
+   * Validate a string with a {@link Pattern}.
    *
    * <pre>
    * assertThat(&quot;abc&quot;, matchesRegex(Pattern.compile(&quot;&circ;[a-z]$&quot;));
@@ -582,8 +638,8 @@ public class Matchers {
    *     the matchers that the elements of examined arrays should satisfy
    */
   @SafeVarargs
-  public static <T> su.pernova.matchers.collection.IsArray<T> array(su.pernova.matchers.Matcher<? super T>... elementMatchers) {
-    return su.pernova.matchers.collection.IsArray.array(elementMatchers);
+  public static <T> IsArray<T> array(Matcher<? super T>... elementMatchers) {
+    return IsArray.array(elementMatchers);
   }
 
   /**
@@ -596,7 +652,7 @@ public class Matchers {
    * @param elementMatcher
    *     the matcher to apply to elements in examined arrays
    */
-  public static <T> su.pernova.matchers.Matcher<T[]> hasItemInArray(su.pernova.matchers.Matcher<? super T> elementMatcher) {
+  public static <T> Matcher<T[]> hasItemInArray(Matcher<? super T> elementMatcher) {
     return ArrayMatching.hasItemInArray(elementMatcher);
   }
 
@@ -610,7 +666,7 @@ public class Matchers {
    * @param element
    *     the element that should be present in examined arrays
    */
-  public static <T> su.pernova.matchers.Matcher<T[]> hasItemInArray(T element) {
+  public static <T> Matcher<T[]> hasItemInArray(T element) {
     return ArrayMatching.hasItemInArray(element);
   }
 
@@ -625,7 +681,7 @@ public class Matchers {
    *     the items that must equal the items within an examined array
    */
   @SafeVarargs
-  public static <E> su.pernova.matchers.Matcher<E[]> arrayContaining(E... items) {
+  public static <E> Matcher<E[]> arrayContaining(E... items) {
     return ArrayMatching.arrayContaining(items);
   }
 
@@ -640,7 +696,7 @@ public class Matchers {
    *     the matchers that must be satisfied by the items in the examined array
    */
   @SafeVarargs
-  public static <E> su.pernova.matchers.Matcher<E[]> arrayContaining(su.pernova.matchers.Matcher<? super E>... itemMatchers) {
+  public static <E> Matcher<E[]> arrayContaining(Matcher<? super E>... itemMatchers) {
     return ArrayMatching.arrayContaining(itemMatchers);
   }
 
@@ -654,7 +710,7 @@ public class Matchers {
    * @param itemMatchers
    *     a list of matchers, each of which must be satisfied by the corresponding item in an examined array
    */
-  public static <E> su.pernova.matchers.Matcher<E[]> arrayContaining(java.util.List<su.pernova.matchers.Matcher<? super E>> itemMatchers) {
+  public static <E> Matcher<E[]> arrayContaining(List<Matcher<? super E>> itemMatchers) {
     return ArrayMatching.arrayContaining(itemMatchers);
   }
 
@@ -679,7 +735,7 @@ public class Matchers {
    *     a list of matchers, each of which must be satisfied by an entry in an examined array
    */
   @SafeVarargs
-  public static <E> su.pernova.matchers.Matcher<E[]> arrayContainingInAnyOrder(su.pernova.matchers.Matcher<? super E>... itemMatchers) {
+  public static <E> Matcher<E[]> arrayContainingInAnyOrder(Matcher<? super E>... itemMatchers) {
     return ArrayMatching.arrayContainingInAnyOrder(itemMatchers);
   }
 
@@ -703,7 +759,7 @@ public class Matchers {
    * @param itemMatchers
    *     a list of matchers, each of which must be satisfied by an item provided by an examined array
    */
-  public static <E> su.pernova.matchers.Matcher<E[]> arrayContainingInAnyOrder(java.util.Collection<su.pernova.matchers.Matcher<? super E>> itemMatchers) {
+  public static <E> Matcher<E[]> arrayContainingInAnyOrder(Collection<Matcher<? super E>> itemMatchers) {
     return ArrayMatching.arrayContainingInAnyOrder(itemMatchers);
   }
 
@@ -726,7 +782,7 @@ public class Matchers {
    *     the items that must equal the entries of an examined array, in any order
    */
   @SafeVarargs
-  public static <E> su.pernova.matchers.Matcher<E[]> arrayContainingInAnyOrder(E... items) {
+  public static <E> Matcher<E[]> arrayContainingInAnyOrder(E... items) {
     return ArrayMatching.arrayContainingInAnyOrder(items);
   }
 
@@ -739,8 +795,8 @@ public class Matchers {
    * @param sizeMatcher
    *     a matcher for the length of an examined array
    */
-  public static <E> su.pernova.matchers.Matcher<E[]> arrayWithSize(su.pernova.matchers.Matcher<? super java.lang.Integer> sizeMatcher) {
-    return su.pernova.matchers.collection.IsArrayWithSize.arrayWithSize(sizeMatcher);
+  public static <E> Matcher<E[]> arrayWithSize(Matcher<? super Integer> sizeMatcher) {
+    return IsArrayWithSize.arrayWithSize(sizeMatcher);
   }
 
   /**
@@ -752,8 +808,8 @@ public class Matchers {
    * @param size
    *     the length that an examined array must have for a positive match
    */
-  public static <E> su.pernova.matchers.Matcher<E[]> arrayWithSize(int size) {
-    return su.pernova.matchers.collection.IsArrayWithSize.arrayWithSize(size);
+  public static <E> Matcher<E[]> arrayWithSize(int size) {
+    return IsArrayWithSize.arrayWithSize(size);
   }
 
   /**
@@ -762,8 +818,8 @@ public class Matchers {
    * For example:
    * <pre>assertThat(new String[0], emptyArray())</pre>
    */
-  public static <E> su.pernova.matchers.Matcher<E[]> emptyArray() {
-    return su.pernova.matchers.collection.IsArrayWithSize.emptyArray();
+  public static <E> Matcher<E[]> emptyArray() {
+    return IsArrayWithSize.emptyArray();
   }
 
   /**
@@ -775,8 +831,8 @@ public class Matchers {
    * @param sizeMatcher
    *     a matcher for the size of an examined {@link java.util.Map}
    */
-  public static <K, V> su.pernova.matchers.Matcher<java.util.Map<? extends K,? extends V>> aMapWithSize(su.pernova.matchers.Matcher<? super java.lang.Integer> sizeMatcher) {
-    return su.pernova.matchers.collection.IsMapWithSize.aMapWithSize(sizeMatcher);
+  public static <K, V> Matcher<Map<? extends K,? extends V>> aMapWithSize(Matcher<? super Integer> sizeMatcher) {
+    return IsMapWithSize.aMapWithSize(sizeMatcher);
   }
 
   /**
@@ -788,8 +844,8 @@ public class Matchers {
    * @param size
    *     the expected size of an examined {@link java.util.Map}
    */
-  public static <K, V> su.pernova.matchers.Matcher<java.util.Map<? extends K,? extends V>> aMapWithSize(int size) {
-    return su.pernova.matchers.collection.IsMapWithSize.aMapWithSize(size);
+  public static <K, V> Matcher<Map<? extends K,? extends V>> aMapWithSize(int size) {
+    return IsMapWithSize.aMapWithSize(size);
   }
 
   /**
@@ -798,8 +854,8 @@ public class Matchers {
    * For example:
    * <pre>assertThat(myMap, is(anEmptyMap()))</pre>
    */
-  public static <K, V> su.pernova.matchers.Matcher<java.util.Map<? extends K,? extends V>> anEmptyMap() {
-    return su.pernova.matchers.collection.IsMapWithSize.anEmptyMap();
+  public static <K, V> Matcher<Map<? extends K,? extends V>> anEmptyMap() {
+    return IsMapWithSize.anEmptyMap();
   }
 
   /**
@@ -811,8 +867,8 @@ public class Matchers {
    * @param sizeMatcher
    *     a matcher for the size of an examined {@link java.util.Collection}
    */
-  public static <E> su.pernova.matchers.Matcher<java.util.Collection<? extends E>> hasSize(su.pernova.matchers.Matcher<? super java.lang.Integer> sizeMatcher) {
-    return su.pernova.matchers.collection.IsCollectionWithSize.hasSize(sizeMatcher);
+  public static <E> Matcher<Collection<? extends E>> hasSize(Matcher<? super Integer> sizeMatcher) {
+    return IsCollectionWithSize.hasSize(sizeMatcher);
   }
 
   /**
@@ -824,8 +880,8 @@ public class Matchers {
    * @param size
    *     the expected size of an examined {@link java.util.Collection}
    */
-  public static <E> su.pernova.matchers.Matcher<java.util.Collection<? extends E>> hasSize(int size) {
-    return su.pernova.matchers.collection.IsCollectionWithSize.hasSize(size);
+  public static <E> Matcher<Collection<? extends E>> hasSize(int size) {
+    return IsCollectionWithSize.hasSize(size);
   }
 
   /**
@@ -834,8 +890,8 @@ public class Matchers {
    * For example:
    * <pre>assertThat(new ArrayList&lt;String&gt;(), is(empty()))</pre>
    */
-  public static <E> su.pernova.matchers.Matcher<java.util.Collection<? extends E>> empty() {
-    return su.pernova.matchers.collection.IsEmptyCollection.empty();
+  public static <E> Matcher<Collection<? extends E>> empty() {
+    return IsEmptyCollection.empty();
   }
 
   /**
@@ -847,8 +903,8 @@ public class Matchers {
    * @param unusedToForceReturnType
    *     the type of the collection's content
    */
-  public static <E> su.pernova.matchers.Matcher<java.util.Collection<E>> emptyCollectionOf(java.lang.Class<E> unusedToForceReturnType) {
-    return su.pernova.matchers.collection.IsEmptyCollection.emptyCollectionOf(unusedToForceReturnType);
+  public static <E> Matcher<Collection<E>> emptyCollectionOf(Class<E> unusedToForceReturnType) {
+    return IsEmptyCollection.emptyCollectionOf(unusedToForceReturnType);
   }
 
   /**
@@ -856,8 +912,8 @@ public class Matchers {
    * For example:
    * <pre>assertThat(new ArrayList&lt;String&gt;(), is(emptyIterable()))</pre>
    */
-  public static <E> su.pernova.matchers.Matcher<java.lang.Iterable<? extends E>> emptyIterable() {
-    return su.pernova.matchers.collection.IsEmptyIterable.emptyIterable();
+  public static <E> Matcher<Iterable<? extends E>> emptyIterable() {
+    return IsEmptyIterable.emptyIterable();
   }
 
   /**
@@ -868,8 +924,8 @@ public class Matchers {
    * @param unusedToForceReturnType
    *     the type of the iterable's content
    */
-  public static <E> su.pernova.matchers.Matcher<java.lang.Iterable<E>> emptyIterableOf(java.lang.Class<E> unusedToForceReturnType) {
-    return su.pernova.matchers.collection.IsEmptyIterable.emptyIterableOf(unusedToForceReturnType);
+  public static <E> Matcher<Iterable<E>> emptyIterableOf(Class<E> unusedToForceReturnType) {
+    return IsEmptyIterable.emptyIterableOf(unusedToForceReturnType);
   }
 
   /**
@@ -884,8 +940,8 @@ public class Matchers {
    *     the items that must equal the items provided by an examined {@link Iterable}
    */
   @SafeVarargs
-  public static <E> su.pernova.matchers.Matcher<java.lang.Iterable<? extends E>> contains(E... items) {
-    return su.pernova.matchers.collection.IsIterableContainingInOrder.contains(items);
+  public static <E> Matcher<Iterable<? extends E>> contains(E... items) {
+    return IsIterableContainingInOrder.contains(items);
   }
 
   /**
@@ -899,8 +955,8 @@ public class Matchers {
    *     the matcher that must be satisfied by the single item provided by an
    *     examined {@link Iterable}
    */
-  public static <E> su.pernova.matchers.Matcher<java.lang.Iterable<? extends E>> contains(su.pernova.matchers.Matcher<? super E> itemMatcher) {
-    return su.pernova.matchers.collection.IsIterableContainingInOrder.contains(itemMatcher);
+  public static <E> Matcher<Iterable<? extends E>> contains(Matcher<? super E> itemMatcher) {
+    return IsIterableContainingInOrder.contains(itemMatcher);
   }
 
   /**
@@ -915,8 +971,8 @@ public class Matchers {
    *     the matchers that must be satisfied by the items provided by an examined {@link Iterable}
    */
   @SafeVarargs
-  public static <E> su.pernova.matchers.Matcher<java.lang.Iterable<? extends E>> contains(su.pernova.matchers.Matcher<? super E>... itemMatchers) {
-    return su.pernova.matchers.collection.IsIterableContainingInOrder.contains(itemMatchers);
+  public static <E> Matcher<Iterable<? extends E>> contains(Matcher<? super E>... itemMatchers) {
+    return IsIterableContainingInOrder.contains(itemMatchers);
   }
 
   /**
@@ -931,8 +987,8 @@ public class Matchers {
    *     a list of matchers, each of which must be satisfied by the corresponding item provided by
    *     an examined {@link Iterable}
    */
-  public static <E> su.pernova.matchers.Matcher<java.lang.Iterable<? extends E>> contains(java.util.List<su.pernova.matchers.Matcher<? super E>> itemMatchers) {
-    return su.pernova.matchers.collection.IsIterableContainingInOrder.contains(itemMatchers);
+  public static <E> Matcher<Iterable<? extends E>> contains(List<Matcher<? super E>> itemMatchers) {
+    return IsIterableContainingInOrder.contains(itemMatchers);
   }
 
   /**
@@ -956,8 +1012,8 @@ public class Matchers {
    *     a list of matchers, each of which must be satisfied by an item provided by an examined {@link Iterable}
    */
   @SafeVarargs
-  public static <T> su.pernova.matchers.Matcher<java.lang.Iterable<? extends T>> containsInAnyOrder(su.pernova.matchers.Matcher<? super T>... itemMatchers) {
-    return su.pernova.matchers.collection.IsIterableContainingInAnyOrder.containsInAnyOrder(itemMatchers);
+  public static <T> Matcher<Iterable<? extends T>> containsInAnyOrder(Matcher<? super T>... itemMatchers) {
+    return IsIterableContainingInAnyOrder.containsInAnyOrder(itemMatchers);
   }
 
   /**
@@ -981,8 +1037,8 @@ public class Matchers {
    *     the items that must equal the items provided by an examined {@link Iterable} in any order
    */
   @SafeVarargs
-  public static <T> su.pernova.matchers.Matcher<java.lang.Iterable<? extends T>> containsInAnyOrder(T... items) {
-    return su.pernova.matchers.collection.IsIterableContainingInAnyOrder.containsInAnyOrder(items);
+  public static <T> Matcher<Iterable<? extends T>> containsInAnyOrder(T... items) {
+    return IsIterableContainingInAnyOrder.containsInAnyOrder(items);
   }
 
   /**
@@ -1003,8 +1059,8 @@ public class Matchers {
    * @param itemMatchers
    *     a list of matchers, each of which must be satisfied by an item provided by an examined {@link Iterable}
    */
-  public static <T> su.pernova.matchers.Matcher<java.lang.Iterable<? extends T>> containsInAnyOrder(java.util.Collection<su.pernova.matchers.Matcher<? super T>> itemMatchers) {
-    return su.pernova.matchers.collection.IsIterableContainingInAnyOrder.containsInAnyOrder(itemMatchers);
+  public static <T> Matcher<Iterable<? extends T>> containsInAnyOrder(Collection<Matcher<? super T>> itemMatchers) {
+    return IsIterableContainingInAnyOrder.containsInAnyOrder(itemMatchers);
   }
 
   /**
@@ -1018,8 +1074,8 @@ public class Matchers {
    *     the items that must be contained within items provided by an examined {@link Iterable} in the same relative order
    */
   @SafeVarargs
-  public static <E> su.pernova.matchers.Matcher<java.lang.Iterable<? extends E>> containsInRelativeOrder(E... items) {
-    return su.pernova.matchers.collection.IsIterableContainingInRelativeOrder.containsInRelativeOrder(items);
+  public static <E> Matcher<Iterable<? extends E>> containsInRelativeOrder(E... items) {
+    return IsIterableContainingInRelativeOrder.containsInRelativeOrder(items);
   }
 
   /**
@@ -1033,8 +1089,8 @@ public class Matchers {
    *     the matchers that must be satisfied by the items provided by an examined {@link Iterable} in the same relative order
    */
   @SafeVarargs
-  public static <E> su.pernova.matchers.Matcher<java.lang.Iterable<? extends E>> containsInRelativeOrder(su.pernova.matchers.Matcher<? super E>... itemMatchers) {
-    return su.pernova.matchers.collection.IsIterableContainingInRelativeOrder.containsInRelativeOrder(itemMatchers);
+  public static <E> Matcher<Iterable<? extends E>> containsInRelativeOrder(Matcher<? super E>... itemMatchers) {
+    return IsIterableContainingInRelativeOrder.containsInRelativeOrder(itemMatchers);
   }
 
   /**
@@ -1048,8 +1104,8 @@ public class Matchers {
    *     a list of matchers, each of which must be satisfied by the items provided by
    *     an examined {@link Iterable} in the same relative order
    */
-  public static <E> su.pernova.matchers.Matcher<java.lang.Iterable<? extends E>> containsInRelativeOrder(java.util.List<su.pernova.matchers.Matcher<? super E>> itemMatchers) {
-    return su.pernova.matchers.collection.IsIterableContainingInRelativeOrder.containsInRelativeOrder(itemMatchers);
+  public static <E> Matcher<Iterable<? extends E>> containsInRelativeOrder(List<Matcher<? super E>> itemMatchers) {
+    return IsIterableContainingInRelativeOrder.containsInRelativeOrder(itemMatchers);
   }
 
   /**
@@ -1062,8 +1118,8 @@ public class Matchers {
    * @param sizeMatcher
    *     a matcher for the number of items that should be yielded by an examined {@link Iterable}
    */
-  public static <E> su.pernova.matchers.Matcher<java.lang.Iterable<E>> iterableWithSize(su.pernova.matchers.Matcher<? super java.lang.Integer> sizeMatcher) {
-    return su.pernova.matchers.collection.IsIterableWithSize.iterableWithSize(sizeMatcher);
+  public static <E> Matcher<Iterable<E>> iterableWithSize(Matcher<? super Integer> sizeMatcher) {
+    return IsIterableWithSize.iterableWithSize(sizeMatcher);
   }
 
   /**
@@ -1076,8 +1132,8 @@ public class Matchers {
    * @param size
    *     the number of items that should be yielded by an examined {@link Iterable}
    */
-  public static <E> su.pernova.matchers.Matcher<java.lang.Iterable<E>> iterableWithSize(int size) {
-    return su.pernova.matchers.collection.IsIterableWithSize.iterableWithSize(size);
+  public static <E> Matcher<Iterable<E>> iterableWithSize(int size) {
+    return IsIterableWithSize.iterableWithSize(size);
   }
 
   /**
@@ -1092,8 +1148,8 @@ public class Matchers {
    * @param valueMatcher
    *     the value matcher that, in combination with the keyMatcher, must be satisfied by at least one entry
    */
-  public static <K, V> su.pernova.matchers.Matcher<java.util.Map<? extends K,? extends V>> hasEntry(su.pernova.matchers.Matcher<? super K> keyMatcher, su.pernova.matchers.Matcher<? super V> valueMatcher) {
-    return su.pernova.matchers.collection.IsMapContaining.hasEntry(keyMatcher, valueMatcher);
+  public static <K, V> Matcher<Map<? extends K,? extends V>> hasEntry(Matcher<? super K> keyMatcher, Matcher<? super V> valueMatcher) {
+    return IsMapContaining.hasEntry(keyMatcher, valueMatcher);
   }
 
   /**
@@ -1108,8 +1164,8 @@ public class Matchers {
    * @param value
    *     the value that, in combination with the key, must be describe at least one entry
    */
-  public static <K, V> su.pernova.matchers.Matcher<java.util.Map<? extends K,? extends V>> hasEntry(K key, V value) {
-    return su.pernova.matchers.collection.IsMapContaining.hasEntry(key, value);
+  public static <K, V> Matcher<Map<? extends K,? extends V>> hasEntry(K key, V value) {
+    return IsMapContaining.hasEntry(key, value);
   }
 
   /**
@@ -1121,8 +1177,8 @@ public class Matchers {
    * @param keyMatcher
    *     the matcher that must be satisfied by at least one key
    */
-  public static <K> su.pernova.matchers.Matcher<java.util.Map<? extends K,?>> hasKey(su.pernova.matchers.Matcher<? super K> keyMatcher) {
-    return su.pernova.matchers.collection.IsMapContaining.hasKey(keyMatcher);
+  public static <K> Matcher<Map<? extends K,?>> hasKey(Matcher<? super K> keyMatcher) {
+    return IsMapContaining.hasKey(keyMatcher);
   }
 
   /**
@@ -1134,8 +1190,8 @@ public class Matchers {
    * @param key
    *     the key that satisfying maps must contain
    */
-  public static <K> su.pernova.matchers.Matcher<java.util.Map<? extends K,?>> hasKey(K key) {
-    return su.pernova.matchers.collection.IsMapContaining.hasKey(key);
+  public static <K> Matcher<Map<? extends K,?>> hasKey(K key) {
+    return IsMapContaining.hasKey(key);
   }
 
   /**
@@ -1147,8 +1203,8 @@ public class Matchers {
    * @param valueMatcher
    *     the matcher that must be satisfied by at least one value
    */
-  public static <V> su.pernova.matchers.Matcher<java.util.Map<?,? extends V>> hasValue(su.pernova.matchers.Matcher<? super V> valueMatcher) {
-    return su.pernova.matchers.collection.IsMapContaining.hasValue(valueMatcher);
+  public static <V> Matcher<Map<?,? extends V>> hasValue(Matcher<? super V> valueMatcher) {
+    return IsMapContaining.hasValue(valueMatcher);
   }
 
   /**
@@ -1160,8 +1216,8 @@ public class Matchers {
    * @param value
    *     the value that satisfying maps must contain
    */
-  public static <V> su.pernova.matchers.Matcher<java.util.Map<?,? extends V>> hasValue(V value) {
-    return su.pernova.matchers.collection.IsMapContaining.hasValue(value);
+  public static <V> Matcher<Map<?,? extends V>> hasValue(V value) {
+    return IsMapContaining.hasValue(value);
   }
 
   /**
@@ -1173,8 +1229,8 @@ public class Matchers {
    * @param collection
    *     the collection in which matching items must be found
    */
-  public static <T> su.pernova.matchers.Matcher<T> in(java.util.Collection<T> collection) {
-    return su.pernova.matchers.collection.IsIn.in(collection);
+  public static <T> Matcher<T> in(Collection<T> collection) {
+    return IsIn.in(collection);
   }
 
   /**
@@ -1186,8 +1242,8 @@ public class Matchers {
    * @param elements
    *     the array in which matching items must be found
    */
-  public static <T> su.pernova.matchers.Matcher<T> in(T[] elements) {
-    return su.pernova.matchers.collection.IsIn.in(elements);
+  public static <T> Matcher<T> in(T[] elements) {
+    return IsIn.in(elements);
   }
 
   /**
@@ -1201,8 +1257,8 @@ public class Matchers {
    *     the collection in which matching items must be found
    */
   @SuppressWarnings("deprecation")
-  public static <T> su.pernova.matchers.Matcher<T> isIn(java.util.Collection<T> collection) {
-    return su.pernova.matchers.collection.IsIn.isIn(collection);
+  public static <T> Matcher<T> isIn(Collection<T> collection) {
+    return IsIn.isIn(collection);
   }
 
   /**
@@ -1216,8 +1272,8 @@ public class Matchers {
    *     the array in which matching items must be found
    */
   @SuppressWarnings("deprecation")
-  public static <T> su.pernova.matchers.Matcher<T> isIn(T[] elements) {
-    return su.pernova.matchers.collection.IsIn.isIn(elements);
+  public static <T> Matcher<T> isIn(T[] elements) {
+    return IsIn.isIn(elements);
   }
 
   /**
@@ -1232,8 +1288,8 @@ public class Matchers {
    */
   @SuppressWarnings("deprecation")
   @SafeVarargs
-  public static <T> su.pernova.matchers.Matcher<T> isOneOf(T... elements) {
-    return su.pernova.matchers.collection.IsIn.isOneOf(elements);
+  public static <T> Matcher<T> isOneOf(T... elements) {
+    return IsIn.isOneOf(elements);
   }
 
   /**
@@ -1246,8 +1302,8 @@ public class Matchers {
    *     the elements amongst which matching items will be found
    */
   @SafeVarargs
-  public static <T> su.pernova.matchers.Matcher<T> oneOf(T... elements) {
-    return su.pernova.matchers.collection.IsIn.oneOf(elements);
+  public static <T> Matcher<T> oneOf(T... elements) {
+    return IsIn.oneOf(elements);
   }
 
   /**
@@ -1261,8 +1317,8 @@ public class Matchers {
    * @param error
    *     the delta (+/-) within which matches will be allowed
    */
-  public static su.pernova.matchers.Matcher<java.lang.Double> closeTo(double operand, double error) {
-    return su.pernova.matchers.number.IsCloseTo.closeTo(operand, error);
+  public static Matcher<Double> closeTo(double operand, double error) {
+    return IsCloseTo.closeTo(operand, error);
   }
 
   /**
@@ -1270,14 +1326,14 @@ public class Matchers {
    * For example:
    * <pre>assertThat(Double.NaN, is(notANumber()))</pre>
    */
-  public static su.pernova.matchers.Matcher<java.lang.Double> notANumber() {
-    return su.pernova.matchers.number.IsNaN.notANumber();
+  public static Matcher<Double> notANumber() {
+    return IsNaN.notANumber();
   }
 
   /**
-   * Creates a matcher of {@link java.math.BigDecimal}s that matches when an examined BigDecimal is equal
+   * Creates a matcher of {@link BigDecimal}s that matches when an examined BigDecimal is equal
    * to the specified <code>operand</code>, within a range of +/- <code>error</code>. The comparison for equality
-   * is done by BigDecimals {@link java.math.BigDecimal#compareTo(java.math.BigDecimal)} method.
+   * is done by BigDecimals {@link BigDecimal#compareTo(BigDecimal)} method.
    * For example:
    * <pre>assertThat(new BigDecimal("1.03"), is(closeTo(new BigDecimal("1.0"), new BigDecimal("0.03"))))</pre>
    * 
@@ -1286,8 +1342,8 @@ public class Matchers {
    * @param error
    *     the delta (+/-) within which matches will be allowed
    */
-  public static su.pernova.matchers.Matcher<java.math.BigDecimal> closeTo(java.math.BigDecimal operand, java.math.BigDecimal error) {
-    return su.pernova.matchers.number.BigDecimalCloseTo.closeTo(operand, error);
+  public static Matcher<BigDecimal> closeTo(BigDecimal operand, BigDecimal error) {
+    return BigDecimalCloseTo.closeTo(operand, error);
   }
 
   /**
@@ -1299,8 +1355,8 @@ public class Matchers {
    * 
    * @param value the value which, when passed to the compareTo method of the examined object, should return zero
    */
-  public static <T extends java.lang.Comparable<T>> su.pernova.matchers.Matcher<T> comparesEqualTo(T value) {
-    return su.pernova.matchers.number.OrderingComparison.comparesEqualTo(value);
+  public static <T extends Comparable<T>> Matcher<T> comparesEqualTo(T value) {
+    return OrderingComparison.comparesEqualTo(value);
   }
 
   /**
@@ -1313,8 +1369,8 @@ public class Matchers {
    * @param value the value which, when passed to the compareTo method of the examined object, should return greater
    *              than zero
    */
-  public static <T extends java.lang.Comparable<T>> su.pernova.matchers.Matcher<T> greaterThan(T value) {
-    return su.pernova.matchers.number.OrderingComparison.greaterThan(value);
+  public static <T extends Comparable<T>> Matcher<T> greaterThan(T value) {
+    return OrderingComparison.greaterThan(value);
   }
 
   /**
@@ -1327,8 +1383,8 @@ public class Matchers {
    * @param value the value which, when passed to the compareTo method of the examined object, should return greater
    *              than or equal to zero
    */
-  public static <T extends java.lang.Comparable<T>> su.pernova.matchers.Matcher<T> greaterThanOrEqualTo(T value) {
-    return su.pernova.matchers.number.OrderingComparison.greaterThanOrEqualTo(value);
+  public static <T extends Comparable<T>> Matcher<T> greaterThanOrEqualTo(T value) {
+    return OrderingComparison.greaterThanOrEqualTo(value);
   }
 
   /**
@@ -1341,8 +1397,8 @@ public class Matchers {
    * @param value the value which, when passed to the compareTo method of the examined object, should return less
    *              than zero
    */
-  public static <T extends java.lang.Comparable<T>> su.pernova.matchers.Matcher<T> lessThan(T value) {
-    return su.pernova.matchers.number.OrderingComparison.lessThan(value);
+  public static <T extends Comparable<T>> Matcher<T> lessThan(T value) {
+    return OrderingComparison.lessThan(value);
   }
 
   /**
@@ -1355,8 +1411,8 @@ public class Matchers {
    * @param value the value which, when passed to the compareTo method of the examined object, should return less
    *              than or equal to zero
    */
-  public static <T extends java.lang.Comparable<T>> su.pernova.matchers.Matcher<T> lessThanOrEqualTo(T value) {
-    return su.pernova.matchers.number.OrderingComparison.lessThanOrEqualTo(value);
+  public static <T extends Comparable<T>> Matcher<T> lessThanOrEqualTo(T value) {
+    return OrderingComparison.lessThanOrEqualTo(value);
   }
 
   /**
@@ -1368,8 +1424,8 @@ public class Matchers {
    * @param expectedString
    *     the expected value of matched strings
    */
-  public static Matcher<java.lang.String> equalToIgnoringCase(java.lang.String expectedString) {
-    return su.pernova.matchers.text.IsEqualIgnoringCase.equalToIgnoringCase(expectedString);
+  public static Matcher<String> equalToIgnoringCase(String expectedString) {
+    return IsEqualIgnoringCase.equalToIgnoringCase(expectedString);
   }
 
   /**
@@ -1377,7 +1433,7 @@ public class Matchers {
    * @param expectedString
    *     the expected value of matched strings
    */
-  public static Matcher<java.lang.String> equalToIgnoringWhiteSpace(java.lang.String expectedString) {
+  public static Matcher<String> equalToIgnoringWhiteSpace(String expectedString) {
     return equalToCompressingWhiteSpace(expectedString);
   }
 
@@ -1395,7 +1451,7 @@ public class Matchers {
    * @param expectedString
    *     the expected value of matched strings
    */
-  public static Matcher<java.lang.String> equalToCompressingWhiteSpace(java.lang.String expectedString) {
+  public static Matcher<String> equalToCompressingWhiteSpace(String expectedString) {
     return IsEqualCompressingWhiteSpace.equalToCompressingWhiteSpace(expectedString);
   }
 
@@ -1405,8 +1461,8 @@ public class Matchers {
    * For example:
    * <pre>assertThat(((String)null), is(emptyOrNullString()))</pre>
    */
-  public static Matcher<java.lang.String> emptyOrNullString() {
-    return su.pernova.matchers.text.IsEmptyString.emptyOrNullString();
+  public static Matcher<String> emptyOrNullString() {
+    return IsEmptyString.emptyOrNullString();
   }
 
   /**
@@ -1414,8 +1470,8 @@ public class Matchers {
    * For example:
    * <pre>assertThat("", is(emptyString()))</pre>
    */
-  public static Matcher<java.lang.String> emptyString() {
-    return su.pernova.matchers.text.IsEmptyString.emptyString();
+  public static Matcher<String> emptyString() {
+    return IsEmptyString.emptyString();
   }
 
   /**
@@ -1427,8 +1483,8 @@ public class Matchers {
    * @deprecated use is(emptyOrNullString()) instead
    */
   @SuppressWarnings("deprecation")
-  public static Matcher<java.lang.String> isEmptyOrNullString() {
-    return su.pernova.matchers.text.IsEmptyString.isEmptyOrNullString();
+  public static Matcher<String> isEmptyOrNullString() {
+    return IsEmptyString.isEmptyOrNullString();
   }
 
   /**
@@ -1439,8 +1495,8 @@ public class Matchers {
    * @deprecated use is(emptyString()) instead
    */
   @SuppressWarnings("deprecation")
-  public static Matcher<java.lang.String> isEmptyString() {
-    return su.pernova.matchers.text.IsEmptyString.isEmptyString();
+  public static Matcher<String> isEmptyString() {
+    return IsEmptyString.isEmptyString();
   }
 
   /**
@@ -1449,8 +1505,8 @@ public class Matchers {
    * For example:
    * <pre>assertThat(((String)null), is(blankOrNullString()))</pre>
    */
-  public static Matcher<java.lang.String> blankOrNullString() {
-    return su.pernova.matchers.text.IsBlankString.blankOrNullString();
+  public static Matcher<String> blankOrNullString() {
+    return IsBlankString.blankOrNullString();
   }
 
   /**
@@ -1459,24 +1515,24 @@ public class Matchers {
    * For example:
    * <pre>assertThat("  ", is(blankString()))</pre>
    */
-  public static Matcher<java.lang.String> blankString() {
-    return su.pernova.matchers.text.IsBlankString.blankString();
+  public static Matcher<String> blankString() {
+    return IsBlankString.blankString();
   }
 
   /**
-   * Creates a matcher of {@link java.lang.String} that matches when the examined string
-   * exactly matches the given {@link java.util.regex.Pattern}.
+   * Creates a matcher of {@link String} that matches when the examined string
+   * exactly matches the given {@link Pattern}.
    */
-  public static Matcher<java.lang.String> matchesPattern(java.util.regex.Pattern pattern) {
-    return su.pernova.matchers.text.MatchesPattern.matchesPattern(pattern);
+  public static Matcher<String> matchesPattern(Pattern pattern) {
+    return MatchesPattern.matchesPattern(pattern);
   }
 
   /**
-   * Creates a matcher of {@link java.lang.String} that matches when the examined string
-   * exactly matches the given regular expression, treated as a {@link java.util.regex.Pattern}.
+   * Creates a matcher of {@link String} that matches when the examined string
+   * exactly matches the given regular expression, treated as a {@link Pattern}.
    */
-  public static Matcher<java.lang.String> matchesPattern(java.lang.String regex) {
-    return su.pernova.matchers.text.MatchesPattern.matchesPattern(regex);
+  public static Matcher<String> matchesPattern(String regex) {
+    return MatchesPattern.matchesPattern(regex);
   }
 
   /**
@@ -1489,8 +1545,8 @@ public class Matchers {
    * @param substrings
    *     the substrings that must be contained within matching strings
    */
-  public static Matcher<java.lang.String> stringContainsInOrder(java.lang.Iterable<java.lang.String> substrings) {
-    return su.pernova.matchers.text.StringContainsInOrder.stringContainsInOrder(substrings);
+  public static Matcher<String> stringContainsInOrder(Iterable<String> substrings) {
+    return StringContainsInOrder.stringContainsInOrder(substrings);
   }
 
   /**
@@ -1503,8 +1559,8 @@ public class Matchers {
    * @param substrings
    *     the substrings that must be contained within matching strings
    */
-  public static Matcher<java.lang.String> stringContainsInOrder(java.lang.String... substrings) {
-    return su.pernova.matchers.text.StringContainsInOrder.stringContainsInOrder(substrings);
+  public static Matcher<String> stringContainsInOrder(String... substrings) {
+    return StringContainsInOrder.stringContainsInOrder(substrings);
   }
 
     /**
@@ -1519,7 +1575,7 @@ public class Matchers {
      * @param length the expected length of the string
      */
     public static Matcher<CharSequence> hasLength(int length) {
-        return su.pernova.matchers.text.CharSequenceLength.hasLength(length);
+        return CharSequenceLength.hasLength(length);
     }
 
   /**
@@ -1531,8 +1587,8 @@ public class Matchers {
    * @param toStringMatcher
    *     the matcher used to verify the toString result
    */
-  public static <T> su.pernova.matchers.Matcher<T> hasToString(su.pernova.matchers.Matcher<? super java.lang.String> toStringMatcher) {
-    return su.pernova.matchers.object.HasToString.hasToString(toStringMatcher);
+  public static <T> Matcher<T> hasToString(Matcher<? super String> toStringMatcher) {
+    return HasToString.hasToString(toStringMatcher);
   }
 
   /**
@@ -1544,8 +1600,8 @@ public class Matchers {
    * @param expectedToString
    *     the expected toString result
    */
-  public static <T> su.pernova.matchers.Matcher<T> hasToString(java.lang.String expectedToString) {
-    return su.pernova.matchers.object.HasToString.hasToString(expectedToString);
+  public static <T> Matcher<T> hasToString(String expectedToString) {
+    return HasToString.hasToString(expectedToString);
   }
 
   /**
@@ -1557,12 +1613,12 @@ public class Matchers {
    * @param baseType
    *     the base class to examine classes against
    */
-  public static <T> su.pernova.matchers.Matcher<java.lang.Class<?>> typeCompatibleWith(java.lang.Class<T> baseType) {
-    return su.pernova.matchers.object.IsCompatibleType.typeCompatibleWith(baseType);
+  public static <T> Matcher<Class<?>> typeCompatibleWith(Class<T> baseType) {
+    return IsCompatibleType.typeCompatibleWith(baseType);
   }
 
   /**
-   * Creates a matcher of {@link java.util.EventObject} that matches any object
+   * Creates a matcher of {@link EventObject} that matches any object
    * derived from <var>eventClass</var> announced by <var>source</var>.
    * For example:
    * <pre>assertThat(myEvent, is(eventFrom(PropertyChangeEvent.class, myBean)))</pre>
@@ -1572,12 +1628,12 @@ public class Matchers {
    * @param source
    *     the source of the event
    */
-  public static su.pernova.matchers.Matcher<java.util.EventObject> eventFrom(java.lang.Class<? extends java.util.EventObject> eventClass, java.lang.Object source) {
-    return su.pernova.matchers.object.IsEventFrom.eventFrom(eventClass, source);
+  public static Matcher<EventObject> eventFrom(Class<? extends EventObject> eventClass, Object source) {
+    return IsEventFrom.eventFrom(eventClass, source);
   }
 
   /**
-   * Creates a matcher of {@link java.util.EventObject} that matches any EventObject
+   * Creates a matcher of {@link EventObject} that matches any EventObject
    * announced by <var>source</var>.
    * For example:
    * <pre>assertThat(myEvent, is(eventFrom(myBean)))</pre>
@@ -1585,8 +1641,8 @@ public class Matchers {
    * @param source
    *     the source of the event
    */
-  public static su.pernova.matchers.Matcher<java.util.EventObject> eventFrom(java.lang.Object source) {
-    return su.pernova.matchers.object.IsEventFrom.eventFrom(source);
+  public static Matcher<EventObject> eventFrom(Object source) {
+    return IsEventFrom.eventFrom(source);
   }
 
   /**
@@ -1598,8 +1654,8 @@ public class Matchers {
    * @param propertyName
    *     the name of the JavaBean property that examined beans should possess
    */
-  public static <T> su.pernova.matchers.Matcher<T> hasProperty(java.lang.String propertyName) {
-    return su.pernova.matchers.beans.HasProperty.hasProperty(propertyName);
+  public static <T> Matcher<T> hasProperty(String propertyName) {
+    return HasProperty.hasProperty(propertyName);
   }
 
   /**
@@ -1613,8 +1669,8 @@ public class Matchers {
    * @param valueMatcher
    *     a matcher for the value of the specified property of the examined bean
    */
-  public static <T> su.pernova.matchers.Matcher<T> hasProperty(java.lang.String propertyName, su.pernova.matchers.Matcher<?> valueMatcher) {
-    return su.pernova.matchers.beans.HasPropertyWithValue.hasProperty(propertyName, valueMatcher);
+  public static <T> Matcher<T> hasProperty(String propertyName, Matcher<?> valueMatcher) {
+    return HasPropertyWithValue.hasProperty(propertyName, valueMatcher);
   }
 
   /**
@@ -1633,11 +1689,11 @@ public class Matchers {
    *     do not check any of these named properties.
    */
   public static <B> Matcher<B> samePropertyValuesAs(B expectedBean, String... ignoredProperties) {
-    return su.pernova.matchers.beans.SamePropertyValuesAs.samePropertyValuesAs(expectedBean, ignoredProperties);
+    return SamePropertyValuesAs.samePropertyValuesAs(expectedBean, ignoredProperties);
   }
 
   /**
-   * Creates a matcher of {@link org.w3c.dom.Node}s that matches when the examined node has a value at the
+   * Creates a matcher of {@link Node}s that matches when the examined node has a value at the
    * specified <code>xPath</code> that satisfies the specified <code>valueMatcher</code>.
    * For example:
    * <pre>assertThat(xml, hasXPath("/root/something[2]/cheese", equalTo("Cheddar")))</pre>
@@ -1647,12 +1703,12 @@ public class Matchers {
    * @param valueMatcher
    *     matcher for the value at the specified xpath
    */
-  public static su.pernova.matchers.Matcher<org.w3c.dom.Node> hasXPath(java.lang.String xPath, Matcher<java.lang.String> valueMatcher) {
-    return su.pernova.matchers.xml.HasXPath.hasXPath(xPath, valueMatcher);
+  public static Matcher<Node> hasXPath(String xPath, Matcher<String> valueMatcher) {
+    return HasXPath.hasXPath(xPath, valueMatcher);
   }
 
   /**
-   * Creates a matcher of {@link org.w3c.dom.Node}s that matches when the examined node has a value at the
+   * Creates a matcher of {@link Node}s that matches when the examined node has a value at the
    * specified <code>xPath</code>, within the specified <code>namespaceContext</code>, that satisfies
    * the specified <code>valueMatcher</code>.
    * For example:
@@ -1665,12 +1721,12 @@ public class Matchers {
    * @param valueMatcher
    *     matcher for the value at the specified xpath
    */
-  public static su.pernova.matchers.Matcher<org.w3c.dom.Node> hasXPath(java.lang.String xPath, javax.xml.namespace.NamespaceContext namespaceContext, Matcher<java.lang.String> valueMatcher) {
-    return su.pernova.matchers.xml.HasXPath.hasXPath(xPath, namespaceContext, valueMatcher);
+  public static Matcher<Node> hasXPath(String xPath, NamespaceContext namespaceContext, Matcher<String> valueMatcher) {
+    return HasXPath.hasXPath(xPath, namespaceContext, valueMatcher);
   }
 
   /**
-   * Creates a matcher of {@link org.w3c.dom.Node}s that matches when the examined node contains a node
+   * Creates a matcher of {@link Node}s that matches when the examined node contains a node
    * at the specified <code>xPath</code>, with any content.
    * For example:
    * <pre>assertThat(xml, hasXPath("/root/something[2]/cheese"))</pre>
@@ -1678,12 +1734,12 @@ public class Matchers {
    * @param xPath
    *     the target xpath
    */
-  public static su.pernova.matchers.Matcher<org.w3c.dom.Node> hasXPath(java.lang.String xPath) {
-    return su.pernova.matchers.xml.HasXPath.hasXPath(xPath);
+  public static Matcher<Node> hasXPath(String xPath) {
+    return HasXPath.hasXPath(xPath);
   }
 
   /**
-   * Creates a matcher of {@link org.w3c.dom.Node}s that matches when the examined node contains a node
+   * Creates a matcher of {@link Node}s that matches when the examined node contains a node
    * at the specified <code>xPath</code> within the specified namespace context, with any content.
    * For example:
    * <pre>assertThat(xml, hasXPath("/root/something[2]/cheese", myNs))</pre>
@@ -1693,8 +1749,8 @@ public class Matchers {
    * @param namespaceContext
    *     the namespace for matching nodes
    */
-  public static su.pernova.matchers.Matcher<org.w3c.dom.Node> hasXPath(java.lang.String xPath, javax.xml.namespace.NamespaceContext namespaceContext) {
-    return su.pernova.matchers.xml.HasXPath.hasXPath(xPath, namespaceContext);
+  public static Matcher<Node> hasXPath(String xPath, NamespaceContext namespaceContext) {
+    return HasXPath.hasXPath(xPath, namespaceContext);
   }
 
 
