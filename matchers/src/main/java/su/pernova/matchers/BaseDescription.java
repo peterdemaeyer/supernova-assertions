@@ -14,7 +14,7 @@ import static java.lang.String.valueOf;
 public abstract class BaseDescription implements Description {
 
     @Override
-    public Description appendText(String text) {
+    public Description appendText(CharSequence text) {
         append(text);
         return this;
     }
@@ -109,7 +109,7 @@ public abstract class BaseDescription implements Description {
      * The default implementation passes every character to {@link #append(char)}.  
      * Override in subclasses to provide an efficient implementation.
      */
-    protected void append(String str) {
+    protected void append(CharSequence str) {
         for (int i = 0; i < str.length(); i++) {
             append(str.charAt(i));
         }

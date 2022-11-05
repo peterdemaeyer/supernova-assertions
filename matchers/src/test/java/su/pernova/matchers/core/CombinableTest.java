@@ -1,12 +1,17 @@
 package su.pernova.matchers.core;
 
-import su.pernova.matchers.Matcher;
+import static su.pernova.matchers.AbstractMatcherTest.assertDescription;
+import static su.pernova.matchers.AbstractMatcherTest.assertDoesNotMatch;
+import static su.pernova.matchers.AbstractMatcherTest.assertMatches;
+import static su.pernova.matchers.AbstractMatcherTest.assertMismatchDescription;
+import static su.pernova.matchers.AbstractMatcherTest.assertNullSafe;
+import static su.pernova.matchers.AbstractMatcherTest.assertUnknownTypeSafe;
+import static su.pernova.matchers.Matchers.not;
+import static su.pernova.matchers.core.IsEqual.equalTo;
+
 import org.junit.jupiter.api.Test;
 
-import static su.pernova.matchers.AbstractMatcherTest.*;
-import static su.pernova.matchers.core.IsEqual.equalTo;
-import static su.pernova.matchers.core.IsNot.not;
-import static su.pernova.matchers.core.IsNull.notNullValue;
+import su.pernova.matchers.Matcher;
 
 public final class CombinableTest {
     private static final CombinableMatcher<Integer> EITHER_3_OR_4 = CombinableMatcher.either(equalTo(3)).or(equalTo(4));
@@ -63,6 +68,6 @@ public final class CombinableTest {
     @Test public void
     picksUpTypeFromLeftHandSideOfExpression() {
         @SuppressWarnings("unused")
-        Matcher<String> matcher = CombinableMatcher.both(equalTo("yellow")).and(notNullValue(String.class));
+        Matcher<String> matcher = CombinableMatcher.both(equalTo("yellow")).and(not(null));
     }
 }

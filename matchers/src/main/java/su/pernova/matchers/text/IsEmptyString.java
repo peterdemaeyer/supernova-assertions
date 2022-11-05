@@ -1,12 +1,13 @@
 
 package su.pernova.matchers.text;
 
+import static su.pernova.matchers.Matchers.is;
+import static su.pernova.matchers.core.AnyOf.anyOf;
+
 import su.pernova.matchers.Description;
 import su.pernova.matchers.Matcher;
 import su.pernova.matchers.TypeSafeMatcher;
-
-import static su.pernova.matchers.core.AnyOf.anyOf;
-import static su.pernova.matchers.core.IsNull.nullValue;
+import su.pernova.matchers.internal.core.SameAs;
 
 /**
  * Matches empty Strings (and null).
@@ -14,7 +15,7 @@ import static su.pernova.matchers.core.IsNull.nullValue;
 public final class IsEmptyString extends TypeSafeMatcher<String> {
     private static final IsEmptyString INSTANCE = new IsEmptyString();
     @SuppressWarnings("unchecked")
-    private static final Matcher<String> NULL_OR_EMPTY_INSTANCE = anyOf(nullValue(), INSTANCE);
+    private static final Matcher<String> NULL_OR_EMPTY_INSTANCE = anyOf(new SameAs<>("", null), INSTANCE);
 
     private IsEmptyString() { }
 

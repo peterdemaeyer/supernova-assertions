@@ -14,13 +14,6 @@
     <properties>
         <jacoco.coverage.minimum>0.37</jacoco.coverage.minimum>
     </properties>
-    <dependencies>
-        <dependency>
-            <groupId>su.pernova</groupId>
-            <artifactId>commons</artifactId>
-            <type>test-jar</type>
-        </dependency>
-    </dependencies>
     <build>
         <plugins>
             <plugin>

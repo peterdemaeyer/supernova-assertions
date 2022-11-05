@@ -15,5 +15,21 @@ In the same spirit as Hamcrest, Supernova Matchers offers common matchers, but a
 
 So, what are Supernova Matchers doing better than Hamcrest?
 * Compiled for Java 1.8+.
-* Correct semantical difference between object identity and object equality.
+* Correct semantic difference between object identity and object equality.
 * ...
+
+# Migration from Hamcrest
+
+| Hamcrest                              | Supernova Matchers       |
+|---------------------------------------|--------------------------|
+| `org.hamcrest.`                       | `su.pernova.matchers.`   |
+| `CoreMatchers.nullValue()`            | `Matchers.is(null)`      |
+| `CoreMatchers.notNullValue()`         | `Matchers.is(not(null))` |
+| `CoreMatchers.sameInstance(expected)` | `Matchers.is(expected)`  |
+
+# Migration from JUnit 5
+
+| JUnit 5                           | Supernova Matchers                              |
+|-----------------------------------|-------------------------------------------------|
+| `assertSame(expected, actual)`    | `assertThat(actual, is(sameAs(expected)))`      |
+| `assertNotSame(expected, actual)` | `assertThat(actual, is(not(sameAs(expected))))` |

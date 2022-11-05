@@ -36,7 +36,7 @@ public class StringDescription extends BaseDescription {
     }
 
     @Override
-    protected void append(String str) {
+    protected void append(CharSequence str) {
         try {
             out.append(str);
         } catch (IOException e) {

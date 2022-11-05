@@ -15,7 +15,7 @@ public interface Description {
     /**
      * Appends some plain text to the description.
      */
-    Description appendText(String text);
+    Description appendText(CharSequence text);
 
     /**
      * Appends the description of a {@link SelfDescribing} value to this description.
@@ -60,7 +60,7 @@ public interface Description {
       }
 
       @Override
-      public Description appendText(String text) {
+      public Description appendText(CharSequence text) {
         return this;
       }
 
