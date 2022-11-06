@@ -45,7 +45,7 @@ import su.pernova.matchers.internal.core.Not;
 import su.pernova.matchers.internal.core.SameAs;
 import su.pernova.matchers.number.BigDecimalCloseTo;
 import su.pernova.matchers.number.IsCloseTo;
-import su.pernova.matchers.number.IsNaN;
+import su.pernova.matchers.number.NumberMatchers;
 import su.pernova.matchers.number.OrderingComparison;
 import su.pernova.matchers.object.HasToString;
 import su.pernova.matchers.object.IsCompatibleType;
@@ -59,7 +59,7 @@ import su.pernova.matchers.text.MatchesPattern;
 import su.pernova.matchers.text.StringContainsInOrder;
 import su.pernova.matchers.xml.HasXPath;
 
-public class Matchers {
+public class Matchers implements NumberMatchers {
 
 	private Matchers() {
 		// Prevent instantiation.
@@ -1214,15 +1214,6 @@ public class Matchers {
 	 */
 	public static Matcher<Double> closeTo(double operand, double error) {
 		return IsCloseTo.closeTo(operand, error);
-	}
-
-	/**
-	 * Creates a matcher of {@link Double}s that matches when an examined double is not a number.
-	 * For example:
-	 * <pre>assertThat(Double.NaN, is(notANumber()))</pre>
-	 */
-	public static Matcher<Double> notANumber() {
-		return IsNaN.notANumber();
 	}
 
 	/**

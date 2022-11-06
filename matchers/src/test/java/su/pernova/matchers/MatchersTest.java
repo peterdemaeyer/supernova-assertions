@@ -1,5 +1,6 @@
 package su.pernova.matchers;
 
+import static java.lang.Double.NaN;
 import static java.lang.System.lineSeparator;
 import static java.util.Arrays.stream;
 import static java.util.concurrent.TimeUnit.MINUTES;
@@ -11,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static su.pernova.matchers.MatcherAssertions.assertThat;
 import static su.pernova.matchers.Matchers.is;
+import static su.pernova.matchers.Matchers.sameAs;
 
 import java.util.stream.Stream;
 
@@ -60,6 +62,19 @@ class MatchersTest {
 		assertEquals(expectedMessage("Expected: is \"b\"", "     but: was \"a\""), expectedSame.getMessage());
 		final AssertionError expectedSameNotEqual = assertThrows(AssertionError.class, () -> assertThat(value, is(equalValue)));
 		assertEquals(expectedMessage("Expected: is \"a\"", "     but: was \"a\""), expectedSameNotEqual.getMessage());
+	}
+
+	@Test
+	@SuppressWarnings("StringOperationCanBeSimplified")
+	void sameAsMatchesSameButNotEqualObjects() {
+		String value = new String("a");
+		String equalValue = new String("a");
+		String nonEqualValue = "b";
+		assertDoesNotThrow(() -> assertThat(value, is(sameAs(value))));
+		final AssertionError expectedSame = assertThrows(AssertionError.class, () -> assertThat(value, is(sameAs(nonEqualValue))));
+		assertEquals(expectedMessage("Expected: is same as \"b\"", "     but: was \"a\""), expectedSame.getMessage());
+		final AssertionError expectedSameNotEqual = assertThrows(AssertionError.class, () -> assertThat(value, is(sameAs(equalValue))));
+		assertEquals(expectedMessage("Expected: is same as \"a\"", "     but: was \"a\""), expectedSameNotEqual.getMessage());
 	}
 
 	private static String expectedMessage(String... lines) {

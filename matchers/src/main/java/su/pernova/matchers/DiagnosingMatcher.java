@@ -9,7 +9,7 @@ public abstract class DiagnosingMatcher<T> extends Matcher<T> {
 
     @Override
     public final boolean matches(Object item) {
-        return matches(item, Description.NONE);
+        return matches(item, Description.NULL);
     }
 
     @Override
