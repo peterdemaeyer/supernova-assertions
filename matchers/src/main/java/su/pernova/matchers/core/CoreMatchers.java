@@ -1,5 +1,6 @@
-package su.pernova.matchers;
+package su.pernova.matchers.core;
 
+import su.pernova.matchers.Matcher;
 import su.pernova.matchers.core.IsIterableContaining;
 
 @SuppressWarnings("UnusedDeclaration")
@@ -10,7 +11,7 @@ public class CoreMatchers {
    * For example:
    * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
    */
-  public static <T> su.pernova.matchers.Matcher<T> allOf(java.lang.Iterable<su.pernova.matchers.Matcher<? super T>> matchers) {
+  public static <T> Matcher<T> allOf(Iterable<Matcher<? super T>> matchers) {
     return su.pernova.matchers.core.AllOf.allOf(matchers);
   }
 
@@ -20,7 +21,7 @@ public class CoreMatchers {
    * <pre>assertThat("myValue", allOf(startsWith("my"), containsString("Val")))</pre>
    */
   @SafeVarargs
-  public static <T> su.pernova.matchers.Matcher<T> allOf(su.pernova.matchers.Matcher<? super T>... matchers) {
+  public static <T> Matcher<T> allOf(Matcher<? super T>... matchers) {
     return su.pernova.matchers.core.AllOf.allOf(matchers);
   }
 
@@ -30,7 +31,7 @@ public class CoreMatchers {
    * For example:
    * <pre>assertThat("myValue", anyOf(startsWith("foo"), containsString("Val")))</pre>
    */
-  public static <T> su.pernova.matchers.core.AnyOf<T> anyOf(java.lang.Iterable<su.pernova.matchers.Matcher<? super T>> matchers) {
+  public static <T> su.pernova.matchers.core.AnyOf<T> anyOf(Iterable<Matcher<? super T>> matchers) {
     return su.pernova.matchers.core.AnyOf.anyOf(matchers);
   }
 
@@ -40,7 +41,7 @@ public class CoreMatchers {
    * <pre>assertThat("myValue", anyOf(startsWith("foo"), containsString("Val")))</pre>
    */
   @SafeVarargs
-  public static <T> su.pernova.matchers.core.AnyOf<T> anyOf(su.pernova.matchers.Matcher<? super T>... matchers) {
+  public static <T> su.pernova.matchers.core.AnyOf<T> anyOf(Matcher<? super T>... matchers) {
     return su.pernova.matchers.core.AnyOf.anyOf(matchers);
   }
 
@@ -75,7 +76,7 @@ public class CoreMatchers {
    * @param values
    *     optional values to insert into the tokenised description
    */
-  public static <T> su.pernova.matchers.Matcher<T> describedAs(java.lang.String description, su.pernova.matchers.Matcher<T> matcher, java.lang.Object... values) {
+  public static <T> Matcher<T> describedAs(java.lang.String description, Matcher<T> matcher, java.lang.Object... values) {
     return su.pernova.matchers.core.DescribedAs.describedAs(description, matcher, values);
   }
 
@@ -101,7 +102,7 @@ public class CoreMatchers {
    * instead of:
    * <pre>assertThat(cheese, equalTo(smelly))</pre>
    */
-  public static <T> su.pernova.matchers.Matcher<T> is(su.pernova.matchers.Matcher<T> matcher) {
+  public static <T> Matcher<T> is(Matcher<T> matcher) {
     return su.pernova.matchers.core.Is.is(matcher);
   }
 
@@ -112,7 +113,7 @@ public class CoreMatchers {
    * instead of:
    * <pre>assertThat(cheese, is(equalTo(smelly)))</pre>
    */
-  public static <T> su.pernova.matchers.Matcher<T> is(T value) {
+  public static <T> Matcher<T> is(T value) {
     return su.pernova.matchers.core.Is.is(value);
   }
 
@@ -123,7 +124,7 @@ public class CoreMatchers {
    * instead of:
    * <pre>assertThat(cheese, is(instanceOf(Cheddar.class)))</pre>
    */
-  public static <T> su.pernova.matchers.Matcher<T> isA(java.lang.Class<T> type) {
+  public static <T> Matcher<T> isA(java.lang.Class<T> type) {
     return su.pernova.matchers.core.Is.isA(type);
   }
 
@@ -156,7 +157,7 @@ public class CoreMatchers {
    * @param itemMatcher
    *     the matcher to apply to items provided by the examined {@link Iterable}
    */
-  public static <T> su.pernova.matchers.Matcher<java.lang.Iterable<? super T>> hasItem(su.pernova.matchers.Matcher<? super T> itemMatcher) {
+  public static <T> su.pernova.matchers.Matcher<java.lang.Iterable<? super T>> hasItem(Matcher<? super T> itemMatcher) {
     return IsIterableContaining.hasItem(itemMatcher);
   }
 
@@ -187,7 +188,7 @@ public class CoreMatchers {
    *     the matchers to apply to items provided by the examined {@link Iterable}
    */
   @SafeVarargs
-  public static <T> su.pernova.matchers.Matcher<java.lang.Iterable<T>> hasItems(su.pernova.matchers.Matcher<? super T>... itemMatchers) {
+  public static <T> su.pernova.matchers.Matcher<java.lang.Iterable<T>> hasItems(Matcher<? super T>... itemMatchers) {
     return IsIterableContaining.hasItems(itemMatchers);
   }
 
@@ -228,7 +229,7 @@ public class CoreMatchers {
    * assertThat(new String[] {"foo", "bar"}, equalTo(new String[] {"foo", "bar"}));
    * </pre>
    */
-  public static <T> su.pernova.matchers.Matcher<T> equalTo(T operand) {
+  public static <T> Matcher<T> equalTo(T operand) {
     return su.pernova.matchers.core.IsEqual.equalTo(operand);
   }
 
@@ -251,7 +252,7 @@ public class CoreMatchers {
    * For example:
    * <pre>assertThat(new Canoe(), instanceOf(Canoe.class));</pre>
    */
-  public static <T> su.pernova.matchers.Matcher<T> any(java.lang.Class<T> type) {
+  public static <T> Matcher<T> any(java.lang.Class<T> type) {
     return su.pernova.matchers.core.IsInstanceOf.any(type);
   }
 
@@ -264,7 +265,7 @@ public class CoreMatchers {
    * For example:
    * <pre>assertThat(new Canoe(), instanceOf(Paddlable.class));</pre>
    */
-  public static <T> su.pernova.matchers.Matcher<T> instanceOf(java.lang.Class<?> type) {
+  public static <T> Matcher<T> instanceOf(java.lang.Class<?> type) {
     return su.pernova.matchers.core.IsInstanceOf.instanceOf(type);
   }
 
@@ -277,7 +278,7 @@ public class CoreMatchers {
    * @param matcher
    *     the matcher whose sense should be inverted
    */
-  public static <T> su.pernova.matchers.Matcher<T> not(su.pernova.matchers.Matcher<T> matcher) {
+  public static <T> Matcher<T> not(Matcher<T> matcher) {
     return su.pernova.matchers.core.IsNot.not(matcher);
   }
 
@@ -291,7 +292,7 @@ public class CoreMatchers {
    * @param value
    *     the value that any examined object should <b>not</b> equal
    */
-  public static <T> su.pernova.matchers.Matcher<T> not(T value) {
+  public static <T> Matcher<T> not(T value) {
     return su.pernova.matchers.core.IsNot.not(value);
   }
 

@@ -3,7 +3,7 @@ package su.pernova.matchers.text;
 import su.pernova.matchers.FeatureMatcher;
 import su.pernova.matchers.Matcher;
 
-import static su.pernova.matchers.CoreMatchers.equalTo;
+import static su.pernova.matchers.core.CoreMatchers.equalTo;
 
 /**
  * @author Marco Leichsenring
