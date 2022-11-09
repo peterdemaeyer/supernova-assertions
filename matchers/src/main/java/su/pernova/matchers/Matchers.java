@@ -10,9 +10,6 @@ import javax.xml.namespace.NamespaceContext;
 
 import org.w3c.dom.Node;
 
-import su.pernova.matchers.beans.HasProperty;
-import su.pernova.matchers.beans.HasPropertyWithValue;
-import su.pernova.matchers.beans.SamePropertyValuesAs;
 import su.pernova.matchers.collection.ArrayMatching;
 import su.pernova.matchers.collection.IsArray;
 import su.pernova.matchers.collection.IsArrayWithSize;
@@ -1491,48 +1488,6 @@ public final class Matchers {
 	 */
 	public static Matcher<EventObject> eventFrom(Object source) {
 		return IsEventFrom.eventFrom(source);
-	}
-
-	/**
-	 * Creates a matcher that matches when the examined object has a JavaBean property
-	 * with the specified name.
-	 * For example:
-	 * <pre>assertThat(myBean, hasProperty("foo"))</pre>
-	 *
-	 * @param propertyName the name of the JavaBean property that examined beans should possess
-	 */
-	public static <T> Matcher<T> hasProperty(String propertyName) {
-		return HasProperty.hasProperty(propertyName);
-	}
-
-	/**
-	 * Creates a matcher that matches when the examined object has a JavaBean property
-	 * with the specified name whose value satisfies the specified matcher.
-	 * For example:
-	 * <pre>assertThat(myBean, hasProperty("foo", equalTo("bar"))</pre>
-	 *
-	 * @param propertyName the name of the JavaBean property that examined beans should possess
-	 * @param valueMatcher a matcher for the value of the specified property of the examined bean
-	 */
-	public static <T> Matcher<T> hasProperty(String propertyName, Matcher<?> valueMatcher) {
-		return HasPropertyWithValue.hasProperty(propertyName, valueMatcher);
-	}
-
-	/**
-	 * Creates a matcher that matches when the examined object has values for all of
-	 * its JavaBean properties that are equal to the corresponding values of the
-	 * specified bean. If any properties are marked as ignored, they will be dropped from
-	 * both the expected and actual bean. Note that the ignored properties use JavaBean
-	 * display names, for example <pre>age</pre> rather than method names such as <pre>getAge</pre>.
-	 * For example:
-	 * <pre>assertThat(myBean, samePropertyValuesAs(myExpectedBean))</pre>
-	 * <pre>assertThat(myBean, samePropertyValuesAs(myExpectedBean), "age", "height")</pre>
-	 *
-	 * @param expectedBean the bean against which examined beans are compared
-	 * @param ignoredProperties do not check any of these named properties.
-	 */
-	public static <B> Matcher<B> samePropertyValuesAs(B expectedBean, String... ignoredProperties) {
-		return SamePropertyValuesAs.samePropertyValuesAs(expectedBean, ignoredProperties);
 	}
 
 	/**
