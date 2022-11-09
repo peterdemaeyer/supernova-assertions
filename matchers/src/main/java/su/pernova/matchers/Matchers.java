@@ -1,7 +1,6 @@
 package su.pernova.matchers;
 
 import java.math.BigDecimal;
-import java.util.EventObject;
 import java.util.regex.Pattern;
 
 import su.pernova.matchers.core.AllOf;
@@ -22,9 +21,6 @@ import su.pernova.matchers.core.StringStartsWith;
 import su.pernova.matchers.number.BigDecimalCloseTo;
 import su.pernova.matchers.number.IsCloseTo;
 import su.pernova.matchers.number.NumberMatchers;
-import su.pernova.matchers.object.HasToString;
-import su.pernova.matchers.object.IsCompatibleType;
-import su.pernova.matchers.object.IsEventFrom;
 
 public final class Matchers {
 
@@ -536,67 +532,6 @@ public final class Matchers {
 	 */
 	public static Matcher<BigDecimal> closeTo(BigDecimal operand, BigDecimal error) {
 		return BigDecimalCloseTo.closeTo(operand, error);
-	}
-
-	/**
-	 * Creates a matcher that matches any examined object whose <code>toString</code> method
-	 * returns a value that satisfies the specified matcher.
-	 * For example:
-	 * <pre>assertThat(true, hasToString(equalTo("TRUE")))</pre>
-	 *
-	 * @param toStringMatcher the matcher used to verify the toString result
-	 */
-	public static <T> Matcher<T> hasToString(Matcher<? super String> toStringMatcher) {
-		return HasToString.hasToString(toStringMatcher);
-	}
-
-	/**
-	 * Creates a matcher that matches any examined object whose <code>toString</code> method
-	 * returns a value equalTo the specified string.
-	 * For example:
-	 * <pre>assertThat(true, hasToString("TRUE"))</pre>
-	 *
-	 * @param expectedToString the expected toString result
-	 */
-	public static <T> Matcher<T> hasToString(String expectedToString) {
-		return HasToString.hasToString(expectedToString);
-	}
-
-	/**
-	 * Creates a matcher of {@link Class} that matches when the specified baseType is
-	 * assignable from the examined class.
-	 * For example:
-	 * <pre>assertThat(Integer.class, typeCompatibleWith(Number.class))</pre>
-	 *
-	 * @param baseType the base class to examine classes against
-	 */
-	public static <T> Matcher<Class<?>> typeCompatibleWith(Class<T> baseType) {
-		return IsCompatibleType.typeCompatibleWith(baseType);
-	}
-
-	/**
-	 * Creates a matcher of {@link EventObject} that matches any object
-	 * derived from <var>eventClass</var> announced by <var>source</var>.
-	 * For example:
-	 * <pre>assertThat(myEvent, is(eventFrom(PropertyChangeEvent.class, myBean)))</pre>
-	 *
-	 * @param eventClass the class of the event to match on
-	 * @param source the source of the event
-	 */
-	public static Matcher<EventObject> eventFrom(Class<? extends EventObject> eventClass, Object source) {
-		return IsEventFrom.eventFrom(eventClass, source);
-	}
-
-	/**
-	 * Creates a matcher of {@link EventObject} that matches any EventObject
-	 * announced by <var>source</var>.
-	 * For example:
-	 * <pre>assertThat(myEvent, is(eventFrom(myBean)))</pre>
-	 *
-	 * @param source the source of the event
-	 */
-	public static Matcher<EventObject> eventFrom(Object source) {
-		return IsEventFrom.eventFrom(source);
 	}
 
 	/**
