@@ -3,9 +3,6 @@ package su.pernova.matchers;
 import java.math.BigDecimal;
 import java.util.EventObject;
 import java.util.regex.Pattern;
-import javax.xml.namespace.NamespaceContext;
-
-import org.w3c.dom.Node;
 
 import su.pernova.matchers.core.AllOf;
 import su.pernova.matchers.core.AnyOf;
@@ -28,13 +25,6 @@ import su.pernova.matchers.number.NumberMatchers;
 import su.pernova.matchers.object.HasToString;
 import su.pernova.matchers.object.IsCompatibleType;
 import su.pernova.matchers.object.IsEventFrom;
-import su.pernova.matchers.text.CharSequenceLength;
-import su.pernova.matchers.text.IsBlankString;
-import su.pernova.matchers.text.IsEmptyString;
-import su.pernova.matchers.text.IsEqualCompressingWhiteSpace;
-import su.pernova.matchers.text.IsEqualIgnoringCase;
-import su.pernova.matchers.text.MatchesPattern;
-import su.pernova.matchers.text.StringContainsInOrder;
 
 public final class Matchers {
 
@@ -546,164 +536,6 @@ public final class Matchers {
 	 */
 	public static Matcher<BigDecimal> closeTo(BigDecimal operand, BigDecimal error) {
 		return BigDecimalCloseTo.closeTo(operand, error);
-	}
-
-	/**
-	 * Creates a matcher of {@link String} that matches when the examined string is equal to
-	 * the specified expectedString, ignoring case.
-	 * For example:
-	 * <pre>assertThat("Foo", equalToIgnoringCase("FOO"))</pre>
-	 *
-	 * @param expectedString the expected value of matched strings
-	 */
-	public static Matcher<String> equalToIgnoringCase(String expectedString) {
-		return IsEqualIgnoringCase.equalToIgnoringCase(expectedString);
-	}
-
-	/**
-	 * @param expectedString the expected value of matched strings
-	 * @deprecated {@link #equalToCompressingWhiteSpace(String)}
-	 */
-	public static Matcher<String> equalToIgnoringWhiteSpace(String expectedString) {
-		return equalToCompressingWhiteSpace(expectedString);
-	}
-
-	/**
-	 * Creates a matcher of {@link String} that matches when the examined string is equal to
-	 * the specified expectedString, when whitespace differences are (mostly) ignored.  To be
-	 * exact, the following whitespace rules are applied:
-	 * <ul>
-	 *   <li>all leading and trailing whitespace of both the expectedString and the examined string are ignored</li>
-	 *   <li>any remaining whitespace, appearing within either string, is collapsed to a single space before comparison</li>
-	 * </ul>
-	 * For example:
-	 * <pre>assertThat("   my\tfoo  bar ", equalToIgnoringWhiteSpace(" my  foo bar"))</pre>
-	 *
-	 * @param expectedString the expected value of matched strings
-	 */
-	public static Matcher<String> equalToCompressingWhiteSpace(String expectedString) {
-		return IsEqualCompressingWhiteSpace.equalToCompressingWhiteSpace(expectedString);
-	}
-
-	/**
-	 * Creates a matcher of {@link String} that matches when the examined string is <code>null</code>, or
-	 * has zero length.
-	 * For example:
-	 * <pre>assertThat(((String)null), is(emptyOrNullString()))</pre>
-	 */
-	public static Matcher<String> emptyOrNullString() {
-		return IsEmptyString.emptyOrNullString();
-	}
-
-	/**
-	 * Creates a matcher of {@link String} that matches when the examined string has zero length.
-	 * For example:
-	 * <pre>assertThat("", is(emptyString()))</pre>
-	 */
-	public static Matcher<String> emptyString() {
-		return IsEmptyString.emptyString();
-	}
-
-	/**
-	 * Creates a matcher of {@link String} that matches when the examined string is <code>null</code>, or
-	 * has zero length.
-	 * For example:
-	 * <pre>assertThat(((String)null), isEmptyOrNullString())</pre>
-	 *
-	 * @deprecated use is(emptyOrNullString()) instead
-	 */
-	@SuppressWarnings("deprecation")
-	public static Matcher<String> isEmptyOrNullString() {
-		return IsEmptyString.isEmptyOrNullString();
-	}
-
-	/**
-	 * Creates a matcher of {@link String} that matches when the examined string has zero length.
-	 * For example:
-	 * <pre>assertThat("", isEmptyString())</pre>
-	 *
-	 * @deprecated use is(emptyString()) instead
-	 */
-	@SuppressWarnings("deprecation")
-	public static Matcher<String> isEmptyString() {
-		return IsEmptyString.isEmptyString();
-	}
-
-	/**
-	 * Creates a matcher of {@link String} that matches when the examined string is <code>null</code>, or
-	 * contains zero or more whitespace characters and nothing else.
-	 * For example:
-	 * <pre>assertThat(((String)null), is(blankOrNullString()))</pre>
-	 */
-	public static Matcher<String> blankOrNullString() {
-		return IsBlankString.blankOrNullString();
-	}
-
-	/**
-	 * Creates a matcher of {@link String} that matches when the examined string contains
-	 * zero or more whitespace characters and nothing else.
-	 * For example:
-	 * <pre>assertThat("  ", is(blankString()))</pre>
-	 */
-	public static Matcher<String> blankString() {
-		return IsBlankString.blankString();
-	}
-
-	/**
-	 * Creates a matcher of {@link String} that matches when the examined string
-	 * exactly matches the given {@link Pattern}.
-	 */
-	public static Matcher<String> matchesPattern(Pattern pattern) {
-		return MatchesPattern.matchesPattern(pattern);
-	}
-
-	/**
-	 * Creates a matcher of {@link String} that matches when the examined string
-	 * exactly matches the given regular expression, treated as a {@link Pattern}.
-	 */
-	public static Matcher<String> matchesPattern(String regex) {
-		return MatchesPattern.matchesPattern(regex);
-	}
-
-	/**
-	 * Creates a matcher of {@link String} that matches when the examined string contains all of
-	 * the specified substrings, considering the order of their appearance.
-	 * For example:
-	 * <pre>assertThat("myfoobarbaz", stringContainsInOrder(Arrays.asList("bar", "foo")))</pre>
-	 * fails as "foo" occurs before "bar" in the string "myfoobarbaz"
-	 *
-	 * @param substrings the substrings that must be contained within matching strings
-	 */
-	public static Matcher<String> stringContainsInOrder(Iterable<String> substrings) {
-		return StringContainsInOrder.stringContainsInOrder(substrings);
-	}
-
-	/**
-	 * Creates a matcher of {@link String} that matches when the examined string contains all of
-	 * the specified substrings, considering the order of their appearance.
-	 * For example:
-	 * <pre>assertThat("myfoobarbaz", stringContainsInOrder("bar", "foo"))</pre>
-	 * fails as "foo" occurs before "bar" in the string "myfoobarbaz"
-	 *
-	 * @param substrings the substrings that must be contained within matching strings
-	 */
-	public static Matcher<String> stringContainsInOrder(String... substrings) {
-		return StringContainsInOrder.stringContainsInOrder(substrings);
-	}
-
-	/**
-	 * Creates a matcher of {@link CharSequence} that matches when a char sequence has the length
-	 * of the specified <code>argument</code>.
-	 * For example:
-	 *
-	 * <pre>
-	 * assertThat("text", length(4))
-	 * </pre>
-	 *
-	 * @param length the expected length of the string
-	 */
-	public static Matcher<CharSequence> hasLength(int length) {
-		return CharSequenceLength.hasLength(length);
 	}
 
 	/**
