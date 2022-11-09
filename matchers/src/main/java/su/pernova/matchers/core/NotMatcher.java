@@ -1,10 +1,10 @@
-package su.pernova.matchers.internal.core;
+package su.pernova.matchers.core;
 
 import su.pernova.matchers.Matcher;
 
-public class Not<T> extends DelegatingMatcher<T> {
+class NotMatcher<T> extends IdentityMatcher<T> {
 
-	public Not(Matcher<T> delegate) {
+	NotMatcher(Matcher<T> delegate) {
 		super("not ", delegate);
 	}
 

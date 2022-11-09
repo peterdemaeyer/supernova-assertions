@@ -8,7 +8,7 @@ import su.pernova.matchers.TypeSafeDiagnosingMatcher;
 import java.io.File;
 import java.io.IOException;
 
-import static su.pernova.matchers.core.IsEqual.equalTo;
+import static su.pernova.matchers.core.EqualsMatcher.equalTo;
 
 public final class FileMatchers {
 

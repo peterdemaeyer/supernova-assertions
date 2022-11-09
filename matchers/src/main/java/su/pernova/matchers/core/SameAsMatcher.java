@@ -1,17 +1,17 @@
-package su.pernova.matchers.internal.core;
+package su.pernova.matchers.core;
 
 import static java.util.Objects.requireNonNull;
 
 import su.pernova.matchers.Description;
 import su.pernova.matchers.Matcher;
 
-public class SameAs<T> extends Matcher<T> {
+public class SameAsMatcher<T> extends Matcher<T> {
 
 	private final CharSequence relation;
 
 	private final T expected;
 
-	public SameAs(CharSequence relation, T expected) {
+	public SameAsMatcher(CharSequence relation, T expected) {
 		this.relation = requireNonNull(relation, "relation is null");
 		this.expected = expected;
 	}

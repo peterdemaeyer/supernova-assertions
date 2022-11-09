@@ -4,27 +4,28 @@ import su.pernova.matchers.Matcher;
 import su.pernova.matchers.Description;
 
 import java.lang.reflect.Array;
-
+import java.util.Objects;
 
 /**
  * Is the value equal to another value, as tested by the
  * {@link java.lang.Object#equals} invokedMethod?
  */
-public class IsEqual<T> extends Matcher<T> {
-    private final Object expectedValue;
+public class EqualsMatcher<T> extends Matcher<T> {
 
-    public IsEqual(T equalArg) {
-        expectedValue = equalArg;
+    private final Object expected;
+
+    public EqualsMatcher(T expected) {
+        this.expected = expected;
     }
 
     @Override
-    public boolean matches(Object actualValue) {
-        return areEqual(actualValue, expectedValue);
+    public boolean matches(Object actual) {
+        return Objects.equals(expected, actual);
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendValue(expectedValue);
+        description.appendValue(expected);
     }
 
     private static boolean areEqual(Object actual, Object expected) {
@@ -83,14 +84,14 @@ public class IsEqual<T> extends Matcher<T> {
      * 
      */
     public static <T> Matcher<T> equalTo(T operand) {
-        return new IsEqual<>(operand);
+        return new EqualsMatcher<>(operand);
     }
 
     /**
-     * Creates an {@link su.pernova.matchers.core.IsEqual} matcher that does not enforce the values being
+     * Creates an {@link EqualsMatcher} matcher that does not enforce the values being
      * compared to be of the same static type.
      */
     public static Matcher<Object> equalToObject(Object operand) {
-        return new IsEqual<>(operand);
+        return new EqualsMatcher<>(operand);
     }
 }

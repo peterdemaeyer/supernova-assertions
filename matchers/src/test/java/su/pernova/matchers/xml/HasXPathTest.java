@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import static su.pernova.matchers.AbstractMatcherTest.*;
-import static su.pernova.matchers.core.IsEqual.equalTo;
+import static su.pernova.matchers.core.EqualsMatcher.equalTo;
 import static su.pernova.matchers.core.IsNot.not;
 import static su.pernova.matchers.core.StringContains.containsString;
 import static su.pernova.matchers.xml.HasXPath.hasXPath;

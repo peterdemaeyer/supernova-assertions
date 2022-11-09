@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import static su.pernova.matchers.AbstractMatcherTest.*;
 import static su.pernova.matchers.text.IsEqualIgnoringCase.equalToIgnoringCase;
 
-public final class IsEqualIgnoringCaseTest {
+public final class EqualsMatcherIgnoringCaseTest {
 
     @Test public void
     copesWithNullsAndUnknownTypes() {

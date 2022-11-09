@@ -1,7 +1,7 @@
 package su.pernova.matchers.beans;
 
 import su.pernova.matchers.*;
-import su.pernova.matchers.core.IsEqual;
+import su.pernova.matchers.core.EqualsMatcher;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
@@ -12,7 +12,7 @@ import static su.pernova.matchers.Matchers.is;
 import static su.pernova.matchers.beans.HasPropertyWithValue.hasProperty;
 import static su.pernova.matchers.beans.HasPropertyWithValue.hasPropertyAtPath;
 import static su.pernova.matchers.core.IsAnything.anything;
-import static su.pernova.matchers.core.IsEqual.equalTo;
+import static su.pernova.matchers.core.EqualsMatcher.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -106,7 +106,7 @@ public class HasPropertyWithValueTest extends AbstractMatcherTest {
       }
     }
 
-    assertThat(new X(), HasPropertyWithValue.hasProperty("test", IsEqual.equalTo(1)));
+    assertThat(new X(), HasPropertyWithValue.hasProperty("test", EqualsMatcher.equalTo(1)));
   }
 
   interface IX {

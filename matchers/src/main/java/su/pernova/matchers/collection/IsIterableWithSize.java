@@ -5,7 +5,7 @@ import su.pernova.matchers.Matcher;
 
 import java.util.Iterator;
 
-import static su.pernova.matchers.core.IsEqual.equalTo;
+import static su.pernova.matchers.core.EqualsMatcher.equalTo;
 
 public class IsIterableWithSize<E> extends FeatureMatcher<Iterable<E>, Integer> {
 

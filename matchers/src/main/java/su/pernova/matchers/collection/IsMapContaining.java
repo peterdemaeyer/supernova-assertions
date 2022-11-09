@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import static su.pernova.matchers.core.IsAnything.anything;
-import static su.pernova.matchers.core.IsEqual.equalTo;
+import static su.pernova.matchers.core.EqualsMatcher.equalTo;
 
 public class IsMapContaining<K,V> extends TypeSafeMatcher<Map<? extends K, ? extends V>> {
     private final Matcher<? super K> keyMatcher;

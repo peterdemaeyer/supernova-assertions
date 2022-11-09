@@ -7,7 +7,7 @@ import static su.pernova.matchers.core.AnyOf.anyOf;
 import su.pernova.matchers.Description;
 import su.pernova.matchers.Matcher;
 import su.pernova.matchers.TypeSafeMatcher;
-import su.pernova.matchers.internal.core.SameAs;
+import su.pernova.matchers.core.SameAsMatcher;
 
 /**
  * Matches empty Strings (and null).
@@ -15,7 +15,7 @@ import su.pernova.matchers.internal.core.SameAs;
 public final class IsEmptyString extends TypeSafeMatcher<String> {
     private static final IsEmptyString INSTANCE = new IsEmptyString();
     @SuppressWarnings("unchecked")
-    private static final Matcher<String> NULL_OR_EMPTY_INSTANCE = anyOf(new SameAs<>("", null), INSTANCE);
+    private static final Matcher<String> NULL_OR_EMPTY_INSTANCE = anyOf(new SameAsMatcher<>("", null), INSTANCE);
 
     private IsEmptyString() { }
 

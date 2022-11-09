@@ -1,7 +1,7 @@
 package su.pernova.matchers;
 
 import static su.pernova.matchers.MatcherAssertions.assertThat;
-import static su.pernova.matchers.core.IsEqual.equalTo;
+import static su.pernova.matchers.core.EqualsMatcher.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;

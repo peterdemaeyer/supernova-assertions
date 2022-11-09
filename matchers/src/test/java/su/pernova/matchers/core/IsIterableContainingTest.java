@@ -8,7 +8,7 @@ import static su.pernova.matchers.AbstractMatcherTest.assertMatches;
 import static su.pernova.matchers.AbstractMatcherTest.assertMismatchDescription;
 import static su.pernova.matchers.AbstractMatcherTest.assertNullSafe;
 import static su.pernova.matchers.AbstractMatcherTest.assertUnknownTypeSafe;
-import static su.pernova.matchers.core.IsEqual.equalTo;
+import static su.pernova.matchers.core.EqualsMatcher.equalTo;
 import static su.pernova.matchers.core.IsIterableContaining.hasItem;
 import static su.pernova.matchers.core.IsIterableContaining.hasItems;
 
@@ -62,7 +62,7 @@ public final class IsIterableContainingTest {
         final Set<Number> s = new HashSet<>();
         s.add(2);
 
-        assertMatches(new IsIterableContaining<>(new IsEqual<Number>(2)), s);
+        assertMatches(new IsIterableContaining<>(new EqualsMatcher<Number>(2)), s);
         assertMatches(IsIterableContaining.hasItem(2), s);
     }
 

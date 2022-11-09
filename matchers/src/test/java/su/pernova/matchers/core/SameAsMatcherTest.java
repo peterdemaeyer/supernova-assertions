@@ -1,4 +1,4 @@
-package su.pernova.matchers.internal.core;
+package su.pernova.matchers.core;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -8,13 +8,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 import su.pernova.matchers.Description;
+import su.pernova.matchers.Matcher;
+import su.pernova.matchers.MatcherContractTest;
 import su.pernova.matchers.StringDescription;
 
-class SameAsTest {
+class SameAsMatcherTest implements MatcherContractTest {
+
+	@Override
+	public Matcher createObject() {
+		return new SameAsMatcher("same as ", this);
+	}
 
 	@Test
 	void constructionThrowsWhenRelationIsNull() {
-		final NullPointerException expected = assertThrows(NullPointerException.class, () -> new SameAs<>(null, this));
+		final NullPointerException expected = assertThrows(NullPointerException.class, () -> new SameAsMatcher<>(null, this));
 		assertEquals("relation is null", expected.getMessage());
 	}
 
@@ -23,11 +30,11 @@ class SameAsTest {
 	void customRelationIsAppendedToDescription() {
 		final String instance = new String("instance");
 		final String anotherInstance = new String("another instance");
-		final SameAs<Object> sameAs = new SameAs<>("has custom relation to ", instance);
-		assertTrue(sameAs.matches(instance));
-		assertFalse(sameAs.matches(anotherInstance));
+		final SameAsMatcher<Object> matcher = new SameAsMatcher<>("has custom relation to ", instance);
+		assertTrue(matcher.matches(instance));
+		assertFalse(matcher.matches(anotherInstance));
 		Description description = new StringDescription();
-		sameAs.describeTo(description);
+		matcher.describeTo(description);
 		assertEquals("has custom relation to \"instance\"", description.toString());
 	}
 }

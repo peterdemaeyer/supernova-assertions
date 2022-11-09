@@ -9,7 +9,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static su.pernova.matchers.collection.IsIterableContainingInRelativeOrder.containsInRelativeOrder;
-import static su.pernova.matchers.core.IsEqual.equalTo;
+import static su.pernova.matchers.core.EqualsMatcher.equalTo;
 
 @SuppressWarnings("unchecked")
 public class IsIterableContainingInRelativeOrderTest extends AbstractMatcherTest {

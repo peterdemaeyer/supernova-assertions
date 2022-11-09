@@ -7,10 +7,9 @@ import static su.pernova.matchers.AbstractMatcherTest.assertMismatchDescription;
 import static su.pernova.matchers.AbstractMatcherTest.assertNullSafe;
 import static su.pernova.matchers.AbstractMatcherTest.assertUnknownTypeSafe;
 import static su.pernova.matchers.MatcherAssertions.assertThat;
-import static su.pernova.matchers.Matchers.not;
 import static su.pernova.matchers.core.AllOf.allOf;
-import static su.pernova.matchers.core.Is.is;
-import static su.pernova.matchers.core.IsEqual.equalTo;
+import static su.pernova.matchers.core.CoreMatchers.is;
+import static su.pernova.matchers.core.EqualsMatcher.equalTo;
 import static su.pernova.matchers.core.StringContains.containsString;
 import static su.pernova.matchers.core.StringEndsWith.endsWith;
 import static su.pernova.matchers.core.StringStartsWith.startsWith;
@@ -55,7 +54,7 @@ public final class AllOfTest {
 	supportsMixedTypes() {
 		final Matcher<SampleSubClass> matcher = allOf(
 				equalTo(new SampleBaseClass("bad")),
-				is(not(null)),
+				is(CoreMatchers.not(null)),
 				equalTo(new SampleBaseClass("good")),
 				equalTo(new SampleSubClass("ugly")));
 

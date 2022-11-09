@@ -29,20 +29,18 @@ import su.pernova.matchers.collection.IsMapWithSize;
 import su.pernova.matchers.core.AllOf;
 import su.pernova.matchers.core.AnyOf;
 import su.pernova.matchers.core.CombinableMatcher;
+import su.pernova.matchers.core.CoreMatchers;
 import su.pernova.matchers.core.DescribedAs;
+import su.pernova.matchers.core.EqualsMatcher;
 import su.pernova.matchers.core.Every;
-import su.pernova.matchers.core.Is;
 import su.pernova.matchers.core.IsAnything;
-import su.pernova.matchers.core.IsEqual;
 import su.pernova.matchers.core.IsInstanceOf;
 import su.pernova.matchers.core.IsIterableContaining;
-import su.pernova.matchers.core.IsNot;
+import su.pernova.matchers.core.SameAsMatcher;
 import su.pernova.matchers.core.StringContains;
 import su.pernova.matchers.core.StringEndsWith;
 import su.pernova.matchers.core.StringRegularExpression;
 import su.pernova.matchers.core.StringStartsWith;
-import su.pernova.matchers.internal.core.Not;
-import su.pernova.matchers.internal.core.SameAs;
 import su.pernova.matchers.number.BigDecimalCloseTo;
 import su.pernova.matchers.number.IsCloseTo;
 import su.pernova.matchers.number.NumberMatchers;
@@ -59,7 +57,7 @@ import su.pernova.matchers.text.MatchesPattern;
 import su.pernova.matchers.text.StringContainsInOrder;
 import su.pernova.matchers.xml.HasXPath;
 
-public class Matchers implements NumberMatchers {
+public final class Matchers {
 
 	private Matchers() {
 		// Prevent instantiation.
@@ -239,17 +237,19 @@ public class Matchers implements NumberMatchers {
 	}
 
 	/**
-	 * Decorates another Matcher, retaining its behaviour, but allowing tests
-	 * to be slightly more expressive.
-	 * For example:
-	 * <pre>assertThat(cheese, is(equalTo(smelly)))</pre>
+	 * Decorates another matcher, preserving its behaviour, but allowing assertions to be more expressive.
+	 * When given {@code null} as delegate, this method will return a null matcher.
+	 *
+	 * <h3>Examples</h3>
+	 *
+	 * <pre>{@code assertThat(instance, is(equalTo(anotherInstance)))}</pre>
 	 * instead of:
-	 * <pre>assertThat(cheese, equalTo(smelly))</pre>
+	 * <pre>{@code assertThat(instance, equalTo(anotherInstance))}</pre>
 	 *
 	 * @since 1.0.0
 	 */
-	public static <T> Matcher<T> is(Matcher<T> matcher) {
-		return (matcher != null) ? Is.is(matcher) : is((T) null);
+	public static <T> Matcher<T> is(Matcher<T> delegate) {
+		return CoreMatchers.is(delegate);
 	}
 
 	/**
@@ -257,7 +257,7 @@ public class Matchers implements NumberMatchers {
 	 * Such a matcher implements the "is" relation, corresponding to the "==" operator in Java.
 	 * Beware that this matcher matches for identity <i>only</i>, it does <i>not</i> match for equality.
 	 *
-	 * <h1>Examples</h1>
+	 * <h3>Examples</h13
 	 *
 	 * <pre>{@code
 	 * assertThat(value, is(null)); // Assert that a value is null.
@@ -270,7 +270,7 @@ public class Matchers implements NumberMatchers {
 	 * @since 1.0.0
 	 */
 	public static <T> Matcher<T> is(T expected) {
-		return new SameAs<>("is ", expected);
+		return new SameAsMatcher<>("is ", expected);
 	}
 
 	/**
@@ -288,7 +288,7 @@ public class Matchers implements NumberMatchers {
 	 * @since 1.0.0
 	 */
 	public static <T> Matcher<T> sameAs(T expected) {
-		return new SameAs<>("same as ", expected);
+		return new SameAsMatcher<>("same as ", expected);
 	}
 
 	/**
@@ -299,7 +299,7 @@ public class Matchers implements NumberMatchers {
 	 * <pre>assertThat(cheese, is(instanceOf(Cheddar.class)))</pre>
 	 */
 	public static <T> Matcher<T> isA(Class<?> type) {
-		return Is.isA(type);
+		return CoreMatchers.isA(type);
 	}
 
 	/**
@@ -399,15 +399,15 @@ public class Matchers implements NumberMatchers {
 	 * </pre>
 	 */
 	public static <T> Matcher<T> equalTo(T operand) {
-		return IsEqual.equalTo(operand);
+		return EqualsMatcher.equalTo(operand);
 	}
 
 	/**
-	 * Creates an {@link IsEqual} matcher that does not enforce the values being
+	 * Creates an {@link EqualsMatcher} matcher that does not enforce the values being
 	 * compared to be of the same static type.
 	 */
 	public static Matcher<Object> equalToObject(Object operand) {
-		return IsEqual.equalToObject(operand);
+		return EqualsMatcher.equalToObject(operand);
 	}
 
 	/**
@@ -436,31 +436,6 @@ public class Matchers implements NumberMatchers {
 	 */
 	public static <T> Matcher<T> instanceOf(Class<?> type) {
 		return IsInstanceOf.instanceOf(type);
-	}
-
-	/**
-	 * Creates a matcher that wraps an existing matcher, but inverts the logic by which
-	 * it will match.
-	 * For example:
-	 * <pre>assertThat(cheese, is(not(equalTo(smelly))))</pre>
-	 *
-	 * @param matcher the matcher whose sense should be inverted
-	 */
-	public static <T> Matcher<T> not(Matcher<T> matcher) {
-		return IsNot.not(matcher);
-	}
-
-	/**
-	 * A shortcut to the frequently used <code>not(equalTo(x))</code>.
-	 * For example:
-	 * <pre>assertThat(cheese, is(not(smelly)))</pre>
-	 * instead of:
-	 * <pre>assertThat(cheese, is(not(equalTo(smelly))))</pre>
-	 *
-	 * @param value the value that any examined object should <b>not</b> equal
-	 */
-	public static <T> Matcher<T> not(T value) {
-		return new Not<>(new SameAs<>("", value));
 	}
 
 	/**
@@ -1611,5 +1586,25 @@ public class Matchers implements NumberMatchers {
 	 */
 	public static Matcher<Node> hasXPath(String xPath, NamespaceContext namespaceContext) {
 		return HasXPath.hasXPath(xPath, namespaceContext);
+	}
+
+	/**
+	 * @see CoreMatchers#not(Matcher)
+	 * @since 1.0.0
+	 */
+	public static <T> Matcher<T> not(Matcher<T> delegate) {
+		return CoreMatchers.not(delegate);
+	}
+
+	public static <T> Matcher<T> not(T expected) {
+		return CoreMatchers.not(expected);
+	}
+
+	/**
+	 * @see NumberMatchers#notANumber()
+	 * @since 1.0.0
+	 */
+	public static Matcher notANumber() {
+		return NumberMatchers.notANumber();
 	}
 }

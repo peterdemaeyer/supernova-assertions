@@ -1,7 +1,7 @@
 package su.pernova.matchers.collection;
 
 import static su.pernova.matchers.collection.IsArrayContainingInOrder.arrayContaining;
-import static su.pernova.matchers.core.IsEqual.equalTo;
+import static su.pernova.matchers.core.EqualsMatcher.equalTo;
 
 import su.pernova.matchers.AbstractMatcherTest;
 import su.pernova.matchers.Matcher;

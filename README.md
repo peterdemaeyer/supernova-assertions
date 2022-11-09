@@ -31,5 +31,5 @@ So, what are Supernova Matchers doing better than Hamcrest?
 
 | JUnit 5                           | Supernova Matchers                              |
 |-----------------------------------|-------------------------------------------------|
-| `assertSame(expected, actual)`    | `assertThat(actual, is(sameAs(expected)))`      |
-| `assertNotSame(expected, actual)` | `assertThat(actual, is(not(sameAs(expected))))` |
+| `assertSame(expected, actual)`    | `assertThat(actual, is(matcher(expected)))`      |
+| `assertNotSame(expected, actual)` | `assertThat(actual, is(not(matcher(expected))))` |

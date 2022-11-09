@@ -1,6 +1,6 @@
 package su.pernova.matchers.io;
 
-import static su.pernova.matchers.core.IsEqual.equalTo;
+import static su.pernova.matchers.core.EqualsMatcher.equalTo;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;

@@ -4,7 +4,7 @@ import su.pernova.matchers.Matcher;
 import org.junit.jupiter.api.Test;
 
 import static su.pernova.matchers.AbstractMatcherTest.*;
-import static su.pernova.matchers.core.IsEqual.equalTo;
+import static su.pernova.matchers.core.EqualsMatcher.equalTo;
 import static su.pernova.matchers.object.HasToString.hasToString;
 
 public final class HasToStringTest {

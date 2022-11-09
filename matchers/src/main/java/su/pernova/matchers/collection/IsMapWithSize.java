@@ -5,7 +5,7 @@ import su.pernova.matchers.Matcher;
 
 import java.util.Map;
 
-import static su.pernova.matchers.core.IsEqual.equalTo;
+import static su.pernova.matchers.core.EqualsMatcher.equalTo;
 
 /**
  * Matches if map size satisfies a nested matcher.

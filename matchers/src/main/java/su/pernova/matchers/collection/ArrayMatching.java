@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static su.pernova.matchers.core.IsEqual.equalTo;
+import static su.pernova.matchers.core.EqualsMatcher.equalTo;
 
 /**
  * @author Steve Freeman 2016 http://www.hamcrest.com

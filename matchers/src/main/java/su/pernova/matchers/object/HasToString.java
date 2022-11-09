@@ -3,7 +3,7 @@ package su.pernova.matchers.object;
 import su.pernova.matchers.FeatureMatcher;
 import su.pernova.matchers.Matcher;
 
-import static su.pernova.matchers.core.IsEqual.equalTo;
+import static su.pernova.matchers.core.EqualsMatcher.equalTo;
 
 public class HasToString<T> extends FeatureMatcher<T, String> {
     public HasToString(Matcher<? super String> toStringMatcher) {

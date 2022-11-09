@@ -5,12 +5,11 @@ import su.pernova.matchers.FeatureMatcher;
 import su.pernova.matchers.Matcher;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static su.pernova.matchers.collection.IsIterableContainingInOrder.contains;
-import static su.pernova.matchers.core.IsEqual.equalTo;
+import static su.pernova.matchers.core.EqualsMatcher.equalTo;
 
 @SuppressWarnings("unchecked")
 public class IsIterableContainingInOrderTest extends AbstractMatcherTest {

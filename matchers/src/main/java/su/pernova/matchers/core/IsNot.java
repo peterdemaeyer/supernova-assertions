@@ -3,7 +3,7 @@ package su.pernova.matchers.core;
 import su.pernova.matchers.Matcher;
 import su.pernova.matchers.Description;
 
-import static su.pernova.matchers.core.IsEqual.equalTo;
+import static su.pernova.matchers.core.EqualsMatcher.equalTo;
 
 
 /**

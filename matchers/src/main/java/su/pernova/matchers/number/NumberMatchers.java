@@ -3,10 +3,16 @@ package su.pernova.matchers.number;
 import su.pernova.matchers.Matcher;
 
 /**
+ * Utility class providing matchers specific to {@link Number}.
+ *
  * @author Peter De Maeyer
  * @since 1.0.0
  */
-public interface NumberMatchers {
+public final class NumberMatchers {
+
+	private NumberMatchers() {
+		// Prevent instantiation.
+	}
 
 	/**
 	 * Returns a matcher implementing the "not a number" relation.
@@ -33,7 +39,7 @@ public interface NumberMatchers {
 	 *
 	 * @return a matcher implementing the "not a number" relation, not {@code null}.
 	 */
-	static <T> Matcher<T> notANumber() {
+	public static <T> Matcher<T> notANumber() {
 		return NotANumberMatcher.getInstance();
 	}
 }

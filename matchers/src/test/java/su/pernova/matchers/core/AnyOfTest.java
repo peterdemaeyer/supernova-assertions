@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static su.pernova.matchers.AbstractMatcherTest.*;
 import static su.pernova.matchers.MatcherAssertions.assertThat;
 import static su.pernova.matchers.core.AnyOf.anyOf;
-import static su.pernova.matchers.core.IsEqual.equalTo;
+import static su.pernova.matchers.core.EqualsMatcher.equalTo;
 import static su.pernova.matchers.core.StringEndsWith.endsWith;
 import static su.pernova.matchers.core.StringStartsWith.startsWith;
 

@@ -11,7 +11,7 @@ import java.util.*;
 import static java.util.Arrays.asList;
 import static su.pernova.matchers.beans.PropertyUtil.NO_ARGUMENTS;
 import static su.pernova.matchers.beans.PropertyUtil.propertyDescriptorsFor;
-import static su.pernova.matchers.core.IsEqual.equalTo;
+import static su.pernova.matchers.core.EqualsMatcher.equalTo;
 
 public class SamePropertyValuesAs<T> extends DiagnosingMatcher<T> {
     private final T expectedBean;

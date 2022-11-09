@@ -7,7 +7,7 @@ import static su.pernova.matchers.AbstractMatcherTest.assertMismatchDescription;
 import static su.pernova.matchers.AbstractMatcherTest.assertNullSafe;
 import static su.pernova.matchers.AbstractMatcherTest.assertUnknownTypeSafe;
 import static su.pernova.matchers.Matchers.not;
-import static su.pernova.matchers.core.IsEqual.equalTo;
+import static su.pernova.matchers.core.EqualsMatcher.equalTo;
 
 import org.junit.jupiter.api.Test;
 

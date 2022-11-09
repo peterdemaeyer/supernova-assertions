@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static su.pernova.matchers.collection.IsMapWithSize.aMapWithSize;
-import static su.pernova.matchers.core.IsEqual.equalTo;
+import static su.pernova.matchers.core.EqualsMatcher.equalTo;
 
 public final class IsMapWithSizeTest extends AbstractMatcherTest {
 

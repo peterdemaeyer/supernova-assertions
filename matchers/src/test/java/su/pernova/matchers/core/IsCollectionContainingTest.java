@@ -13,7 +13,7 @@ import static java.util.Arrays.asList;
 import static su.pernova.matchers.MatcherAssertions.assertThat;
 import static su.pernova.matchers.core.IsCollectionContaining.hasItem;
 import static su.pernova.matchers.core.IsCollectionContaining.hasItems;
-import static su.pernova.matchers.core.IsEqual.equalTo;
+import static su.pernova.matchers.core.EqualsMatcher.equalTo;
 
 public class IsCollectionContainingTest extends AbstractMatcherTest {
     @Override
@@ -49,7 +49,7 @@ public class IsCollectionContainingTest extends AbstractMatcherTest {
     {
       final Set<Number> s = new HashSet<Number>();
       s.add(Integer.valueOf(2));
-      assertThat(s, new IsCollectionContaining<Number>(new IsEqual<Number>(Integer.valueOf(2))));
+      assertThat(s, new IsCollectionContaining<Number>(new EqualsMatcher<Number>(Integer.valueOf(2))));
       assertThat(s, IsCollectionContaining.hasItem(Integer.valueOf(2)));
     }
 

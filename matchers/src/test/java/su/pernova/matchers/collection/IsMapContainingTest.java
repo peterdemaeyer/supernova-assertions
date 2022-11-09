@@ -9,7 +9,7 @@ import java.util.TreeMap;
 
 import static su.pernova.matchers.collection.IsMapContaining.hasEntry;
 import static su.pernova.matchers.core.IsAnything.anything;
-import static su.pernova.matchers.core.IsEqual.equalTo;
+import static su.pernova.matchers.core.EqualsMatcher.equalTo;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class IsMapContainingTest extends AbstractMatcherTest {

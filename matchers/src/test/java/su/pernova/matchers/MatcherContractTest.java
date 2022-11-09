@@ -6,6 +6,10 @@ import org.junit.jupiter.api.Test;
 
 public interface MatcherContractTest {
 
+	/**
+	 * Concrete test subclasses must override this method to return a specific matcher instance.
+	 * It is recommended for implementations to use covariant method overriding.
+	 */
 	Matcher createObject();
 
 	@Test

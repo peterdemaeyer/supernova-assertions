@@ -1,14 +1,15 @@
 package su.pernova.matchers.collection;
 
-import su.pernova.matchers.AbstractMatcherTest;
-import su.pernova.matchers.Matcher;
+import static java.util.Arrays.asList;
+
+import static su.pernova.matchers.collection.IsEmptyCollection.empty;
+import static su.pernova.matchers.core.CoreMatchers.is;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-import static java.util.Arrays.asList;
-import static su.pernova.matchers.collection.IsEmptyCollection.empty;
-import static su.pernova.matchers.core.Is.is;
+import su.pernova.matchers.AbstractMatcherTest;
+import su.pernova.matchers.Matcher;
 
 public class IsEmptyCollectionTest extends AbstractMatcherTest {
 

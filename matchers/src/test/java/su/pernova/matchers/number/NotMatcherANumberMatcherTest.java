@@ -11,12 +11,12 @@ import su.pernova.matchers.Matcher;
 import su.pernova.matchers.MatcherContractTest;
 import su.pernova.matchers.StringDescription;
 
-class NotANumberMatcherTest implements MatcherContractTest {
+class NotMatcherANumberMatcherTest implements MatcherContractTest {
 
 	private final Description description = new StringDescription();
 
 	@Override
-	public Matcher createObject() {
+	public NotANumberMatcher createObject() {
 		return NotANumberMatcher.getInstance();
 	}
 

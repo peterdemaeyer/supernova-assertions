@@ -1,6 +1,5 @@
 package su.pernova.matchers;
 
-import static java.lang.Double.NaN;
 import static java.lang.System.lineSeparator;
 import static java.util.Arrays.stream;
 import static java.util.concurrent.TimeUnit.MINUTES;
@@ -23,14 +22,14 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 
-import su.pernova.matchers.internal.core.SameAs;
+import su.pernova.matchers.core.SameAsMatcher;
 
 class MatchersTest {
 
 	@Test
 	void isMatchesNull() {
 		assertDoesNotThrow(() -> assertThat(null, is((Object) null)));
-		final AssertionError expectedNull = assertThrows(AssertionError.class, () -> assertThat("not null", is((Object) null)));
+		final AssertionError expectedNull = assertThrows(AssertionError.class, () -> assertThat("not null", is(null)));
 		assertEquals(lineSeparator() + "Expected: is null" + lineSeparator() + "     but: was \"not null\"", expectedNull.getMessage());
 		final AssertionError didNotExpectNull = assertThrows(AssertionError.class, () -> assertThat(null, is("not null")));
 		assertEquals(lineSeparator() + "Expected: is \"not null\"" + lineSeparator() + "     but: was null", didNotExpectNull.getMessage());
@@ -39,7 +38,7 @@ class MatchersTest {
 	@Test
 	void isMatchesNullMatcher() {
 		assertDoesNotThrow(() -> assertThat((Matcher) null, is((Matcher) null)));
-		final AssertionError expected = assertThrows(AssertionError.class, () -> assertThat(new SameAs<>("", "test"), is((Matcher) null)));
+		final AssertionError expected = assertThrows(AssertionError.class, () -> assertThat(new SameAsMatcher<>("", "test"), is((Matcher) null)));
 		assertEquals(lineSeparator() + "Expected: is null" + lineSeparator() + "     but: was <\"test\">", expected.getMessage());
 	}
 

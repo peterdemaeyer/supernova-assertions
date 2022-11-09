@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static su.pernova.matchers.AbstractMatcherTest.*;
 import static su.pernova.matchers.core.DescribedAs.describedAs;
 import static su.pernova.matchers.core.IsAnything.anything;
-import static su.pernova.matchers.core.IsEqual.equalTo;
+import static su.pernova.matchers.core.EqualsMatcher.equalTo;
 
 public final class DescribedAsTest {
 

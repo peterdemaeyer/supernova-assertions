@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import su.pernova.matchers.Description;
 import su.pernova.matchers.Matcher;
 import su.pernova.matchers.TypeSafeMatcher;
-import su.pernova.matchers.internal.core.SameAs;
+import su.pernova.matchers.core.SameAsMatcher;
 
 /**
  * Matches blank Strings (and null).
@@ -17,7 +17,7 @@ import su.pernova.matchers.internal.core.SameAs;
 public final class IsBlankString extends TypeSafeMatcher<String> {
 	private static final IsBlankString BLANK_INSTANCE = new IsBlankString();
 
-	private static final Matcher<String> NULL_OR_BLANK_INSTANCE = anyOf(new SameAs<>("", null), BLANK_INSTANCE);
+	private static final Matcher<String> NULL_OR_BLANK_INSTANCE = anyOf(new SameAsMatcher<>("", null), BLANK_INSTANCE);
 
 	private static final Pattern REGEX_WHITESPACE = Pattern.compile("\\s*");
 

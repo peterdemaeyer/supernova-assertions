@@ -4,7 +4,7 @@ import su.pernova.matchers.Description;
 import su.pernova.matchers.DiagnosingMatcher;
 import su.pernova.matchers.Matcher;
 import su.pernova.matchers.TypeSafeDiagnosingMatcher;
-import su.pernova.matchers.core.IsEqual;
+import su.pernova.matchers.core.EqualsMatcher;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class HasEqualValues<T> extends TypeSafeDiagnosingMatcher<T> {
 
         public FieldMatcher(Field field, Object expectedObject) {
             this.field = field;
-            this.matcher = IsEqual.equalTo(uncheckedGet(field, expectedObject));
+            this.matcher = EqualsMatcher.equalTo(uncheckedGet(field, expectedObject));
         }
         @Override
         protected boolean matches(Object item, Description mismatch) {

@@ -1,6 +1,6 @@
 package su.pernova.matchers;
 
-import su.pernova.matchers.core.IsEqual;
+import su.pernova.matchers.core.EqualsMatcher;
 import org.junit.jupiter.api.Test;
 
 import static su.pernova.matchers.AbstractMatcherTest.*;
@@ -33,7 +33,7 @@ public final class FeatureMatcherTest {
         assertEquals("was ShouldNotMatch <ShouldNotMatch>", mismatchDescription.toString());
     }
 
-    public static class Match extends IsEqual<String> {
+    public static class Match extends EqualsMatcher<String> {
         public Match(String equalArg) { super(equalArg); }
         @Override public void describeMismatch(Object actual, Description description) {
             description.appendText("mismatch-description");

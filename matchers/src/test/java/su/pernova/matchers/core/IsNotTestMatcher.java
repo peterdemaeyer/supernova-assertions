@@ -4,11 +4,11 @@ import su.pernova.matchers.Matcher;
 import org.junit.jupiter.api.Test;
 
 import static su.pernova.matchers.AbstractMatcherTest.*;
-import static su.pernova.matchers.core.IsEqual.equalTo;
+import static su.pernova.matchers.core.EqualsMatcher.equalTo;
 import static su.pernova.matchers.core.IsInstanceOf.instanceOf;
 import static su.pernova.matchers.core.IsNot.not;
 
-public final class IsNotTest {
+public final class IsNotTestMatcher {
 
     @Test public void
     copesWithNullsAndUnknownTypes() {

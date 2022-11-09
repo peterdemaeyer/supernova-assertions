@@ -4,7 +4,7 @@ import su.pernova.matchers.FeatureMatcher;
 import su.pernova.matchers.Matcher;
 
 import static su.pernova.matchers.core.DescribedAs.describedAs;
-import static su.pernova.matchers.core.IsEqual.equalTo;
+import static su.pernova.matchers.core.EqualsMatcher.equalTo;
 
 /**
  * Matches if array size satisfies a nested matcher.

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static su.pernova.matchers.core.AllOf.allOf;
-import static su.pernova.matchers.core.IsEqual.equalTo;
+import static su.pernova.matchers.core.EqualsMatcher.equalTo;
 
 public class IsIterableContaining<T> extends TypeSafeDiagnosingMatcher<Iterable<? super T>> {
     private final Matcher<? super T> elementMatcher;
