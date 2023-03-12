@@ -2,10 +2,11 @@
 
 ## Since 1.0.0
 
-* Added a `notANumber` matcher implementing the "not a number" relation based on the `isNaN` operator.
-  It applies to instances of `Double` and `Float`.
-* Added an `is` matcher implementing the identity relation.
-  When given a value, it corresponds to the "==" operator.
+* Added an `is` matcher implementing the identity matcher.
+  When given a value, it corresponds to the `==` operator.
   When decorating another matcher, it corresponds to the identity operator, preserving its behavior while being a bit
   more descriptive.
-* Added `sameAs` matcher implementing the "same as" relation corresponding to the "==" operator.
+* Added a `Matchers.sameAs` matcher implementing the identity relation corresponding to the `==` operator.
+* Added a `Matchers.equalTo` matcher implementing equality relation corresponding to the `Object.equals` operator.
+* Added a `Matchers.instanceOf` matcher implementing the relation corresponding to the `instanceof` operator.
+* Added a `Assertions.assertThat` assertion builder.

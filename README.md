@@ -24,7 +24,7 @@ The main classes are:
 | `assertThat(actual).is(null)`              | Asserts whether an object is null. This is nothing more than a particular case of the identity operator.  |
 | `assertThat(actual).is(true)`              | Asserts whether a condition is true This is nothing more than a particular case of the identity operator. |
 | `assertThat(actual).is(sameAs(expected))`  | Equivalent to `assertThat(actual).is(expected)`, but more explicit, also in the message upon mismatch.    |
-| `assertThat(actual).is(equalTo(expected))` | Asserts object equality, corresponding to the `equalTo` operator.                                         |
+| `assertThat(actual).is(equalTo(expected))` | Asserts object equality, corresponding to the `Object.equals` operator.                                   |
 | `assertThat(actual).is(instanceOf(class))` | Asserts object class, corresponding to the `instanceof` operator.                                         |
 | `assertThat(subject(actual)).is(expected)` | Equivalent to `assertThat(actual).is(expected)`, but more explicit.                                       |
 
