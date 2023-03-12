@@ -2,7 +2,10 @@ package su.pernova.assertions;
 
 import static su.pernova.assertions.Subjects.subject;
 
-public class Assertions {
+public final class Assertions {
+
+	private Assertions() {
+	}
 
 	public static Assertion assertThat(Object actual) {
 		return assertThat(subject(actual));
