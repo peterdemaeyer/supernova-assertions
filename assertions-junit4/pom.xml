@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>su.pernova</groupId>
-        <artifactId>supernova-matchers</artifactId>
+        <artifactId>assertions-parent</artifactId>
         <version>${revision}${changelist}</version>
     </parent>
     <artifactId>assertions-junit4</artifactId>
-    <name>Supernova Matchers - JUnit 4</name>
+    <name>Supernova Assertions - JUnit 4</name>
     <description>Integration tests with only JUnit 4 as runtime dependency.</description>
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

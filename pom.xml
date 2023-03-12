@@ -11,15 +11,15 @@
         <relativePath/>
     </parent>
     <groupId>su.pernova</groupId>
-    <artifactId>supernova-matchers</artifactId>
-    <name>Supernova Matchers - Parent</name>
+    <artifactId>assertions-parent</artifactId>
+    <name>Supernova Assertions - Parent</name>
     <packaging>pom</packaging>
     <version>${revision}${changelist}</version>
     <modules>
+        <module>assertions</module>
         <module>assertions-junit4</module>
         <module>assertions-junit5</module>
         <module>assertions-junit4-junit5</module>
-        <module>assertions</module>
     </modules>
     <properties>
         <revision>1.0.0</revision>
@@ -41,4 +41,18 @@
             </plugin>
         </plugins>
     </build>
+    <dependencies>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <version>2.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.23.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>
