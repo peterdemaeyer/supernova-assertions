@@ -60,7 +60,7 @@ So, what are Supernova Matchers doing better than Hamcrest?
 
 # Migration from JUnit 5
 
-| JUnit 5                           | Supernova Matchers                               |
-|-----------------------------------|--------------------------------------------------|
-| `assertSame(expected, actual)`    | `assertThat(actual, is(matcher(expected)))`      |
-| `assertNotSame(expected, actual)` | `assertThat(actual, is(not(matcher(expected))))` |
+| JUnit 5                           | Supernova Matchers                     |
+|-----------------------------------|----------------------------------------|
+| `assertSame(expected, actual)`    | `assertThat(actual).is(expected)`      |
+| `assertNotSame(expected, actual)` | `assertThat(actual).is(not(expected))` |

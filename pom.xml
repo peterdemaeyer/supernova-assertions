@@ -5,16 +5,23 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>su.pernova</groupId>
-        <artifactId>supernova</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <artifactId>bom</artifactId>
+        <version>1.0.0</version>
         <!-- Search parent POM in Maven repository. -->
         <relativePath/>
     </parent>
     <groupId>su.pernova</groupId>
     <artifactId>assertions-parent</artifactId>
     <name>Supernova Assertions - Parent</name>
+    <description>Intuitive and minimalistic assertions for Java.</description>
+    <url>https://github.com/peterdemaeyer/supernova-assertions/</url>
     <packaging>pom</packaging>
     <version>${revision}${changelist}</version>
+    <scm>
+        <connection>scm:git:git://github.com/peterdemaeyer/supernova-assertions.git</connection>
+        <developerConnection>scm:git:ssh://github.com:peterdemaeyer/supernova-assertions.git</developerConnection>
+        <url>https://github.com/peterdemaeyer/supernova-assertions/tree/main</url>
+    </scm>
     <modules>
         <module>assertions</module>
         <module>assertions-junit4</module>
