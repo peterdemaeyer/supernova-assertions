@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import internal.su.pernova.assertions.matchers.Is;
+import internal.su.pernova.assertions.matchers.Identity;
 import internal.su.pernova.assertions.matchers.SameAs;
 import internal.su.pernova.assertions.subjects.GenericSubject;
 
@@ -18,7 +18,7 @@ class GenericSubjectTest {
 	@Test
 	void subjectMatchesNull() {
 		final GenericSubject subject = new GenericSubject(null);
-		assertTrue(subject.match(new Is(new SameAs(null, ""))));
+		assertTrue(subject.match(new Identity("", new SameAs("", null))));
 		subject.describe(description);
 		assertEquals(" subject", description.toString());
 		subject.describeMismatch(mismatchDescription);

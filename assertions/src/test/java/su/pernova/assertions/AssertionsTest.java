@@ -1,6 +1,7 @@
 package su.pernova.assertions;
 
 import static java.lang.System.lineSeparator;
+import static java.util.regex.Pattern.DOTALL;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -10,10 +11,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static su.pernova.assertions.Assertions.assertThat;
 import static su.pernova.assertions.Matchers.equalTo;
 import static su.pernova.assertions.Matchers.instanceOf;
+import static su.pernova.assertions.Matchers.regex;
 import static su.pernova.assertions.Matchers.sameAs;
 import static su.pernova.assertions.Subjects.condition;
 
 import java.math.BigInteger;
+import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.Test;
 
@@ -79,5 +82,17 @@ class AssertionsTest {
 	void assertionFailsWhenActualIsNotInstanceOfExpectedClass() {
 		final AssertionError error = assertThrows(AssertionError.class, () -> assertThat("abc").is(instanceOf(Double.class)));
 		assertEquals("expected that subject is instance of: " + Double.class.getName() + lineSeparator() + "but was: \"abc\"", error.getMessage());
+	}
+
+	@Test
+	void assertionSucceedsWhenRegexMatches() {
+		assertThat("abc").matches(regex(".*"));
+		assertThat("abc\ndef").matches(regex(Pattern.compile(".*", DOTALL)));
+	}
+
+	@Test
+	void assertFailsWhenRegexMismatches() {
+		final AssertionError error = assertThrows(AssertionError.class, () -> assertThat("abc").matches(regex("[0-1]*")));
+		assertEquals("expected that subject matches regex: \"[0-1]*\"" + lineSeparator() + "but was: \"abc\"", error.getMessage());
 	}
 }

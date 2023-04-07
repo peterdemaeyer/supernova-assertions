@@ -6,7 +6,7 @@
     <parent>
         <groupId>su.pernova</groupId>
         <artifactId>bom</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
         <!-- Search parent POM in Maven repository. -->
         <relativePath/>
     </parent>
@@ -29,7 +29,7 @@
         <module>assertions-junit4-junit5</module>
     </modules>
     <properties>
-        <revision>1.0.0</revision>
+        <revision>1.1.0</revision>
         <changelist>-SNAPSHOT</changelist>
     </properties>
     <build>
