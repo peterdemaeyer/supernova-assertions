@@ -4,11 +4,11 @@ import su.pernova.assertions.Description;
 import su.pernova.assertions.Matcher;
 import su.pernova.assertions.Subject;
 
-public class GenericSubject implements Subject {
+public class DefaultSubject implements Subject {
 
 	protected final Object actual;
 
-	public GenericSubject(Object actual) {
+	public DefaultSubject(Object actual) {
 		this.actual = actual;
 	}
 

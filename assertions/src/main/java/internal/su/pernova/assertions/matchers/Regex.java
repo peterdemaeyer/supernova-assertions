@@ -4,10 +4,16 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.regex.Pattern;
 
-public class Regex extends GenericMatcher<Pattern> {
+import internal.su.pernova.assertions.DefaultDescribable;
+import su.pernova.assertions.Description;
+import su.pernova.assertions.Matcher;
+
+public class Regex extends DefaultDescribable implements Matcher {
+
+	private final Pattern regex;
 
 	public Regex(Pattern regex) {
-		super(null, requireNonNull(regex, "regex is null"));
+		this.regex = requireNonNull(regex, "regex is null");
 	}
 
 	public Regex(String regex) {
@@ -16,6 +22,11 @@ public class Regex extends GenericMatcher<Pattern> {
 
 	@Override
 	public boolean match(Object actual) {
-		return (actual != null) && expected.matcher((CharSequence) actual).matches();
+		return (actual instanceof CharSequence) && regex.matcher((CharSequence) actual).matches();
+	}
+
+	@Override
+	public Description describe(Description description) {
+		return Matcher.super.describe(description).appendArgument(regex);
 	}
 }

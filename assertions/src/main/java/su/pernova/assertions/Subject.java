@@ -1,11 +1,22 @@
 package su.pernova.assertions;
 
 /**
- * The subject of an assertion of the form "assert that &lt;subject&gt; &lt;has relation to&gt; &lt;expected&gt;".
- * This class implements a <em>prototype</em> design pattern, which means that every instance serves both as subject and
- * as factory for other similar subjects with a different actual object.
+ * This interface defines the subject of an assertion of the form
+ * "assert that &lt;(actual) subject&gt; &lt;holds&gt; &lt;relation with&gt; &lt;(expected) object&gt;".
+ * A subject transforms an actual object into the subject of a relation.
+ * The default subject "is" the actual object, not transforming it, but for example a "content of" subject transformq an
+ * actual object into its content before subjecting it to the relation test.
+ *
+ * @since 1.0.0
  */
 public interface Subject extends Describable {
 
+	/**
+	 * Matches this subject against a given matcher.
+	 *
+	 * @param matcher a matcher to match against, not {@code null}.
+	 * @return {@code true} if the matcher matches, {@code false} otherwise.
+	 * @since 1.0.0
+	 */
 	boolean match(Matcher matcher);
 }

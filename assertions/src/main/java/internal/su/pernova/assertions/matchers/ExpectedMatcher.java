@@ -2,11 +2,11 @@ package internal.su.pernova.assertions.matchers;
 
 import su.pernova.assertions.Description;
 
-public abstract class GenericMatcher<E> extends DescriptiveMatcher {
+public abstract class ExpectedMatcher extends DescriptiveMatcher {
 
-	protected final E expected;
+	protected final Object expected;
 
-	protected GenericMatcher(CharSequence description, E expected) {
+	protected ExpectedMatcher(CharSequence description, Object expected) {
 		super(description);
 		this.expected = expected;
 	}

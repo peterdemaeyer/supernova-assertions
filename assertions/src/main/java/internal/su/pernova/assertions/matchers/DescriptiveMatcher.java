@@ -1,19 +1,20 @@
 package internal.su.pernova.assertions.matchers;
 
+import internal.su.pernova.assertions.DefaultDescribable;
 import su.pernova.assertions.Description;
 import su.pernova.assertions.Matcher;
 
-public abstract class DescriptiveMatcher implements Matcher {
+public abstract class DescriptiveMatcher extends DefaultDescribable implements Matcher {
 
-	protected final CharSequence descriptionText;
+	protected final CharSequence customDescription;
 
 	protected DescriptiveMatcher(CharSequence description) {
-		this.descriptionText = description;
+		customDescription = description;
 	}
 
 	@Override
 	public Description describe(Description description) {
-		return (descriptionText != null) ? description.appendText(" " + descriptionText) : Matcher.super.describe(description);
+		return (customDescription != null) ? description.appendText(" " + customDescription) : Matcher.super.describe(description);
 	}
 
 	@Override

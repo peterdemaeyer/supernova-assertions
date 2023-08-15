@@ -9,14 +9,33 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 
+/**
+ * This description implementation appends text and arguments to a delegate {@link Appendable}.
+ * It is instantiated and called by the framework.
+ * Users typically don't need to instantiate nor call this class themselves.
+ * Instances of this class are not thread-safe.
+ *
+ * @since 1.0.0
+ */
 public class AppendableDescription implements Description {
 
 	private final Appendable appendable;
 
+	/**
+	 * Constructs an instance of this class delegating to a given appendable.
+	 *
+	 * @param appendable an appendable to delegate to, not {@code null}.
+	 */
 	public AppendableDescription(Appendable appendable) {
 		this.appendable = requireNonNull(appendable, "appendable is null");
 	}
 
+	/**
+	 * Appends a given text as-is to this description.
+	 *
+	 * @param text a text to append to this description, not {@code null}.
+	 * @return this description.
+	 */
 	public AppendableDescription appendText(CharSequence text) {
 		try {
 			appendable.append(text);
@@ -26,6 +45,16 @@ public class AppendableDescription implements Description {
 		return this;
 	}
 
+	/**
+	 * Appends a quoted argument to this description.
+	 * Objects of enum types, numbers, classes are unquoted.
+	 * Characters are single-quoted, for example 'c'.
+	 * Collections and arrays are quoted recursively.
+	 * Any other object, including {@link String}, is double-quoted, for example \"string\".
+	 *
+	 * @param argument an argument to append to this description, which may be {@code null}.
+	 * @return this description.
+	 */
 	public AppendableDescription appendArgument(Object argument) {
 		try {
 			appendable.append(": ");

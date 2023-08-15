@@ -7,7 +7,7 @@ import static internal.su.pernova.assertions.DescribableUtils.getDefaultDescript
 import org.junit.jupiter.api.Test;
 
 import internal.su.pernova.assertions.subjects.Condition;
-import internal.su.pernova.assertions.subjects.GenericSubject;
+import internal.su.pernova.assertions.subjects.DefaultSubject;
 import su.pernova.assertions.Describable;
 
 class DescribableUtilsTest {
@@ -19,7 +19,7 @@ class DescribableUtilsTest {
 
 	@Test
 	void defaultDescriptionTextStripsPrefix() {
-		assertEquals(" subject", getDefaultDescriptionText(new GenericSubject(null)));
+		assertEquals(" subject", getDefaultDescriptionText(new DefaultSubject(null)));
 	}
 
 	@Test

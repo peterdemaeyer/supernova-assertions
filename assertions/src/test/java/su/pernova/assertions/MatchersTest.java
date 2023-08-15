@@ -11,7 +11,9 @@ import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.Test;
 
-class MatchersTest {
+import su.pernova.design.UtilityContractTest;
+
+class MatchersTest implements UtilityContractTest {
 
 	@Test
 	void noMatcherIsNull() {

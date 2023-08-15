@@ -1,11 +1,11 @@
 package internal.su.pernova.assertions.matchers;
 
-import static java.util.Objects.requireNonNull;
+import java.util.Objects;
 
-public class EqualTo extends GenericMatcher<Object> {
+public class EqualTo extends ExpectedMatcher {
 
-	public EqualTo(CharSequence customText, Object expected) {
-		super(customText, requireNonNull(expected, "expected is null"));
+	public EqualTo(CharSequence description, Object expected) {
+		super(description, expected);
 	}
 
 	public EqualTo(Object expected) {
@@ -14,6 +14,6 @@ public class EqualTo extends GenericMatcher<Object> {
 
 	@Override
 	public boolean match(Object actual) {
-		return expected.equals(actual);
+		return Objects.equals(expected, actual);
 	}
 }

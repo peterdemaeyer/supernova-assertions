@@ -2,7 +2,9 @@ package internal.su.pernova.assertions;
 
 import static java.lang.Character.isLowerCase;
 
+import su.pernova.assertions.AppendableDescription;
 import su.pernova.assertions.Describable;
+import su.pernova.assertions.Description;
 
 public final class DescribableUtils {
 

@@ -7,7 +7,9 @@ import static su.pernova.assertions.Subjects.subject;
 
 import org.junit.jupiter.api.Test;
 
-class SubjectsTest {
+import su.pernova.design.UtilityContractTest;
+
+class SubjectsTest implements UtilityContractTest {
 
 	@Test
 	void noSubjectIsNull() {

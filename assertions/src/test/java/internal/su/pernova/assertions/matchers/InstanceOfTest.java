@@ -1,33 +1,47 @@
 package internal.su.pernova.assertions.matchers;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import static su.pernova.assertions.AssertionTestUtils.assertThrowsAssertionErrorWithMessage;
+import static su.pernova.assertions.Assertions.assertThat;
+import static su.pernova.assertions.Matchers.instanceOf;
 
 import org.junit.jupiter.api.Test;
 
+import su.pernova.assertions.Matchers;
+
 class InstanceOfTest {
+
+	private final Object anyObject = new Object();
 
 	@Test
 	void instanceOfDoesNotMatchNull() {
-		final InstanceOf instanceOf = new InstanceOf(String.class);
-		assertFalse(instanceOf.match(null));
+		assertThrowsAssertionErrorWithMessage(
+				() -> assertThat(null).is(instanceOf(String.class)),
+				String.format("expected that subject is instance of: java.lang.String%nbut was: null")
+		);
 	}
 
 	@Test
-	void instanceOfDoesNotMatchObjectOfAnotherClass() {
-		final InstanceOf instanceOf = new InstanceOf(Number.class);
-		assertFalse(instanceOf.match(this));
+	void instanceOfDoesNotMatchAnyObject() {
+		assertThrowsAssertionErrorWithMessage(
+				() -> assertThat(anyObject).is(instanceOf(Number.class)),
+				String.format("expected that subject is instance of: java.lang.Number%nbut was: \"%s\"", anyObject)
+		);
 	}
 
 	@Test
 	void instanceOfMatchesObjectOfClass() {
-		final InstanceOf instanceOf = new InstanceOf(String.class);
-		assertTrue(instanceOf.match("abc"));
+		assertThat("abc").is(instanceOf(String.class));
 	}
 
 	@Test
 	void instanceOfMatchesObjectOfSubclass() {
-		final InstanceOf instanceOf = new InstanceOf(CharSequence.class);
-		assertTrue(instanceOf.match("abc"));
+		assertThat("abc").is(instanceOf(CharSequence.class));
+	}
+
+	@Test
+	void stringValue() {
+		assertEquals("instance of: java.lang.Void", instanceOf(Void.class).toString());
 	}
 }
