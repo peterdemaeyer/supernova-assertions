@@ -3,6 +3,8 @@ package internal.su.pernova.assertions.matchers;
 import static java.lang.Math.nextDown;
 import static java.lang.Math.nextUp;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import static su.pernova.assertions.AssertionTestUtils.assertThrowsAssertionErrorWithMessage;
 import static su.pernova.assertions.AssertionTestUtils.assertThrowsWithMessage;
 import static su.pernova.assertions.Assertions.assertThat;
@@ -82,5 +84,19 @@ class CloseToTest {
 		assertThrowsWithMessage(IllegalArgumentException.class, () -> closeTo(1, 0.1), "tolerance is not an instance of java.lang.Integer");
 		assertThrowsWithMessage(NullPointerException.class, () -> closeTo(null, 0.1), "expected is null");
 		assertThrowsWithMessage(NullPointerException.class, () -> closeTo(1.0, null), "tolerance is null");
+	}
+
+	@Test
+	void closeToIsRobustAgainstOutOfBoundsValues() {
+		assertDoesNotThrow(() -> assertThat(Long.MAX_VALUE).is(closeTo(Long.MAX_VALUE, 1L)));
+		assertDoesNotThrow(() -> assertThat(Integer.MAX_VALUE).is(closeTo(Integer.MAX_VALUE, 1)));
+		assertDoesNotThrow(() -> assertThat(Short.MAX_VALUE).is(closeTo(Short.MAX_VALUE, (short) 1)));
+		assertDoesNotThrow(() -> assertThat(Byte.MAX_VALUE).is(closeTo(Byte.MAX_VALUE, (byte) 1)));
+		assertDoesNotThrow(() -> assertThat(Double.NEGATIVE_INFINITY).is(closeTo(Double.NEGATIVE_INFINITY, 1d)));
+		assertDoesNotThrow(() -> assertThat(Float.POSITIVE_INFINITY).is(closeTo(Float.POSITIVE_INFINITY, 1f)));
+		assertDoesNotThrow(() -> assertThat(Long.MIN_VALUE).is(closeTo(Long.MIN_VALUE, 1L)));
+		assertDoesNotThrow(() -> assertThat(Integer.MIN_VALUE).is(closeTo(Integer.MIN_VALUE, 1)));
+		assertDoesNotThrow(() -> assertThat(Short.MIN_VALUE).is(closeTo(Short.MIN_VALUE, (short) 1)));
+		assertDoesNotThrow(() -> assertThat(Byte.MIN_VALUE).is(closeTo(Byte.MIN_VALUE, (byte) 1)));
 	}
 }

@@ -1,5 +1,7 @@
 package internal.su.pernova.assertions.matchers;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 import static java.util.Objects.requireNonNull;
 
 import java.math.BigDecimal;
@@ -34,23 +36,63 @@ public class CloseTo extends DescriptiveMatcher {
 			minimum = ((BigDecimal) expected).subtract((BigDecimal) tolerance);
 			maximum = ((BigDecimal) expected).add((BigDecimal) tolerance);
 		} else if (expected instanceof Long) {
-			minimum = expected.longValue() - tolerance.longValue();
-			maximum = expected.longValue() + tolerance.longValue();
+			minimum = cappedMin(expected.longValue(), tolerance.longValue());
+			maximum = cappedMax(expected.longValue(), tolerance.longValue());
 		} else if (expected instanceof Integer) {
-			minimum = expected.intValue() - tolerance.intValue();
-			maximum = expected.intValue() + tolerance.intValue();
+			minimum = cappedMin(expected.intValue(), tolerance.intValue());
+			maximum = cappedMax(expected.intValue(), tolerance.intValue());
 		} else if (expected instanceof Short) {
-			minimum = (short) (expected.shortValue() - tolerance.shortValue());
-			maximum = (short) (expected.shortValue() + tolerance.shortValue());
+			minimum = cappedMin(expected.shortValue(), tolerance.shortValue());
+			maximum = cappedMax(expected.shortValue(), tolerance.shortValue());
 		} else if (expected instanceof Byte) {
-			minimum = (byte) (expected.byteValue() - tolerance.byteValue());
-			maximum = (byte) (expected.byteValue() + tolerance.byteValue());
+			minimum = cappedMin(expected.byteValue(), tolerance.byteValue());
+			maximum = cappedMax(expected.byteValue(), tolerance.byteValue());
 		} else if (expected instanceof BigInteger) {
 			minimum = ((BigInteger) expected).subtract((BigInteger) tolerance);
 			maximum = ((BigInteger) expected).add((BigInteger) tolerance);
 		} else {
 			throw new IllegalArgumentException(String.format("illegal number class: %s", expected.getClass().getName()));
 		}
+	}
+
+	private static long cappedMin(long expected, long tolerance) {
+		final long minimum = expected - tolerance;
+		return (minimum > expected) ? Long.MIN_VALUE : minimum;
+	}
+
+	private static long cappedMax(long expected, long tolerance) {
+		final long maximum = expected + tolerance;
+		return (maximum < expected) ? Long.MAX_VALUE : maximum;
+	}
+
+	private static int cappedMin(int expected, int tolerance) {
+		final int minimum = expected - tolerance;
+		return (minimum > expected) ? Integer.MIN_VALUE : minimum;
+	}
+
+	private static int cappedMax(int expected, int tolerance) {
+		final int maximum = expected + tolerance;
+		return (maximum < expected) ? Integer.MAX_VALUE : maximum;
+	}
+
+	private static short cappedMin(short expected, short tolerance) {
+		final short minimum = (short) (expected - tolerance);
+		return (minimum > expected) ? Short.MIN_VALUE : minimum;
+	}
+
+	private static short cappedMax(short expected, short tolerance) {
+		final short maximum = (short) (expected + tolerance);
+		return (maximum < expected) ? Short.MAX_VALUE : maximum;
+	}
+
+	private static byte cappedMin(byte expected, byte tolerance) {
+		final byte minimum = (byte) (expected - tolerance);
+		return (minimum > expected) ? Byte.MIN_VALUE : minimum;
+	}
+
+	private static byte cappedMax(byte expected, byte tolerance) {
+		final byte maximum = (byte) (expected + tolerance);
+		return (maximum < expected) ? Byte.MAX_VALUE : maximum;
 	}
 
 	@Override
