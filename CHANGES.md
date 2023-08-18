@@ -11,6 +11,8 @@
   Beware that the `==` behaves differently for primitive NaN values than for corresponding object values.
   For example: primitive `Double.NaN == Double.NaN` is `false` while object `Double.valueOf(Double.NaN) == 
   Double.valueOf(Double.NaN)` is `true`.
+* Added a `Matchers.closeTo` matcher matching numbers with a tolerance.
+  The expected value defines the type, the tolerance and actual value must be of the same or a compatible type.
 
 # Changes since 1.1.0
 
