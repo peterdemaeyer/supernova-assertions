@@ -36,8 +36,8 @@ class IsTest {
 	void isDoesNotMatchAnyObject() {
 		final Object anyObject = new Object();
 		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(this).is(anyObject),
-				String.format("expected that subject is: \"%s\"%nbut was: \"%s\"", anyObject, this)
+				() -> assertThat(anyObject).is(this),
+				String.format("expected that subject is: \"%s\"%nbut was: \"%s\"", this, anyObject)
 		);
 	}
 

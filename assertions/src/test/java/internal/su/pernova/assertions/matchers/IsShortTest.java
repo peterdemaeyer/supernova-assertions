@@ -71,9 +71,10 @@ class IsShortTest {
 
 	@Test
 	void isShortDoesNotMatchAnyObject() {
+		final Object anyObject = new Object();
 		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(this).is((short) 6),
-				String.format("expected that subject is: 6%nbut was: \"%s\"", this)
+				() -> assertThat(anyObject).is((short) 6),
+				String.format("expected that subject is: 6%nbut was: \"%s\"", anyObject)
 		);
 	}
 

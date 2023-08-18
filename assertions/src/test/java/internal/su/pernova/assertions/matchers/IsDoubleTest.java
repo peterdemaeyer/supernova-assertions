@@ -72,9 +72,10 @@ class IsDoubleTest {
 
 	@Test
 	void isDoubleDoesNotMatchAnyObject() {
+		final Object anyObject = new Object();
 		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(this).is(6d),
-				String.format("expected that subject is: 6.0%nbut was: \"%s\"", this)
+				() -> assertThat(anyObject).is(6d),
+				String.format("expected that subject is: 6.0%nbut was: \"%s\"", anyObject)
 		);
 	}
 

@@ -12,8 +12,6 @@ import su.pernova.assertions.Matchers;
 
 class InstanceOfTest {
 
-	private final Object anyObject = new Object();
-
 	@Test
 	void instanceOfDoesNotMatchNull() {
 		assertThrowsAssertionErrorWithMessage(
@@ -24,6 +22,7 @@ class InstanceOfTest {
 
 	@Test
 	void instanceOfDoesNotMatchAnyObject() {
+		final Object anyObject = new Object();
 		assertThrowsAssertionErrorWithMessage(
 				() -> assertThat(anyObject).is(instanceOf(Number.class)),
 				String.format("expected that subject is instance of: java.lang.Number%nbut was: \"%s\"", anyObject)

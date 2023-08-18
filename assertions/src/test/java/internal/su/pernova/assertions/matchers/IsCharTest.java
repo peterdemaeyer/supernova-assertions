@@ -69,9 +69,10 @@ class IsCharTest {
 
 	@Test
 	void isCharDoesNotMatchAnyObject() {
+		final Object anyObject = new Object();
 		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(this).is('x'),
-				String.format("expected that subject is: 'x'%nbut was: \"%s\"", this)
+				() -> assertThat(anyObject).is('x'),
+				String.format("expected that subject is: 'x'%nbut was: \"%s\"", anyObject)
 		);
 	}
 

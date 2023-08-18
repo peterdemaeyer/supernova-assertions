@@ -74,8 +74,9 @@ class IsIntTest {
 
 	@Test
 	void isIntDoesNotMatchAnyObject() {
-		assertThrowsAssertionErrorWithMessage(() -> assertThat(this).is(6),
-				String.format("expected that subject is: 6%nbut was: \"%s\"", this));
+		final Object anyObject = new Object();
+		assertThrowsAssertionErrorWithMessage(() -> assertThat(anyObject).is(6),
+				String.format("expected that subject is: 6%nbut was: \"%s\"", anyObject));
 	}
 
 	@Test

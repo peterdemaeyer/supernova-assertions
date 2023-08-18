@@ -132,9 +132,30 @@ public class Assertion {
 		return evaluate(Matchers.is(expected));
 	}
 
+	/**
+	 *
+	 * @param expected
+	 * @return
+	 * @since 2.0.0
+	 */
 	public Assertion is(boolean expected) {
 		return evaluate(Matchers.is(expected));
 	}
+
+	/**
+	 * Creates a "does" matcher, decorating a given matcher.
+	 * The intended use case:
+	 * <pre>{@code
+	 * assertThat(() -> methodUnderTest()).does(not(throw_()));
+	 * }</pre>
+	 *
+	 * @param matcher
+	 * @return
+	 * @since 2.0.0
+	 */
+//	public Assertion does(Matcher matcher) {
+//		return evaluate(new MatcherDecorator("does", matcher));
+//	}
 
 	private Assertion evaluate(Matcher matcher) {
 		if (!subject.match(matcher)) {

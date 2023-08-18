@@ -75,9 +75,10 @@ class IsLongTest {
 
 	@Test
 	void isLongDoesNotMatchAnyObject() {
+		final Object anyObject = new Object();
 		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(this).is(6L),
-				String.format("expected that subject is: 6%nbut was: \"%s\"", this)
+				() -> assertThat(anyObject).is(6L),
+				String.format("expected that subject is: 6%nbut was: \"%s\"", anyObject)
 		);
 	}
 

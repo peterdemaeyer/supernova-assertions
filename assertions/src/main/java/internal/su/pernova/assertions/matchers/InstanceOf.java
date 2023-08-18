@@ -8,19 +8,19 @@ import su.pernova.assertions.Matcher;
 
 public class InstanceOf extends DefaultDescribable implements Matcher {
 
-	private final Class clazz;
+	private final Class class_;
 
-	public InstanceOf(Class clazz) {
-		this.clazz = requireNonNull(clazz, "class is null");
+	public InstanceOf(Class class_) {
+		this.class_ = requireNonNull(class_, "class is null");
 	}
 
 	@Override
 	public boolean match(Object actual) {
-		return clazz.isInstance(actual);
+		return class_.isInstance(actual);
 	}
 
 	@Override
 	public Description describe(Description description) {
-		return Matcher.super.describe(description).appendArgument(clazz);
+		return Matcher.super.describe(description).appendArgument(class_);
 	}
 }

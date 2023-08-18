@@ -3,6 +3,7 @@ package su.pernova.assertions;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+import internal.su.pernova.assertions.matchers.CloseTo;
 import internal.su.pernova.assertions.matchers.EqualTo;
 import internal.su.pernova.assertions.matchers.InstanceOf;
 import internal.su.pernova.assertions.matchers.Is;
@@ -249,4 +250,24 @@ public final class Matchers {
 	public static Matcher nan() {
 		return Nan.getInstance();
 	}
+
+	/**
+	 * Returns a matcher matching an expected number with a given tolerance.
+	 *
+	 * @param expected
+	 * @param tolerance
+	 * @return
+	 * @since 2.0.0
+	 */
+	public static Matcher closeTo(Number expected, Number tolerance) {
+		return new CloseTo(expected, tolerance);
+	}
+//
+//	public static Matcher greaterThan(Comparable comparable) {
+//		return new GreaterThan(comparable);
+//	}
+//
+//	public static Matcher lessThan(Comparable comparable) {
+//		return new LessThan(comparable);
+//	}
 }

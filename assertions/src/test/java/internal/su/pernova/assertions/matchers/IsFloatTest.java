@@ -76,9 +76,10 @@ class IsFloatTest {
 
 	@Test
 	void isFloatDoesNotMatchAnyObject() {
+		final Object anyObject = new Object();
 		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(this).is(6f),
-				String.format("expected that subject is: 6.0%nbut was: \"%s\"", this)
+				() -> assertThat(anyObject).is(6f),
+				String.format("expected that subject is: 6.0%nbut was: \"%s\"", anyObject)
 		);
 	}
 

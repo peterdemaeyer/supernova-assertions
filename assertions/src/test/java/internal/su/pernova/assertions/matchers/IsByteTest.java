@@ -75,9 +75,10 @@ class IsByteTest {
 
 	@Test
 	void isByteDoesNotMatchAnyObject() {
+		final Object anyObject = new Object();
 		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(this).is((byte) 6),
-				String.format("expected that subject is: 6%nbut was: \"%s\"", this)
+				() -> assertThat(anyObject).is((byte) 6),
+				String.format("expected that subject is: 6%nbut was: \"%s\"", anyObject)
 		);
 	}
 
