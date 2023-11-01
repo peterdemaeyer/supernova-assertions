@@ -4,6 +4,7 @@
 
 # Changes since 2.0.0
 
+* Added a method `Assertions.fail` that fails instantly.
 * Added a `Matchers.is` matcher implementing the "is" relation for primitive expected values using the `==` operator.
   Beware that this may behave differently than for the corresponding object values.
   For example: primitive `1L == 1` is `true` while object `Long.valueOf(1L) == Integer.valueOf(1)` is `false`.

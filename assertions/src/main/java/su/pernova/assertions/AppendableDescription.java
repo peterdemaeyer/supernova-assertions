@@ -7,7 +7,6 @@ import static java.util.Objects.requireNonNull;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 
 /**
  * This description implementation appends text and arguments to a delegate {@link Appendable}.
@@ -21,6 +20,10 @@ public class AppendableDescription implements Description {
 
 	private final Appendable appendable;
 
+	private Object actual = null;
+
+	private Object expected = null;
+
 	/**
 	 * Constructs an instance of this class delegating to a given appendable.
 	 *
@@ -28,6 +31,28 @@ public class AppendableDescription implements Description {
 	 */
 	public AppendableDescription(Appendable appendable) {
 		this.appendable = requireNonNull(appendable, "appendable is null");
+	}
+
+	@Override
+	public Description appendActual(Object actual) {
+		this.actual = actual;
+		return Description.super.appendActual(actual);
+	}
+
+	@Override
+	public Description appendExpected(Object expected) {
+		this.expected = expected;
+		return Description.super.appendExpected(expected);
+	}
+
+	@Override
+	public Object getActual() {
+		return actual;
+	}
+
+	@Override
+	public Object getExpected() {
+		return expected;
 	}
 
 	/**

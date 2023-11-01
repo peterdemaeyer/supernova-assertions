@@ -3,6 +3,9 @@ package su.pernova.assertions;
 import static java.lang.System.lineSeparator;
 import static java.util.Objects.requireNonNull;
 
+import java.util.List;
+
+import internal.su.pernova.assertions.FailureProvider;
 import internal.su.pernova.assertions.matchers.MatcherDecorator;
 
 /**
@@ -167,7 +170,7 @@ public class Assertion {
 					.appendText("but");
 			matcher.describeMismatch(description);
 			subject.describeMismatch(description);
-			throw new AssertionError(description);
+			throw FailureProvider.getInstance().newAssertionFailure(description.toString(), description.getExpected(), description.getActual());
 		}
 		return this;
 	}

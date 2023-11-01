@@ -11,25 +11,16 @@
     <artifactId>assertions-junit4</artifactId>
     <name>Supernova Assertions - JUnit 4</name>
     <description>Integration tests with only JUnit 4 as runtime dependency.</description>
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-install-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>su.pernova</groupId>
+            <artifactId>assertions</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 </project>

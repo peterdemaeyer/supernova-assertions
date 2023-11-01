@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>su.pernova</groupId>
+		<artifactId>assertions-parent</artifactId>
+		<version>${revision}${changelist}</version>
+	</parent>
+	<artifactId>assertions-aggregate</artifactId>
+	<name>Supernova Assertions - Aggregate</name>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<skipMain>true</skipMain>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<!-- Even though we have nothing to deploy ourselves, we're the last module in the multi-module project so
+			 we need to enable deployment to make sure delayed deployment of earlier modules happens. -->
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<configuration>
+					<skipNexusStagingDeployMojo>false</skipNexusStagingDeployMojo>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>su.pernova</groupId>
+			<artifactId>assertions</artifactId>
+			<version>${project.version}</version>
+			<!-- Scope compile, runtime, provided: project source and execution data is included in the report. -->
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>su.pernova</groupId>
+			<artifactId>assertions-junit4</artifactId>
+			<version>${project.version}</version>
+			<type>test-jar</type>
+			<classifier>tests</classifier>
+			<!-- Scope test: only execution data is considered in the report. -->
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>su.pernova</groupId>
+			<artifactId>assertions-junit5</artifactId>
+			<version>${project.version}</version>
+			<type>test-jar</type>
+			<classifier>tests</classifier>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>su.pernova</groupId>
+			<artifactId>assertions-junit4-junit5</artifactId>
+			<version>${project.version}</version>
+			<type>test-jar</type>
+			<classifier>tests</classifier>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>

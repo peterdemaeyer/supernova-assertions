@@ -11,9 +11,6 @@
     <artifactId>assertions</artifactId>
     <name>Supernova Assertions - Main</name>
     <description>Supernova Assertions main project which produces the release artifacts.</description>
-    <properties>
-        <jacoco.coverage.minimum>1.00</jacoco.coverage.minimum>
-    </properties>
     <build>
         <plugins>
             <plugin>
@@ -48,4 +45,26 @@
             </plugin>
         </plugins>
     </build>
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.opentest4j</groupId>
+            <artifactId>opentest4j</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
 </project>

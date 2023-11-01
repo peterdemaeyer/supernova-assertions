@@ -11,4 +11,17 @@
     <artifactId>assertions-junit5</artifactId>
     <name>Supernova Assertions - JUnit 5</name>
     <description>Integration tests with only JUnit 5 (Jupiter) as runtime dependency.</description>
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>su.pernova</groupId>
+            <artifactId>assertions</artifactId>
+            <version>${project.version}</version>
+            <!-- Scope must be "compile" instead of "test", otherwise JaCoCo doesn't compute coverage for it. -->
+        </dependency>
+    </dependencies>
 </project>

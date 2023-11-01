@@ -28,4 +28,48 @@ public interface Description {
 	 * @since 1.0.0
 	 */
 	Description appendArgument(Object argument);
+
+	/**
+	 * Appends an expected value to this description.
+	 *
+	 * @param expected an expected value to append to this description, possibly {@code null}.
+	 * @return this description.
+	 * @since 2.0.0
+	 */
+	default Description appendExpected(Object expected) {
+		return appendArgument(expected);
+	}
+
+	/**
+	 * Appends an actual value to this description.
+	 *
+	 * @param actual an actual value to append to this description, possibly {@code null}.
+	 * @return this description.
+	 * @since 2.0.0
+	 */
+	default Description appendActual(Object actual) {
+		return appendArgument(actual);
+	}
+
+	/**
+	 * Gets the expected value(s) appended to this description so far.
+	 * The purpose of the expected value is for it to be used in the {@link org.opentest4j.AssertionFailedError} when
+	 * the optional OpenTest4J is on the class path, for example in JUnit 5 assertion failures.
+	 * In other cases, where a plain {@link AssertionError} is used, the expected value is irrelevant.
+	 *
+	 * @return the expected value(s), possibly {@code null}, or possibly a list of multiple values.
+	 * @since 2.0.0
+	 */
+	Object getExpected();
+
+	/**
+	 * Gets the actual value(s) appended to this description so far.
+	 * The purpose of the actual value is for it to be used in the {@link org.opentest4j.AssertionFailedError} when
+	 * the optional OpenTest4J is on the class path, for example in JUnit 5 assertion failures.
+	 * In other cases, where a plain {@link AssertionError} is used, the actual value is irrelevant.
+	 *
+	 * @return the actual values(s), possibly {@code null}, or possibly a list of multiple values.
+	 * @since 2.0.0
+	 */
+	Object getActual();
 }

@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import org.junit.jupiter.api.Test;
+import org.opentest4j.AssertionFailedError;
 
 import su.pernova.assertions.AssertionTestUtils;
 import su.pernova.assertions.Matchers;
@@ -76,10 +77,12 @@ class IsByteTest {
 	@Test
 	void isByteDoesNotMatchAnyObject() {
 		final Object anyObject = new Object();
-		assertThrowsAssertionErrorWithMessage(
+		final AssertionFailedError failure = assertThrowsAssertionErrorWithMessage(
 				() -> assertThat(anyObject).is((byte) 6),
 				String.format("expected that subject is: 6%nbut was: \"%s\"", anyObject)
 		);
+		assertEquals(anyObject, failure.getActual().getEphemeralValue());
+		assertEquals((byte) 6, failure.getExpected().getEphemeralValue());
 	}
 
 	@Test

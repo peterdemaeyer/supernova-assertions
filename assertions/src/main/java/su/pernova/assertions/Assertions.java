@@ -2,6 +2,8 @@ package su.pernova.assertions;
 
 import static su.pernova.assertions.Subjects.subject;
 
+import internal.su.pernova.assertions.FailureProvider;
+
 /**
  * This utility class provides factory methods for creating {@link Assertion}s.
  *
@@ -32,5 +34,14 @@ public final class Assertions {
 	 */
 	public static Assertion assertThat(Subject subject) {
 		return new Assertion((subject != null) ? subject : subject(null));
+	}
+
+	/**
+	 * Fails instantly.
+	 *
+	 * @since 2.0.0
+	 */
+	public static void fail() {
+		throw FailureProvider.getInstance().newAssertionFailure();
 	}
 }

@@ -11,6 +11,7 @@ import static su.pernova.assertions.Assertions.assertThat;
 import static su.pernova.assertions.Matchers.is;
 
 import org.junit.jupiter.api.Test;
+import org.opentest4j.AssertionFailedError;
 
 class IsBooleanTest {
 
@@ -30,10 +31,12 @@ class IsBooleanTest {
 				() -> assertThat(FALSE).is(true),
 				String.format("expected that subject is: true%nbut was: false")
 		);
-		assertThrowsAssertionErrorWithMessage(
+		final AssertionFailedError failure = assertThrowsAssertionErrorWithMessage(
 				() -> assertThat(true).is(false),
 				String.format("expected that subject is: false%nbut was: true")
 		);
+		assertEquals(true, failure.getActual().getEphemeralValue());
+		assertEquals(false, failure.getExpected().getEphemeralValue());
 	}
 
 	@Test

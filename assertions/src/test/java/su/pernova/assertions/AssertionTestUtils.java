@@ -10,12 +10,13 @@ public final class AssertionTestUtils {
 	private AssertionTestUtils() {
 	}
 
-	public static void assertThrowsAssertionErrorWithMessage(Executable executable, String expectedMessage) {
-		assertThrowsWithMessage(AssertionError.class, executable, expectedMessage);
+	public static <T extends AssertionError> T assertThrowsAssertionErrorWithMessage(Executable executable, String expectedMessage) {
+		return (T) assertThrowsWithMessage(AssertionError.class, executable, expectedMessage);
 	}
 
-	public static <T extends Throwable> void assertThrowsWithMessage(Class<T> expectedType, Executable executable, String expectedMessage) {
+	public static <T extends Throwable> T assertThrowsWithMessage(Class<T> expectedType, Executable executable, String expectedMessage) {
 		final T throwable = assertThrows(expectedType, executable);
 		assertEquals(expectedMessage, throwable.getMessage());
+		return throwable;
 	}
 }

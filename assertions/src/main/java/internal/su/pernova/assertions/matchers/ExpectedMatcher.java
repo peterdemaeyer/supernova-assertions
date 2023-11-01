@@ -13,6 +13,6 @@ public abstract class ExpectedMatcher extends DescriptiveMatcher {
 
 	@Override
 	public Description describe(Description description) {
-		return super.describe(description).appendArgument(expected);
+		return super.describe(description).appendExpected(expected);
 	}
 }
