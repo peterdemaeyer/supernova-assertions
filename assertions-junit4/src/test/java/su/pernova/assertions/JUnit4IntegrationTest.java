@@ -2,9 +2,8 @@ package su.pernova.assertions;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
 
-import static su.pernova.assertions.Assertions.fail;
+import static su.pernova.assertions.Matchers.is;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -26,7 +25,7 @@ public class JUnit4IntegrationTest {
 		assertThrows(ClassNotFoundException.class, () -> Class.forName("org.junit.jupiter.api.Assertions"));
 		assertThrows(ClassNotFoundException.class, () -> Class.forName("org.opentest4j.AssertionFailedError"));
 		final AssertionError jUnit4Failure = assertThrows(AssertionError.class, () -> Assert.assertTrue(false));
-		final AssertionError supernovaFailure = assertThrows(AssertionError.class, () -> Assertions.assertThat(false).is(true));
+		final AssertionError supernovaFailure = assertThrows(AssertionError.class, () -> Assertions.assertThat(false, is(true)));
 		assertEquals(jUnit4Failure.getClass(), supernovaFailure.getClass());
 	}
 

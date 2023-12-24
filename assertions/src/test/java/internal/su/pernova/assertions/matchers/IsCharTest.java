@@ -15,30 +15,30 @@ class IsCharTest {
 
 	@Test
 	void isCharMatchesDecimalNumber() {
-		assertThat(Double.valueOf(5.0)).is('\u0005');
-		assertThat(Float.valueOf(8f)).is('\u0008');
-		assertThat(BigDecimal.valueOf(321L)).is('\u0141');
+		assertThat(Double.valueOf(5.0), is('\u0005'));
+		assertThat(Float.valueOf(8f), is('\u0008'));
+		assertThat(BigDecimal.valueOf(321L), is('\u0141'));
 	}
 
 	@Test
 	void isCharMatchesIntegerNumber() {
-		assertThat(Long.valueOf(10245L)).is('\u2805');
-		assertThat(Integer.valueOf(56)).is('\u0038');
-		assertThat(Short.valueOf((short) 1000)).is('\u03E8');
-		assertThat(Byte.valueOf((byte) 75)).is('\u004B');
-		assertThat(BigInteger.valueOf(31001L)).is('\u7919');
+		assertThat(Long.valueOf(10245L), is('\u2805'));
+		assertThat(Integer.valueOf(56), is('\u0038'));
+		assertThat(Short.valueOf((short) 1000), is('\u03E8'));
+		assertThat(Byte.valueOf((byte) 75), is('\u004B'));
+		assertThat(BigInteger.valueOf(31001L), is('\u7919'));
 	}
 
 	@Test
 	void isCharMatchesCharacter() {
-		assertThat(Character.valueOf('T')).is('T');
-		assertThat(Character.valueOf('\uFFFF')).is('\uFFFF');
+		assertThat(Character.valueOf('T'), is('T'));
+		assertThat(Character.valueOf('\uFFFF'), is('\uFFFF'));
 	}
 
 	@Test
 	void isCharDoesNotMatchCharacter() {
 		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(Character.valueOf('a')).is('b'),
+				() -> assertThat(Character.valueOf('a'), is('b')),
 				String.format("expected that subject is: 'b'%nbut was: 'a'")
 		);
 	}
@@ -46,7 +46,7 @@ class IsCharTest {
 	@Test
 	void isCharDoesNotMatchDouble() {
 		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(Double.valueOf(5.99999999999999)).is('\u0006'),
+				() -> assertThat(Double.valueOf(5.99999999999999), is('\u0006')),
 				String.format("expected that subject is: '\u0006'%nbut was: 5.99999999999999")
 		);
 	}
@@ -54,7 +54,7 @@ class IsCharTest {
 	@Test
 	void isCharDoesNotMatchFloat() {
 		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(Float.valueOf(5f)).is('\u0006'),
+				() -> assertThat(Float.valueOf(5f), is('\u0006')),
 				String.format("expected that subject is: '\u0006'%nbut was: 5.0")
 		);
 	}
@@ -62,7 +62,7 @@ class IsCharTest {
 	@Test
 	void isCharDoesNotMatchNull() {
 		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(null).is('x'),
+				() -> assertThat(null, is('x')),
 				String.format("expected that subject is: 'x'%nbut was: null")
 		);
 	}
@@ -71,7 +71,7 @@ class IsCharTest {
 	void isCharDoesNotMatchAnyObject() {
 		final Object anyObject = new Object();
 		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(anyObject).is('x'),
+				() -> assertThat(anyObject, is('x')),
 				String.format("expected that subject is: 'x'%nbut was: \"%s\"", anyObject)
 		);
 	}

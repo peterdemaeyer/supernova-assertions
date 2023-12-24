@@ -5,11 +5,11 @@ import static java.util.Objects.requireNonNull;
 import su.pernova.assertions.Description;
 import su.pernova.assertions.Matcher;
 
-public class MatcherDecorator extends DescriptiveMatcher {
+public class IdentityMatcher extends DescriptiveMatcher {
 
 	protected final Matcher delegate;
 
-	public MatcherDecorator(CharSequence description, Matcher delegate) {
+	public IdentityMatcher(CharSequence description, Matcher delegate) {
 		super(description);
 		this.delegate = requireNonNull(delegate, "delegate is null");
 	}

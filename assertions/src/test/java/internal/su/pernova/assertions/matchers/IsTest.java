@@ -20,14 +20,14 @@ class IsTest {
 
 	@Test
 	void isMatchesNull() {
-		assertDoesNotThrow(() -> assertThat((Subject) null).is(null));
-		assertDoesNotThrow(() -> assertThat((Object) null).is(null));
+		assertDoesNotThrow(() -> assertThat((Subject) null, is(null)));
+		assertDoesNotThrow(() -> assertThat((Object) null, is(null)));
 	}
 
 	@Test
 	void isDoesNotMatchNull() {
 		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(this).is(null),
+				() -> assertThat(this, is(null)),
 				String.format("expected that subject is: null%nbut was: \"%s\"", this)
 		);
 	}
@@ -36,7 +36,7 @@ class IsTest {
 	void isDoesNotMatchAnyObject() {
 		final Object anyObject = new Object();
 		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(anyObject).is(this),
+				() -> assertThat(anyObject, is(this)),
 				String.format("expected that subject is: \"%s\"%nbut was: \"%s\"", this, anyObject)
 		);
 	}
@@ -44,7 +44,7 @@ class IsTest {
 	@Test
 	void isMatchesIdenticalObjects() {
 		final Object object = new Object();
-		assertThat(object).is(object);
+		assertThat(object, is(object));
 	}
 
 	@Test
@@ -53,7 +53,7 @@ class IsTest {
 		final Object equalObject = new String("abc");
 		assertEquals(object, equalObject); // Precondition assertion.
 		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(object).is(equalObject),
+				() -> assertThat(object, is(equalObject)),
 				String.format("expected that subject is: \"abc\"%nbut was: \"abc\"")
 		);
 	}

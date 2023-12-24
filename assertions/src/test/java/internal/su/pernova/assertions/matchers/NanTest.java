@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import static su.pernova.assertions.AssertionTestUtils.assertThrowsAssertionErrorWithMessage;
 import static su.pernova.assertions.Assertions.assertThat;
+import static su.pernova.assertions.Matchers.is;
 import static su.pernova.assertions.Matchers.nan;
 
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,7 @@ class NanTest {
 	@Test
 	void isDoubleDoesNotMatchNan() {
 		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(Double.NaN).is(Double.NaN),
+				() -> assertThat(Double.NaN, is(Double.NaN)),
 				String.format("expected that subject is: NaN%nbut was: NaN")
 		);
 	}
@@ -29,21 +30,21 @@ class NanTest {
 	@Test
 	void isFloatDoesNotMatchNan() {
 		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(Float.NaN).is(Float.NaN),
+				() -> assertThat(Float.NaN, is(Float.NaN)),
 				String.format("expected that subject is: NaN%nbut was: NaN")
 		);
 	}
 
 	@Test
 	void nanMatchesNan() {
-		assertThat(Double.NaN).is(nan());
-		assertThat(Float.NaN).is(nan());
+		assertThat(Double.NaN, is(nan()));
+		assertThat(Float.NaN, is(nan()));
 	}
 
 	@Test
 	void nanDoesNotMatchNull() {
 		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(null).is(nan()),
+				() -> assertThat(null, is(nan())),
 				String.format("expected that subject is NaN%nbut was: null")
 		);
 	}
@@ -51,7 +52,7 @@ class NanTest {
 	@Test
 	void nanDoesNotMatchAnyObject() {
 		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(this).is(nan()),
+				() -> assertThat(this, is(nan())),
 				String.format("expected that subject is NaN%nbut was: \"%s\"", this)
 		);
 	}

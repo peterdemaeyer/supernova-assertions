@@ -5,13 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static su.pernova.assertions.AssertionTestUtils.assertThrowsAssertionErrorWithMessage;
 import static su.pernova.assertions.AssertionTestUtils.assertThrowsWithMessage;
 import static su.pernova.assertions.Assertions.assertThat;
+import static su.pernova.assertions.Matchers.matches;
 import static su.pernova.assertions.Matchers.regex;
 
 import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.Test;
-
-import su.pernova.assertions.Matchers;
 
 class RegexTest {
 
@@ -35,13 +34,13 @@ class RegexTest {
 
 	@Test
 	void regexMatchesString() {
-		assertThat("abc").matches(regex("[a-c]*"));
+		assertThat("abc", matches(regex("[a-c]*")));
 	}
 
 	@Test
 	void regexDoesNotMatchString() {
 		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat("def").matches(regex("[a-c]*")),
+				() -> assertThat("def", matches(regex("[a-c]*"))),
 				String.format("expected that subject matches regex: \"[a-c]*\"%nbut was: \"def\"")
 		);
 	}
@@ -49,7 +48,7 @@ class RegexTest {
 	@Test
 	void regexDoesNotMatchNull() {
 		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(null).matches(regex(Pattern.compile(".*"))),
+				() -> assertThat(null, matches(regex(Pattern.compile(".*")))),
 				String.format("expected that subject matches regex: \".*\"%nbut was: null")
 		);
 	}
@@ -57,7 +56,7 @@ class RegexTest {
 	@Test
 	void regexDoesNotMatchAnyObject() {
 		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(this).matches(regex(Pattern.compile(".*"))),
+				() -> assertThat(this, matches(regex(Pattern.compile(".*")))),
 				String.format("expected that subject matches regex: \".*\"%nbut was: \"%s\"", this)
 		);
 	}

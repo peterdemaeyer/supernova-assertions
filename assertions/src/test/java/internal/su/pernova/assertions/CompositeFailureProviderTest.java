@@ -10,8 +10,8 @@ class CompositeFailureProviderTest {
 
 	@Test
 	void noProviders() {
-		CompositeFailureProvider compositeFailureProvider = new CompositeFailureProvider(emptyList());
-		assertNull(compositeFailureProvider.newAssertionFailure());
-		assertNull(compositeFailureProvider.newAssertionFailure("message", this, this));
+		CompositeFailureProvider provider = new CompositeFailureProvider(emptyList());
+		assertNull(provider.newFailure());
+		assertNull(provider.newFailure("message", this, this));
 	}
 }

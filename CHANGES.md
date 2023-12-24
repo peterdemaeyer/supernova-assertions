@@ -2,8 +2,14 @@
 
 * Bumped minimum binary compatibility to Java 11.
 
+# Incompatible changes since 2.0.0
+
+* Replaced the `assertThat(subject).matches(matcher)` paradigm with the `assertThat(subject, matches(matcher))`
+  paradigm, eliminating the need for a `Assertion` class.
+
 # Changes since 2.0.0
 
+* Added default assertions of the form `Assertions.assertThat(condition)`.
 * Added a method `Assertions.fail` that fails instantly.
 * Added a `Matchers.is` matcher implementing the "is" relation for primitive expected values using the `==` operator.
   Beware that this may behave differently than for the corresponding object values.

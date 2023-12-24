@@ -18,21 +18,21 @@ class IsBooleanTest {
 	@Test
 	void isBooleanMatches() {
 		assertDoesNotThrow(
-				() -> assertThat(TRUE).is(true)
+				() -> assertThat(TRUE, is(true))
 		);
 		assertDoesNotThrow(
-				() -> assertThat(false).is(false)
+				() -> assertThat(false, is(false))
 		);
 	}
 
 	@Test
 	void isBooleanDoesNotMatch() {
 		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(FALSE).is(true),
+				() -> assertThat(FALSE, is(true)),
 				String.format("expected that subject is: true%nbut was: false")
 		);
 		final AssertionFailedError failure = assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(true).is(false),
+				() -> assertThat(true, is(false)),
 				String.format("expected that subject is: false%nbut was: true")
 		);
 		assertEquals(true, failure.getActual().getEphemeralValue());
@@ -42,7 +42,7 @@ class IsBooleanTest {
 	@Test
 	void isBooleanDoesNotMatchNull() {
 		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(null).is(true),
+				() -> assertThat(null, is(true)),
 				String.format("expected that subject is: true%nbut was: null")
 		);
 	}
@@ -51,7 +51,7 @@ class IsBooleanTest {
 	void isBooleanDoesNotMatchAnyObject() {
 		final Object anyObject = new Object();
 		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(anyObject).is(true),
+				() -> assertThat(anyObject, is(true)),
 				String.format("expected that subject is: true%nbut was: \"%s\"", anyObject)
 		);
 	}

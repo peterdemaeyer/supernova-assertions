@@ -13,9 +13,9 @@ class CompositeFailureProvider extends FailureProvider {
 	}
 
 	@Override
-	public Error newAssertionFailure() {
+	public AssertionError newFailure() {
 		for (FailureProvider provider : providers) {
-			final Error failure = provider.newAssertionFailure();
+			final AssertionError failure = provider.newFailure();
 			if (failure != null) {
 				return failure;
 			}
@@ -24,9 +24,9 @@ class CompositeFailureProvider extends FailureProvider {
 	}
 
 	@Override
-	public Error newAssertionFailure(String message, Object expected, Object actual) {
+	public AssertionError newFailure(String message, Object expected, Object actual) {
 		for (FailureProvider provider : providers) {
-			final Error failure = provider.newAssertionFailure(message, expected, actual);
+			final AssertionError failure = provider.newFailure(message, expected, actual);
 			if (failure != null) {
 				return failure;
 			}

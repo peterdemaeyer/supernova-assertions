@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import static su.pernova.assertions.Matchers.is;
+
 import java.util.concurrent.CompletableFuture;
 
 import org.junit.jupiter.api.Test;
@@ -29,7 +31,7 @@ class JUnit5IntegrationTest {
 		final AssertionFailedError jUnit5Failure = assertThrows(AssertionFailedError.class,
 				() -> org.junit.jupiter.api.Assertions.assertEquals(1, 2));
 		final AssertionFailedError supernovaFailure = assertThrows(AssertionFailedError.class,
-				() -> su.pernova.assertions.Assertions.assertThat(2).is(1));
+				() -> su.pernova.assertions.Assertions.assertThat(2, is(1)));
 		assertEquals(jUnit5Failure.getClass(), supernovaFailure.getClass());
 		assertEquals(jUnit5Failure.getActual().getEphemeralValue(), supernovaFailure.getActual().getEphemeralValue());
 		assertEquals(jUnit5Failure.getExpected().getEphemeralValue(), supernovaFailure.getExpected().getEphemeralValue());

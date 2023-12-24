@@ -15,6 +15,22 @@
  *     subjects.</li>
  *     <li>The interface {@link su.pernova.assertions.Subject} allows writing user-defined subjects.</li>
  * </ol>
+ * <h1>Assertion failure</h1>
+ * A failure is an assertion that fails instantly.
+ * <pre>{@code
+ * fail();
+ * }</pre>
+ * <h1>Default assertion</h1>
+ * The default assertion has no given matchers, so it uses the {@code is(true)} matcher as default.
+ * This assumes the subject is a condition.
+ * <pre>{@code
+ * assertThat(true);
+ * }</pre>
+ * For example:
+ * <pre>{@code
+ * assertThat(file.exists()); // Preferred implicit form for readability.
+ * assertThat(file.exists(), is(true)); // Equivalent explicit form.
+ * }</pre>
  *
  * @since 1.0.0
  */

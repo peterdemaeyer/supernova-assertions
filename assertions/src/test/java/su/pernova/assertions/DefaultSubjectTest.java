@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import internal.su.pernova.assertions.matchers.MatcherDecorator;
+import internal.su.pernova.assertions.matchers.IdentityMatcher;
 import internal.su.pernova.assertions.matchers.Is;
 import internal.su.pernova.assertions.subjects.DefaultSubject;
 
@@ -18,7 +18,7 @@ class DefaultSubjectTest {
 	@Test
 	void subjectMatchesNull() {
 		final DefaultSubject subject = new DefaultSubject(null);
-		assertTrue(subject.match(new MatcherDecorator("", new Is(null))));
+		assertTrue(subject.match(new IdentityMatcher("", new Is(null))));
 		subject.describe(description);
 		assertEquals(" subject", description.toString());
 		subject.describeMismatch(mismatchDescription);

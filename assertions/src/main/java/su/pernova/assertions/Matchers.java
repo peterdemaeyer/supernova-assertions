@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 import internal.su.pernova.assertions.matchers.CloseTo;
 import internal.su.pernova.assertions.matchers.EqualTo;
+import internal.su.pernova.assertions.matchers.IdentityMatcher;
 import internal.su.pernova.assertions.matchers.InstanceOf;
 import internal.su.pernova.assertions.matchers.Is;
 import internal.su.pernova.assertions.matchers.IsBoolean;
@@ -19,7 +20,7 @@ import internal.su.pernova.assertions.matchers.Nan;
 import internal.su.pernova.assertions.matchers.Regex;
 
 /**
- * This utility class provides factory methods for all matchers.
+ * This utility class provides all built-in matchers.
  * It is recommended to use static imports for readability.
  *
  * @since 1.0.0
@@ -30,13 +31,33 @@ public final class Matchers {
 	}
 
 	/**
-	 * Creates a matcher matching a given expected object using the "==" operator.
-	 * This works for any object, including {@code null}.
-	 * Typically, you would call {@ling Assertion#is(Object)} instead of this method.
+	 * Returns an identity matcher decorating a given matcher.
 	 *
-	 * @param expected an expected object, which may be {@code null}.
+	 * @param delegate a given matcher to match, which must not be {@code null}.
+	 * @return an identity matcher decorating a given matcher, not {@code null}.
+	 * @since 2.0.0
+	 */
+	public static Matcher matches(Matcher delegate) {
+		return new IdentityMatcher("matches", delegate);
+	}
+
+	/**
+	 * Returns an identity matcher decorating a given matcher.
+	 *
+	 * @param delegate a given matcher to match, which may be {@code null}.
+	 * @return an identity matcher decorating a given matcher, not {@code null}.
+	 * @since 2.0.0
+	 */
+	public static Matcher is(Matcher delegate) {
+		return (delegate != null) ? new IdentityMatcher("is", delegate) : is((Object) null);
+	}
+
+	/**
+	 * Returns a matcher matching a given object using the "==" operator.
+	 * This works for any object, including {@code null}.
+	 *
+	 * @param expected a given object, which may be {@code null}.
 	 * @return a matcher matching by identity, not {@code null}.
-	 * @link Assertion#is(Object)
 	 * @since 2.0.0
 	 */
 	public static Matcher is(Object expected) {
@@ -44,7 +65,7 @@ public final class Matchers {
 	}
 
 	/**
-	 * Creates a matcher matching a given expected primitive double using the "==" operator.
+	 * Returns a matcher matching a given expected primitive double using the "==" operator.
 	 * Beware that the "==" operator behaves differently for primitive doubles than for {@link Double} objects.
 	 * <table>
 	 *     <th>
@@ -63,7 +84,6 @@ public final class Matchers {
 	 *
 	 * @param expected an expected double.
 	 * @return a matcher, not {@code null}.
-	 * @see Assertion#is(double)
 	 * @since 2.0.0
 	 */
 	public static Matcher is(double expected) {
@@ -71,7 +91,7 @@ public final class Matchers {
 	}
 
 	/**
-	 * Creates a matcher matching a given expected primitive float using the "==" operator.
+	 * Returns a matcher matching a given expected primitive float using the "==" operator.
 	 * Beware that the "==" operator behaves differently for primitive doubles than for {@link Double} objects.
 	 * <table>
 	 *     <th>
@@ -90,7 +110,6 @@ public final class Matchers {
 	 *
 	 * @param expected an expected float.
 	 * @return a matcher using the "==" operator, not {@code null}.
-	 * @see Assertion#is(float)
 	 * @since 2.0.0
 	 */
 	public static Matcher is(float expected) {
@@ -98,7 +117,7 @@ public final class Matchers {
 	}
 
 	/**
-	 * Creates a matcher matching a given expected primitive long using the "==" operator.
+	 * Returns a matcher matching a given expected primitive long using the "==" operator.
 	 * Beware that the "==" operator behaves differently for primitive longs than for {@link Long} objects.
 	 * For example {@code 1L == 1} is {@code true} but {@code Long.valueOf(1L) == Integer.valueOf(1)} is {@code false}.
 	 *
@@ -111,7 +130,7 @@ public final class Matchers {
 	}
 
 	/**
-	 * Creates a matcher matching a given expected primitive int using the "==" operator.
+	 * Returns a matcher matching a given expected primitive int using the "==" operator.
 	 * Beware that the "==" operator behaves differently for primitive ints than for {@link Integer} objects.
 	 * For example {@code 1L == 1} is {@code true} but {@code Long.valueOf(1L) == Integer.valueOf(1)} is {@code false}.
 	 *
@@ -124,7 +143,7 @@ public final class Matchers {
 	}
 
 	/**
-	 * Creates a matcher matching a given expected primitive int using the "==" operator.
+	 * Returns a matcher matching a given expected primitive int using the "==" operator.
 	 * Beware that the "==" operator behaves differently for primitive shorts than for {@link Short} objects.
 	 * For example {@code ((short) 1) == 1} is {@code true} but {@code Short.valueOf((short) 1) == Integer.valueOf(1)}
 	 * is {@code false}.
@@ -138,7 +157,7 @@ public final class Matchers {
 	}
 
 	/**
-	 * Creates a matcher matching a given expected primitive byte using the "==" operator.
+	 * Returns a matcher matching a given expected primitive byte using the "==" operator.
 	 * Beware that the "==" operator behaves differently for primitive bytes than for {@link Byte} objects.
 	 * For example {@code ((byte) 1) == 1} is {@code true} but {@code Byte.valueOf((byte) 1) == Integer.valueOf(1)}
 	 * is {@code false}.
@@ -152,7 +171,7 @@ public final class Matchers {
 	}
 
 	/**
-	 * Creates a matcher matching a given expected primitive char using the "==" operator.
+	 * Returns a matcher matching a given expected primitive char using the "==" operator.
 	 * Beware that the "==" operator behaves differently for primitive chars than for {@link Character} objects.
 	 * For example {@code ('\u0001') == 1} is {@code true} but {@code Character.valueOf('\u0001') == Integer.valueOf(1)}
 	 * is {@code false}.
@@ -166,7 +185,7 @@ public final class Matchers {
 	}
 
 	/**
-	 * Creates a matcher matching a given expected primitive boolean using the "==" operator.
+	 * Returns a matcher matching a given expected primitive boolean using the "==" operator.
 	 * The "==" operator behaves the same for primitive booleans than for {@link Boolean} objects.
 	 * This method is provided for completeness and consistency with the other {@code is} methods that take a primitive
 	 * type as parameter.
@@ -208,7 +227,7 @@ public final class Matchers {
 	 * Such a matcher uses the {@code ==} operator.
 	 *
 	 * @param expected the object to match
-	 * @return
+	 * @return a matcher that matches identical objects, not {@code null}.
 	 * @since 1.0.0
 	 */
 	public static Matcher sameAs(Object expected) {
