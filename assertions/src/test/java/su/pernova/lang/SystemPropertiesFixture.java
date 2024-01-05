@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Properties;
 
+import su.pernova.junit.jupiter.extension.Fixture;
+
 public class SystemPropertiesFixture implements Fixture {
 
 	private final Properties initialSystemProperties = new Properties();

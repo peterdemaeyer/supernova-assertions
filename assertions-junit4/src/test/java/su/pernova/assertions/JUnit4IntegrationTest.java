@@ -8,22 +8,40 @@ import static su.pernova.assertions.Matchers.is;
 import java.util.concurrent.CompletableFuture;
 
 import org.junit.Assert;
+import org.junit.Assume;
+import org.junit.AssumptionViolatedException;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class JUnit4IntegrationTest {
 
+	@BeforeClass
+	public static void assertThatJUnit5IsNotOnClassPath() {
+		assertThrows(ClassNotFoundException.class, () -> Class.forName("org.junit.jupiter.api.Assertions"));
+		assertThrows(ClassNotFoundException.class, () -> Class.forName("org.opentest4j.AssertionFailedError"));
+	}
+
 	@Test
-	public void failure() {
-		final AssertionError jUnit4Failure = assertThrows(AssertionError.class, () -> Assert.fail());
-		final AssertionError supernovaFailure = assertThrows(AssertionError.class, () -> Assertions.fail());
+	public void immediateAssumptionFailure() {
+		assertThrows(AssumptionViolatedException.class, Assumptions::fail);
+	}
+
+	@Test
+	public void assumptionFailure() {
+		final AssumptionViolatedException jUnit4Failure = assertThrows(AssumptionViolatedException.class, () -> Assume.assumeTrue(false));
+		final AssumptionViolatedException supernovaFailure = assertThrows(AssumptionViolatedException.class, () -> Assumptions.assumeThat(false, is(true)));
+		assertEquals(jUnit4Failure.getClass(), supernovaFailure.getClass());
+	}
+
+	@Test
+	public void immediateAssertionFailure() {
+		final AssertionError jUnit4Failure = assertThrows(AssertionError.class, Assert::fail);
+		final AssertionError supernovaFailure = assertThrows(AssertionError.class, Assertions::fail);
 		assertEquals(jUnit4Failure.getClass(), supernovaFailure.getClass());
 	}
 
 	@Test
 	public void assertionFailure() {
-		// JUnit 5 MUST NOT be on the class path for this test.
-		assertThrows(ClassNotFoundException.class, () -> Class.forName("org.junit.jupiter.api.Assertions"));
-		assertThrows(ClassNotFoundException.class, () -> Class.forName("org.opentest4j.AssertionFailedError"));
 		final AssertionError jUnit4Failure = assertThrows(AssertionError.class, () -> Assert.assertTrue(false));
 		final AssertionError supernovaFailure = assertThrows(AssertionError.class, () -> Assertions.assertThat(false, is(true)));
 		assertEquals(jUnit4Failure.getClass(), supernovaFailure.getClass());

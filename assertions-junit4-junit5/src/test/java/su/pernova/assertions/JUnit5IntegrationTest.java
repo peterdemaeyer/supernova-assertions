@@ -8,26 +8,43 @@ import static su.pernova.assertions.Matchers.is;
 
 import java.util.concurrent.CompletableFuture;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
+import org.opentest4j.TestAbortedException;
 
 class JUnit5IntegrationTest {
 
-	@Test
-	void failure() {
-		// JUnit 4 MUST be on the class path for this test.
+	@BeforeAll
+	static void assertThatJUnit4IsOnClassPath() {
 		assertDoesNotThrow(() -> Class.forName("junit.framework.Assert"));
+	}
+
+	@Test
+	void immediateAssumptionFailure() {
+		assertThrows(TestAbortedException.class, su.pernova.assertions.Assumptions::fail);
+	}
+
+	@Test
+	void assumptionFailure() {
+		final TestAbortedException jUnit5Failure = assertThrows(TestAbortedException.class,
+				() -> org.junit.jupiter.api.Assumptions.assumeTrue(false));
+		final TestAbortedException supernovaFailure = assertThrows(TestAbortedException.class,
+				() -> su.pernova.assertions.Assumptions.assumeThat(false, is(true)));
+		assertEquals(jUnit5Failure.getClass(), supernovaFailure.getClass());
+	}
+
+	@Test
+	void immediateAssertionFailure() {
 		final AssertionFailedError jUnit5Failure = assertThrows(AssertionFailedError.class,
-				() -> org.junit.jupiter.api.Assertions.fail());
+				org.junit.jupiter.api.Assertions::fail);
 		final AssertionFailedError supernovaFailure = assertThrows(AssertionFailedError.class,
-				() -> su.pernova.assertions.Assertions.fail());
+				Assertions::fail);
 		assertEquals(jUnit5Failure.getClass(), supernovaFailure.getClass());
 	}
 
 	@Test
 	void assertionFailure() {
-		// JUnit 4 MUST be on the class path for this test.
-		assertDoesNotThrow(() -> Class.forName("junit.framework.Assert"));
 		final AssertionFailedError jUnit5Failure = assertThrows(AssertionFailedError.class,
 				() -> org.junit.jupiter.api.Assertions.assertEquals(1, 2));
 		final AssertionFailedError supernovaFailure = assertThrows(AssertionFailedError.class,

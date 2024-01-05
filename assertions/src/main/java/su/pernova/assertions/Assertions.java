@@ -3,10 +3,10 @@ package su.pernova.assertions;
 import static java.lang.System.lineSeparator;
 
 import static su.pernova.assertions.Matchers.is;
-import static su.pernova.assertions.Subjects.condition;
-import static su.pernova.assertions.Subjects.subject;
+import static su.pernova.assertions.Subjects.defaultSubject;
 
-import internal.su.pernova.assertions.FailureProvider;
+import internal.su.pernova.assertions.AssertionFailureThrower;
+import internal.su.pernova.assertions.FailureThrower;
 
 /**
  * This is the main utility class for writing assertions.
@@ -44,6 +44,18 @@ public final class Assertions {
 	 * @since 2.0.0
 	 */
 	public static void assertThat(Subject subject, Matcher... matchers) {
+		verifyThat(AssertionFailureThrower.getInstance(), subject, matchers);
+	}
+
+	/**
+	 * Verifies that a given subject matches given matchers, throwing using a given thrower if not.
+	 * We use verification as a generalization of assertion and assumption.
+	 *
+	 * @param thrower a given thrower to throw upon mismatch, which must not be {@code null}.
+	 * @param subject a given subject, which may be {@code null}.
+	 * @param matchers given matchers, which may be empty but which must not be {@code null}.
+	 */
+	static void verifyThat(FailureThrower thrower, Subject subject, Matcher... matchers) {
 		if (subject == null) {
 			subject = defaultSubject(null, matchers);
 		}
@@ -60,21 +72,26 @@ public final class Assertions {
 						.appendText("but");
 				matcher.describeMismatch(description);
 				subject.describeMismatch(description);
-				throw FailureProvider.getInstance().newFailure(description.toString(), description.getExpected(), description.getActual());
+				thrower.throwFailure(description.toString(), description.getExpected(), description.getActual());
 			}
 		}
 	}
 
 	/**
-	 * Fails instantly.
+	 * Fails an assertion instantly.
 	 *
 	 * @since 2.0.0
 	 */
 	public static void fail() {
-		throw FailureProvider.getInstance().newFailure();
+		fail(AssertionFailureThrower.getInstance());
 	}
 
-	private static Subject defaultSubject(Object actual, Matcher... matchers) {
-		return (matchers.length == 0) ? condition(actual) : subject(actual);
+	/**
+	 * Fails instantly using a given thrower.
+	 *
+	 * @param thrower a given thrower, which must not be {@code null}.
+	 */
+	static void fail(FailureThrower thrower) {
+		thrower.throwFailure();
 	}
 }

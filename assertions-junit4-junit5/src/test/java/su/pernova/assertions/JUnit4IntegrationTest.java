@@ -1,32 +1,51 @@
 package su.pernova.assertions;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
 
 import static su.pernova.assertions.Matchers.is;
 
 import java.util.concurrent.CompletableFuture;
 
 import org.junit.Assert;
+import org.junit.Assume;
+import org.junit.AssumptionViolatedException;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class JUnit4IntegrationTest {
 
-	@Test
-	public void failure() {
-		final AssertionError jUnit4Failure = assertThrows(AssertionError.class, () -> Assert.fail());
-		final AssertionError supernovaFailure = assertThrows(AssertionError.class, () -> Assertions.fail());
-		assertTrue(jUnit4Failure.getClass().isAssignableFrom(supernovaFailure.getClass()));
+	@BeforeClass
+	public static void assertThatJUnit5IsOnClassPath() throws Exception {
+		// JUnit 5 must ALSO be on the class path for this test.
+		Class.forName("org.junit.jupiter.api.Assertions");
+		Class.forName("org.opentest4j.AssertionFailedError");
 	}
 
 	@Test
-	public void assertionFailure() throws Exception {
-		// JUnit 5 MUST ALSO be on the class path for this test.
-		Class.forName("org.junit.jupiter.api.Assertions");
-		Class.forName("org.opentest4j.AssertionFailedError");
+	public void immediateAssumptionFailure() {
+		assertThrows(AssumptionViolatedException.class, Assumptions::fail);
+	}
+
+	@Test
+	public void assumptionFailure() {
+		final AssumptionViolatedException jUnit4Failure = assertThrows(AssumptionViolatedException.class, () -> Assume.assumeTrue(false));
+		final AssumptionViolatedException supernovaFailure = assertThrows(AssumptionViolatedException.class, () -> Assumptions.assumeThat(false, is(true)));
+		assertEquals(jUnit4Failure.getClass(), supernovaFailure.getClass());
+	}
+
+	@Test
+	public void immediateAssertionFailure() {
+		final AssertionError jUnit4Failure = assertThrows(AssertionError.class, Assert::fail);
+		final AssertionError supernovaFailure = assertThrows(AssertionError.class, Assertions::fail);
+		assertEquals(jUnit4Failure.getClass(), supernovaFailure.getClass());
+	}
+
+	@Test
+	public void assertionFailure() {
 		final AssertionError jUnit4Failure = assertThrows(AssertionError.class, () -> Assert.assertTrue(false));
 		final AssertionError supernovaFailure = assertThrows(AssertionError.class, () -> Assertions.assertThat(false, is(true)));
-		assertTrue(jUnit4Failure.getClass().isAssignableFrom(supernovaFailure.getClass()));
+		assertEquals(jUnit4Failure.getClass(), supernovaFailure.getClass());
 	}
 
 	@Test
@@ -44,6 +63,6 @@ public class JUnit4IntegrationTest {
 		});
 		thread.start();
 		thread.join();
-		assertTrue(AssertionError.class.isAssignableFrom(future.get().getClass()));
+		assertEquals(AssertionError.class, future.get().getClass());
 	}
 }

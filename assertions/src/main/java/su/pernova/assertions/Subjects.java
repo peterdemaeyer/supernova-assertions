@@ -41,4 +41,8 @@ public final class Subjects {
 	public static Subject condition(Object actual) {
 		return new Condition(actual);
 	}
+
+	static Subject defaultSubject(Object actual, Matcher... matchers) {
+		return (matchers.length == 0) ? condition(actual) : subject(actual);
+	}
 }

@@ -10,7 +10,6 @@
         <!-- Search parent POM in Maven repository. -->
         <relativePath/>
     </parent>
-    <groupId>su.pernova</groupId>
     <artifactId>assertions-parent</artifactId>
     <name>Supernova Assertions - Parent</name>
     <description>Intuitive and minimalistic assertions for Java.</description>
@@ -24,6 +23,7 @@
     </scm>
     <modules>
         <module>assertions</module>
+        <module>assertions-junit3</module>
         <module>assertions-junit4</module>
         <module>assertions-junit5</module>
         <module>assertions-junit4-junit5</module>
