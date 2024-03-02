@@ -20,6 +20,7 @@
   Double.valueOf(Double.NaN)` is `true`.
 * Added a `Matchers.closeTo` matcher matching numbers with a tolerance.
   The expected value defines the type, the tolerance and actual value must be of the same or a compatible type.
+* Added `Matchers.not` and `Matchers.does` matchers to negate other matchers. 
 
 # Changes since 1.1.0
 

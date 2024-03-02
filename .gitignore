@@ -1,6 +1,7 @@
 # Maven files, such as target directory and flattened POM.
 target/
 .flattened-pom.xml
+**/*-aggregate/src/
 
 # IntelliJ files.
 .idea/

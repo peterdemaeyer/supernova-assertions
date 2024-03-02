@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 
 import su.pernova.assertions.Subject;
 
-class IsTest {
+class IsObjectTest {
 
 	@Test
 	void isMatchesNull() {

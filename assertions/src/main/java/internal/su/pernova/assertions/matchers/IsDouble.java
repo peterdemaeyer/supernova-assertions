@@ -6,9 +6,13 @@ public class IsDouble extends DescriptiveMatcher {
 
 	private final double expected;
 
-	public IsDouble(double expected) {
-		super("is");
+	public IsDouble(CharSequence description, double expected) {
+		super(description);
 		this.expected = expected;
+	}
+
+	public IsDouble(double expected) {
+		this("is", expected);
 	}
 
 	@Override

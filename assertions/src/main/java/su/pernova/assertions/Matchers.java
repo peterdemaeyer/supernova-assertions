@@ -5,9 +5,8 @@ import java.util.regex.Pattern;
 
 import internal.su.pernova.assertions.matchers.CloseTo;
 import internal.su.pernova.assertions.matchers.EqualTo;
-import internal.su.pernova.assertions.matchers.IdentityMatcher;
 import internal.su.pernova.assertions.matchers.InstanceOf;
-import internal.su.pernova.assertions.matchers.Is;
+import internal.su.pernova.assertions.matchers.IsObject;
 import internal.su.pernova.assertions.matchers.IsBoolean;
 import internal.su.pernova.assertions.matchers.IsByte;
 import internal.su.pernova.assertions.matchers.IsChar;
@@ -17,6 +16,8 @@ import internal.su.pernova.assertions.matchers.IsInt;
 import internal.su.pernova.assertions.matchers.IsLong;
 import internal.su.pernova.assertions.matchers.IsShort;
 import internal.su.pernova.assertions.matchers.Nan;
+import internal.su.pernova.assertions.matchers.Not;
+import internal.su.pernova.assertions.matchers.IsMatcher;
 import internal.su.pernova.assertions.matchers.Regex;
 
 /**
@@ -31,14 +32,33 @@ public final class Matchers {
 	}
 
 	/**
-	 * Returns an identity matcher decorating a given matcher.
+	 * Returns a matcher that matches like a given matcher and prefixes its description with "matches".
+	 * This is useful for expressing regular expressions:
+	 * <pre class="code"><code class="java">
+	 * assertThat("apple", matches(regex("[a-b]*")));
+	 * </code></pre>
 	 *
 	 * @param delegate a given matcher to match, which must not be {@code null}.
 	 * @return an identity matcher decorating a given matcher, not {@code null}.
 	 * @since 2.0.0
 	 */
 	public static Matcher matches(Matcher delegate) {
-		return new IdentityMatcher("matches", delegate);
+		return new IsMatcher("matches", delegate);
+	}
+
+	/**
+	 * Returns a matcher that matches like a given matcher and prefixes its description with "match".
+	 * This is useful for expressing negated regular expressions:
+	 * <pre class="code"><code class="java">
+	 * assertThat("apple", does(not(match(regex("[0-9]*")))));
+	 * </code></pre>
+	 *
+	 * @param delegate a given matcher to match, which must not be {@code null}.
+	 * @return a matcher
+	 * @since 2.0.0
+	 */
+	public static Matcher match(Matcher delegate) {
+		return new IsMatcher("match", delegate);
 	}
 
 	/**
@@ -49,7 +69,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(Matcher delegate) {
-		return (delegate != null) ? new IdentityMatcher("is", delegate) : is((Object) null);
+		return (delegate != null) ? new IsMatcher("is", delegate) : is((Object) null);
 	}
 
 	/**
@@ -61,7 +81,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(Object expected) {
-		return new Is(expected);
+		return new IsObject(expected);
 	}
 
 	/**
@@ -231,7 +251,7 @@ public final class Matchers {
 	 * @since 1.0.0
 	 */
 	public static Matcher sameAs(Object expected) {
-		return new Is(expected);
+		return new IsObject("same as", expected);
 	}
 
 	/**
@@ -273,20 +293,62 @@ public final class Matchers {
 	/**
 	 * Returns a matcher matching an expected number with a given tolerance.
 	 *
-	 * @param expected
-	 * @param tolerance
-	 * @return
+	 * @param expected a number to match, not {@code null}.
+	 * @param tolerance a tolerance, not {@code null}.
+	 * @return a matcher matching a number with a given tolerance.
 	 * @since 2.0.0
 	 */
 	public static Matcher closeTo(Number expected, Number tolerance) {
 		return new CloseTo(expected, tolerance);
 	}
-//
-//	public static Matcher greaterThan(Comparable comparable) {
-//		return new GreaterThan(comparable);
-//	}
-//
-//	public static Matcher lessThan(Comparable comparable) {
-//		return new LessThan(comparable);
-//	}
+
+	/**
+	 * Returns a matcher that matches like a given matcher and prefixes its description with "does".
+	 * This is useful for matching negated regular expressions:
+	 * <pre class="code"><code class="java">
+	 * assertThat("apple", does(not(match(regex("[0-9]*")))));
+	 * </code></pre>
+	 *
+	 * @param delegate a given delegate, which must not be {@code null}.
+	 * @return a matcher that prefixes the description with "does".
+	 * @since 2.0.0
+	 */
+	public static Matcher does(Matcher delegate) {
+		return new IsMatcher("does", delegate);
+	}
+
+	/**
+	 * Returns a matcher that matches when a given matcher does not and vice versa.
+	 * This is useful for matching negations:
+	 * <pre class="code"><code class="java">
+	 * assertThat(1, is(not(equalTo(2))));
+	 * </code></pre>
+	 *
+	 * @param delegate a given delegate, which must not be {@code null}.
+	 * @return a matcher that matches when a given matcher does not and vice versa.
+	 * @since 2.0.0
+	 */
+	public static Matcher not(Matcher delegate) {
+		return new Not(delegate);
+	}
+
+	/**
+	 * Returns a matcher that matches when a given object does not.
+	 *
+	 * @param expected an object to not match, which may be {@code null}.
+	 * @return a matcher that does not match a given object.
+	 */
+	public static Matcher not(Object expected) {
+		return new Not(new IsObject("", expected));
+	}
+
+	/**
+	 * Returns a matcher that matches when a given double value does not.
+	 *
+	 * @param expected a double value to not match.
+	 * @return a matcher that matches when a given double value does not.
+	 */
+	public static Matcher not(double expected) {
+		return new Not(new IsDouble("", expected));
+	}
 }

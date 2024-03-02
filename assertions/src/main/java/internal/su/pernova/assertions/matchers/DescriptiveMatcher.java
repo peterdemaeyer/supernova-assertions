@@ -14,7 +14,11 @@ public abstract class DescriptiveMatcher extends DefaultDescribable implements M
 
 	@Override
 	public Description describe(Description description) {
-		return (customDescription != null) ? description.appendText(" " + customDescription) : Matcher.super.describe(description);
+		return (customDescription != null)
+				? ((customDescription.length() > 0)
+				? description.appendText(" " + customDescription)
+				: description)
+				: Matcher.super.describe(description);
 	}
 
 	@Override
