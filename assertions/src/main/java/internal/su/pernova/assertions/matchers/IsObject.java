@@ -1,13 +1,13 @@
 package internal.su.pernova.assertions.matchers;
 
-public class IsObject extends ExpectedMatcher {
+public class IsObject extends ObjectMatcher {
 
-	public IsObject(CharSequence description, Object expected) {
-		super(description, expected);
+	public IsObject(CharSequence description, boolean prompt, Object expected) {
+		super(description, prompt, expected);
 	}
 
 	public IsObject(Object expected) {
-		this("is", expected);
+		this("is", true, expected);
 	}
 
 	@Override

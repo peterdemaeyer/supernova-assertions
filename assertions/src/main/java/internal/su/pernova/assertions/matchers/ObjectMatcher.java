@@ -2,12 +2,12 @@ package internal.su.pernova.assertions.matchers;
 
 import su.pernova.assertions.Description;
 
-public abstract class ExpectedMatcher extends DescriptiveMatcher {
+public abstract class ObjectMatcher extends PromptDescriptiveMatcher {
 
 	protected final Object expected;
 
-	protected ExpectedMatcher(CharSequence description, Object expected) {
-		super(description);
+	protected ObjectMatcher(CharSequence description, boolean prompt, Object expected) {
+		super(description, prompt);
 		this.expected = expected;
 	}
 

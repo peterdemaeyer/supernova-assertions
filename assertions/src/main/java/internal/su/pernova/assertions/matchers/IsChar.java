@@ -1,15 +1,18 @@
 package internal.su.pernova.assertions.matchers;
 
 import su.pernova.assertions.Description;
-import su.pernova.assertions.Matcher;
 
-public class IsChar extends DescriptiveMatcher {
+public class IsChar extends PromptDescriptiveMatcher {
 
 	private final char expected;
 
-	public IsChar(char expected) {
-		super("is");
+	public IsChar(CharSequence description, boolean prompt, char expected) {
+		super(description, prompt);
 		this.expected = expected;
+	}
+
+	public IsChar(char expected) {
+		this("is", true, expected);
 	}
 
 	@Override

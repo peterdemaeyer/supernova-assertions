@@ -14,17 +14,17 @@ class DescribableUtilsTest {
 
 	@Test
 	void defaultDescriptionText() {
-		assertEquals(" condition", getDefaultDescriptionText(new Condition(null)));
+		assertEquals("condition", getDefaultDescriptionText(new Condition(null)));
 	}
 
 	@Test
 	void defaultDescriptionTextStripsPrefix() {
-		assertEquals(" subject", getDefaultDescriptionText(new DefaultSubject(null)));
+		assertEquals("subject", getDefaultDescriptionText(new DefaultSubject(null)));
 	}
 
 	@Test
 	void defaultDescriptionTextStripsSuffix() {
-		assertEquals(" describable", getDefaultDescriptionText(new DescribableImpl()));
+		assertEquals("describable", getDefaultDescriptionText(new DescribableImpl()));
 	}
 
 	private static class DescribableImpl implements Describable {
@@ -32,7 +32,7 @@ class DescribableUtilsTest {
 
 	@Test
 	void defaultDescriptionTextSplitsOnNumbers() {
-		assertEquals(" describable 123", getDefaultDescriptionText(new Describable123()));
+		assertEquals("describable 123", getDefaultDescriptionText(new Describable123()));
 	}
 
 	private static class Describable123 implements Describable {
@@ -40,7 +40,7 @@ class DescribableUtilsTest {
 
 	@Test
 	void defaultDescriptionTextStripsRecursively() {
-		assertEquals(" describable", getDefaultDescriptionText(new BaseGenericDefaultGenericBasicDescribableImplImpl()));
+		assertEquals("describable", getDefaultDescriptionText(new BaseGenericDefaultGenericBasicDescribableImplImpl()));
 	}
 
 	private static class BaseGenericDefaultGenericBasicDescribableImplImpl implements Describable {
@@ -68,7 +68,7 @@ class DescribableUtilsTest {
 	 */
 	@Test
 	void defaultDescriptionTextDoesNotStripWhenMoreThanPrefix() {
-		assertEquals(" basement", getDefaultDescriptionText(new Basement()));
+		assertEquals("basement", getDefaultDescriptionText(new Basement()));
 	}
 
 	private static class Basement implements Describable {

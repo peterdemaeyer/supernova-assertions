@@ -24,14 +24,14 @@ public interface UtilityContractTest extends ContractTest {
 
 	@Test
 	default void utilityClassOnlyHasStaticMethods() throws Exception {
-		for (Method method : getClassUnderTest().getDeclaredMethods()) {
+		for (final Method method : getClassUnderTest().getDeclaredMethods()) {
 			assertEquals(STATIC, method.getModifiers() & STATIC);
 		}
 	}
 
 	@Test
 	default void utilityClassOnlyHasStaticFields() throws Exception {
-		for (Field field : getClassUnderTest().getDeclaredFields()) {
+		for (final Field field : getClassUnderTest().getDeclaredFields()) {
 			assertEquals(STATIC, field.getModifiers() & STATIC);
 		}
 	}

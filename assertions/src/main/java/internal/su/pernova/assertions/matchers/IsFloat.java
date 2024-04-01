@@ -2,13 +2,17 @@ package internal.su.pernova.assertions.matchers;
 
 import su.pernova.assertions.Description;
 
-public class IsFloat extends DescriptiveMatcher {
+public class IsFloat extends PromptDescriptiveMatcher {
 
 	private final float expected;
 
-	public IsFloat(float expected) {
-		super("is");
+	public IsFloat(CharSequence description, boolean prompt, float expected) {
+		super(description, prompt);
 		this.expected = expected;
+	}
+
+	public IsFloat(float expected) {
+		this("is", true, expected);
 	}
 
 	@Override

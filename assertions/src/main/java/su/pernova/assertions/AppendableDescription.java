@@ -1,7 +1,11 @@
 package su.pernova.assertions;
 
+import static java.lang.Character.isLetterOrDigit;
+import static java.lang.Character.isSpaceChar;
+import static java.lang.Character.isWhitespace;
 import static java.lang.reflect.Array.get;
 import static java.lang.reflect.Array.getLength;
+import static java.util.Arrays.binarySearch;
 import static java.util.Objects.requireNonNull;
 
 import java.io.IOException;
@@ -18,11 +22,23 @@ import java.util.Map.Entry;
  */
 public class AppendableDescription implements Description {
 
+	/**
+	 * This array must be kept sorted because it is used with binarySearch.
+	 */
+	private static final char[] NO_SPACE_BEFORE = { '\t', '\n', '\r', ' ', '!', ')', ',', '.', ':', ';', '>', '?', ']', '}' };
+
+	/**
+	 * This array must be kept sorted because it is used with binarySearch.
+	 */
+	private static final char[] NO_SPACE_AFTER = { '\t', '\n', '\r', ' ', '(', '<', '[', '{' };
+
 	private final Appendable appendable;
 
 	private Object actual = null;
 
 	private Object expected = null;
+
+	private boolean space;
 
 	/**
 	 * Constructs an instance of this class delegating to a given appendable.
@@ -62,12 +78,37 @@ public class AppendableDescription implements Description {
 	 * @return this description.
 	 */
 	public AppendableDescription appendText(CharSequence text) {
-		try {
-			appendable.append(text);
-		} catch (IOException e) {
-			throw new RuntimeException("failed to append text: " + quote(text), e);
+		if (text.length() > 0) {
+			// Regardless of whether space is enabled, if the text already contains whitespace at the start,
+			// we disable the space.
+			if (hasNoSpaceBefore(text.charAt(0))) {
+				space = false;
+			}
+			try {
+				appendSpace();
+				appendable.append(text);
+			} catch (IOException e) {
+				throw new RuntimeException("failed to append text: " + quote(text), e);
+			}
+			// If the last character of the text is NOT whitespace,
+			// schedule a space to be added before the next text.
+			space = !hasNoSpaceAfter(text.charAt(text.length() - 1));
 		}
 		return this;
+	}
+
+	private static boolean hasNoSpaceBefore(char c) {
+		return binarySearch(NO_SPACE_BEFORE, c) >= 0;
+	}
+
+	private static boolean hasNoSpaceAfter(char c) {
+		return binarySearch(NO_SPACE_AFTER, c) >= 0;
+	}
+
+	private void appendSpace() throws IOException {
+		if (space) {
+			appendable.append(' ');
+		}
 	}
 
 	/**
@@ -82,7 +123,6 @@ public class AppendableDescription implements Description {
 	 */
 	public AppendableDescription appendArgument(Object argument) {
 		try {
-			appendable.append(": ");
 			appendQuoted(appendable, argument);
 		} catch (IOException e) {
 			throw new RuntimeException("failed to append argument: " + quote(argument), e);
@@ -90,11 +130,11 @@ public class AppendableDescription implements Description {
 		return this;
 	}
 
-	private static StringBuilder quote(Object argument) {
+	private StringBuilder quote(Object argument) {
 		return quote(new StringBuilder(), argument);
 	}
 
-	static <A extends Appendable> A quote(A appendable, Object argument) {
+	<A extends Appendable> A quote(A appendable, Object argument) {
 		try {
 			return appendQuoted(appendable, argument);
 		} catch (IOException e) {
@@ -102,7 +142,14 @@ public class AppendableDescription implements Description {
 		}
 	}
 
-	private static <A extends Appendable> A appendQuoted(A appendable, Object argument) throws IOException {
+	private <A extends Appendable> A appendQuoted(A appendable, Object argument) throws IOException {
+		appendSpace();
+		recursivelyAppendQuoted(appendable, argument);
+		space = true;
+		return appendable;
+	}
+
+	private void recursivelyAppendQuoted(Appendable appendable, Object argument) throws IOException {
 		if (argument instanceof Iterable) {
 			appendable.append('[');
 			int i = 0;
@@ -110,7 +157,7 @@ public class AppendableDescription implements Description {
 				if (i++ > 0) {
 					appendable.append(", ");
 				}
-				appendQuoted(appendable, element);
+				recursivelyAppendQuoted(appendable, element);
 			}
 			appendable.append(']');
 		} else if (argument instanceof Map) {
@@ -120,9 +167,9 @@ public class AppendableDescription implements Description {
 				if (i++ > 0) {
 					appendable.append(", ");
 				}
-				appendQuoted(appendable, entry.getKey());
+				recursivelyAppendQuoted(appendable, entry.getKey());
 				appendable.append('=');
-				appendQuoted(appendable, entry.getValue());
+				recursivelyAppendQuoted(appendable, entry.getValue());
 			}
 			appendable.append('}');
 		} else if ((argument == null)
@@ -146,7 +193,7 @@ public class AppendableDescription implements Description {
 				if (i > 0) {
 					appendable.append(", ");
 				}
-				appendQuoted(appendable, get(argument, i));
+				recursivelyAppendQuoted(appendable, get(argument, i));
 			}
 			appendable.append(']');
 		} else {
@@ -154,7 +201,6 @@ public class AppendableDescription implements Description {
 					.append(argument.toString().replace("\\", "\\\\").replace("\"", "\\\""))
 					.append('"');
 		}
-		return appendable;
 	}
 
 	/**

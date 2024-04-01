@@ -6,12 +6,17 @@ import internal.su.pernova.assertions.DefaultDescribable;
 import su.pernova.assertions.Description;
 import su.pernova.assertions.Matcher;
 
-public class InstanceOf extends DefaultDescribable implements Matcher {
+public class InstanceOf extends PromptDescriptiveMatcher {
 
 	private final Class class_;
 
-	public InstanceOf(Class class_) {
+	public InstanceOf(CharSequence description, boolean prompt, Class class_) {
+		super(description, prompt);
 		this.class_ = requireNonNull(class_, "class is null");
+	}
+
+	public InstanceOf(Class class_) {
+		this(null, true, class_);
 	}
 
 	@Override
@@ -21,6 +26,6 @@ public class InstanceOf extends DefaultDescribable implements Matcher {
 
 	@Override
 	public Description describe(Description description) {
-		return Matcher.super.describe(description).appendArgument(class_);
+		return super.describe(description).appendArgument(class_);
 	}
 }

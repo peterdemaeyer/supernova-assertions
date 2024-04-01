@@ -15,7 +15,8 @@ class InstanceOfTest {
 	void instanceOfDoesNotMatchNull() {
 		assertThrowsAssertionErrorWithMessage(
 				() -> assertThat(null, is(instanceOf(String.class))),
-				String.format("expected that subject is instance of: java.lang.String%nbut was: null")
+				"expected that subject is instance of: java.lang.String",
+				"but was: null"
 		);
 	}
 
@@ -24,7 +25,8 @@ class InstanceOfTest {
 		final Object anyObject = new Object();
 		assertThrowsAssertionErrorWithMessage(
 				() -> assertThat(anyObject, is(instanceOf(Number.class))),
-				String.format("expected that subject is instance of: java.lang.Number%nbut was: \"%s\"", anyObject)
+				"expected that subject is instance of: java.lang.Number",
+				String.format("but was: \"%s\"", anyObject)
 		);
 	}
 

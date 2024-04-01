@@ -42,6 +42,7 @@ class AppendableDescriptionTest {
 	void appendingNullArgument() {
 		new AppendableDescription(appendable)
 				.appendText("argument")
+				.appendPrompt()
 				.appendArgument(null);
 		assertEquals("argument: null", appendable.toString());
 	}
@@ -50,6 +51,7 @@ class AppendableDescriptionTest {
 	void appendingEnumArgument() {
 		new AppendableDescription(appendable)
 				.appendText("time unit")
+				.appendPrompt()
 				.appendArgument(HOURS);
 		assertEquals("time unit: HOURS", appendable.toString());
 	}
@@ -58,6 +60,7 @@ class AppendableDescriptionTest {
 	void appendingByteArgument() {
 		new AppendableDescription(appendable)
 				.appendText("argument")
+				.appendPrompt()
 				.appendArgument((byte) 5);
 		assertEquals("argument: 5", appendable.toString());
 	}
@@ -66,6 +69,7 @@ class AppendableDescriptionTest {
 	void appendingShortArgument() {
 		new AppendableDescription(appendable)
 				.appendText("argument")
+				.appendPrompt()
 				.appendArgument((short) 5);
 		assertEquals("argument: 5", appendable.toString());
 	}
@@ -74,6 +78,7 @@ class AppendableDescriptionTest {
 	void appendingIntegerArgument() {
 		new AppendableDescription(appendable)
 				.appendText("argument")
+				.appendPrompt()
 				.appendArgument(-3);
 		assertEquals("argument: -3", appendable.toString());
 	}
@@ -82,6 +87,7 @@ class AppendableDescriptionTest {
 	void appendingLongArgument() {
 		new AppendableDescription(appendable)
 				.appendText("argument")
+				.appendPrompt()
 				.appendArgument(999_999_999_999L);
 		assertEquals("argument: 999999999999", appendable.toString());
 	}
@@ -90,6 +96,7 @@ class AppendableDescriptionTest {
 	void appendingFloatArgument() {
 		new AppendableDescription(appendable)
 				.appendText("argument")
+				.appendPrompt()
 				.appendArgument(1.2f);
 		assertEquals("argument: 1.2", appendable.toString());
 	}
@@ -98,6 +105,7 @@ class AppendableDescriptionTest {
 	void appendingDoubleArgument() {
 		new AppendableDescription(appendable)
 				.appendText("double")
+				.appendPrompt()
 				.appendArgument(3.4d);
 		assertEquals("double: 3.4", appendable.toString());
 	}
@@ -106,6 +114,7 @@ class AppendableDescriptionTest {
 	void appendingBooleanArgument() {
 		new AppendableDescription(appendable)
 				.appendText("boolean")
+				.appendPrompt()
 				.appendArgument(true);
 		assertEquals("boolean: true", appendable.toString());
 	}
@@ -114,8 +123,11 @@ class AppendableDescriptionTest {
 	void appendingCharacterArgument() {
 		new AppendableDescription(appendable)
 				.appendText("characters")
+				.appendPrompt()
 				.appendArgument('g')
+				.appendPrompt()
 				.appendArgument('\'')
+				.appendPrompt()
 				.appendArgument('\\');
 		assertEquals("characters: 'g': '\\'': '\\\\'", appendable.toString());
 	}
@@ -124,6 +136,7 @@ class AppendableDescriptionTest {
 	void appendingBigDecimalArgument() {
 		new AppendableDescription(appendable)
 				.appendText("argument")
+				.appendPrompt()
 				.appendArgument(BigDecimal.ONE);
 		assertEquals("argument: 1", appendable.toString());
 	}
@@ -133,6 +146,7 @@ class AppendableDescriptionTest {
 		final String charSequence = "abc\" \t€\\";
 		new AppendableDescription(appendable)
 				.appendText("character sequence")
+				.appendPrompt()
 				.appendArgument(charSequence);
 		assertEquals("character sequence: \"abc\\\" \t€\\\\\"", appendable.toString());
 	}
@@ -142,6 +156,7 @@ class AppendableDescriptionTest {
 		final List<Object> collection = asList(1, 2.4, "abc");
 		new AppendableDescription(appendable)
 				.appendText("collection")
+				.appendPrompt()
 				.appendArgument(collection);
 		assertEquals("collection: [1, 2.4, \"abc\"]", appendable.toString());
 	}
@@ -151,16 +166,18 @@ class AppendableDescriptionTest {
 		final Object[] array = {1, 2.4, "abc"};
 		new AppendableDescription(appendable)
 				.appendText("argument")
+				.appendPrompt()
 				.appendArgument(array);
 		assertEquals("argument: [1, 2.4, \"abc\"]", appendable.toString());
 	}
 
 	@Test
 	void appendingClassArgument() {
-		final Class clazz = String.class;
+		final Class class_ = String.class;
 		new AppendableDescription(appendable)
 				.appendText("argument")
-				.appendArgument(clazz);
+				.appendPrompt()
+				.appendArgument(class_);
 		assertEquals("argument: " + String.class.getName(), appendable.toString());
 	}
 
@@ -171,6 +188,7 @@ class AppendableDescriptionTest {
 		map.put("seven point five", 7.5);
 		new AppendableDescription(appendable)
 				.appendText("map")
+				.appendPrompt()
 				.appendArgument(map);
 		assertEquals("map: {5=\"five\", \"seven point five\"=7.5}", appendable.toString());
 	}
@@ -189,25 +207,55 @@ class AppendableDescriptionTest {
 
 	@Test
 	void appendingTextThrows() {
-		final RuntimeException expectedException = assertThrows(RuntimeException.class, () -> new AppendableDescription(throwingAppendable).appendText("abc"));
+		final RuntimeException expectedException = assertThrows(RuntimeException.class,
+				() -> new AppendableDescription(throwingAppendable).appendText("abc"));
 		assertEquals("failed to append text: \"abc\"", expectedException.getMessage());
 	}
 
 	@Test
 	void appendingArgumentThrows() {
-		final RuntimeException expectedException = assertThrows(RuntimeException.class, () -> new AppendableDescription(throwingAppendable).appendArgument(789));
+		final RuntimeException expectedException = assertThrows(RuntimeException.class,
+				() -> new AppendableDescription(throwingAppendable).appendArgument(789));
 		assertEquals("failed to append argument: 789", expectedException.getMessage());
 	}
 
 	@Test
 	void quotingThrows() {
-		final RuntimeException expectedException = assertThrows(RuntimeException.class, () -> AppendableDescription.quote(throwingAppendable, "abc"));
+		final RuntimeException expectedException = assertThrows(RuntimeException.class,
+				() -> new AppendableDescription(throwingAppendable).quote(throwingAppendable, "abc"));
 		assertEquals("failed to quote argument: abc", expectedException.getMessage());
 	}
 
 	@Test
 	void stringValue() {
-		final AppendableDescription description = new AppendableDescription(appendable).appendText("string value").appendArgument("argument");
+		final Description description = new AppendableDescription(appendable)
+				.appendText("string value")
+				.appendPrompt()
+				.appendArgument("argument");
 		assertEquals(appendable.toString(), description.toString());
+	}
+
+	@Test
+	void appendingTextAutomaticallyAddsSpaces() {
+		new AppendableDescription(appendable)
+				.appendText("")
+				.appendText("The quick")
+				.appendText("brown fox.")
+				.appendText("Which one")
+				.appendText("?")
+				.appendText("That ")
+				.appendText("one.");
+		assertEquals("The quick brown fox. Which one? That one.", appendable.toString());
+	}
+
+	@Test
+	void appendingExpectedAndActual() {
+		Object expected = new Object();
+		Object actual = new Object();
+		Description description = new AppendableDescription(appendable)
+				.appendActual(actual)
+				.appendExpected(expected);
+		assertEquals(expected, description.getExpected());
+		assertEquals(actual, description.getActual());
 	}
 }

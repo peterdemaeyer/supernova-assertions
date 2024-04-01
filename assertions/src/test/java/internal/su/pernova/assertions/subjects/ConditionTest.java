@@ -13,6 +13,6 @@ class ConditionTest {
 	void description() {
 		final Condition condition = new Condition(true);
 		final Description description = condition.describe(new AppendableDescription(new StringBuilder()));
-		assertEquals(" condition", description.toString());
+		assertEquals("condition", description.toString());
 	}
 }

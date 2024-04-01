@@ -28,7 +28,8 @@ class IsObjectTest {
 	void isDoesNotMatchNull() {
 		assertThrowsAssertionErrorWithMessage(
 				() -> assertThat(this, is(null)),
-				String.format("expected that subject is: null%nbut was: \"%s\"", this)
+				"expected that subject is: null",
+				String.format("but was: \"%s\"", this)
 		);
 	}
 
@@ -37,7 +38,8 @@ class IsObjectTest {
 		final Object anyObject = new Object();
 		assertThrowsAssertionErrorWithMessage(
 				() -> assertThat(anyObject, is(this)),
-				String.format("expected that subject is: \"%s\"%nbut was: \"%s\"", this, anyObject)
+				String.format("expected that subject is: \"%s\"", this),
+				String.format("but was: \"%s\"", anyObject)
 		);
 	}
 

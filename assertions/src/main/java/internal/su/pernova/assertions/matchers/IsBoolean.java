@@ -2,13 +2,17 @@ package internal.su.pernova.assertions.matchers;
 
 import su.pernova.assertions.Description;
 
-public class IsBoolean extends DescriptiveMatcher {
+public class IsBoolean extends PromptDescriptiveMatcher {
 
 	private final boolean expected;
 
-	public IsBoolean(boolean expected) {
-		super("is");
+	public IsBoolean(CharSequence description, boolean prompt, boolean expected) {
+		super(description, prompt);
 		this.expected = expected;
+	}
+
+	public IsBoolean(boolean expected) {
+		this("is", true, expected);
 	}
 
 	@Override

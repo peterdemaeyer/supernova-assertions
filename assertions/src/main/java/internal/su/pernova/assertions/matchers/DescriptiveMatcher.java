@@ -16,13 +16,13 @@ public abstract class DescriptiveMatcher extends DefaultDescribable implements M
 	public Description describe(Description description) {
 		return (customDescription != null)
 				? ((customDescription.length() > 0)
-				? description.appendText(" " + customDescription)
+				? description.appendText(customDescription)
 				: description)
 				: Matcher.super.describe(description);
 	}
 
 	@Override
 	public Description describeMismatch(Description mismatchDescription) {
-		return mismatchDescription.appendText(" was");
+		return mismatchDescription.appendText("was");
 	}
 }

@@ -21,6 +21,18 @@ public interface Description {
 	Description appendText(CharSequence text);
 
 	/**
+	 * Appends a prompt to this description, which is ':' by default.
+	 * A prompt is used before an argument in an assertion failure expression such as:
+	 * "expected that subject is equal to: 1 but was: 2"
+	 *
+	 * @return this description, not {@code null}.
+	 * @since 2.0.0
+	 */
+	default Description appendPrompt() {
+		return appendText(":");
+	}
+
+	/**
 	 * Appends a given argument to this description.
 	 *
 	 * @param argument an argument to append to this description, maybe {@code null}.

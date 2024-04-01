@@ -3,10 +3,16 @@ package su.pernova.assertions;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+import internal.su.pernova.assertions.matchers.All;
+import internal.su.pernova.assertions.matchers.AllOf;
+import internal.su.pernova.assertions.matchers.Any;
+import internal.su.pernova.assertions.matchers.AnyOf;
 import internal.su.pernova.assertions.matchers.CloseTo;
+import internal.su.pernova.assertions.matchers.Context;
+import internal.su.pernova.assertions.matchers.ContextSensitive;
 import internal.su.pernova.assertions.matchers.EqualTo;
 import internal.su.pernova.assertions.matchers.InstanceOf;
-import internal.su.pernova.assertions.matchers.IsObject;
+import internal.su.pernova.assertions.matchers.Is;
 import internal.su.pernova.assertions.matchers.IsBoolean;
 import internal.su.pernova.assertions.matchers.IsByte;
 import internal.su.pernova.assertions.matchers.IsChar;
@@ -14,10 +20,10 @@ import internal.su.pernova.assertions.matchers.IsDouble;
 import internal.su.pernova.assertions.matchers.IsFloat;
 import internal.su.pernova.assertions.matchers.IsInt;
 import internal.su.pernova.assertions.matchers.IsLong;
+import internal.su.pernova.assertions.matchers.IsObject;
 import internal.su.pernova.assertions.matchers.IsShort;
 import internal.su.pernova.assertions.matchers.Nan;
 import internal.su.pernova.assertions.matchers.Not;
-import internal.su.pernova.assertions.matchers.IsMatcher;
 import internal.su.pernova.assertions.matchers.Regex;
 
 /**
@@ -27,6 +33,19 @@ import internal.su.pernova.assertions.matchers.Regex;
  * @since 1.0.0
  */
 public final class Matchers {
+
+	private static final Context IDENTITY_CONTEXT = new Context() {
+
+		@Override
+		public Matcher apply(Object expected) {
+			return new IsObject("", false, expected);
+		}
+
+		@Override
+		public Matcher apply(double expected) {
+			return new IsDouble("", false, expected);
+		}
+	};
 
 	private Matchers() {
 	}
@@ -43,7 +62,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher matches(Matcher delegate) {
-		return new IsMatcher("matches", delegate);
+		return new Is("matches", delegate);
 	}
 
 	/**
@@ -58,7 +77,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher match(Matcher delegate) {
-		return new IsMatcher("match", delegate);
+		return new Is("match", delegate);
 	}
 
 	/**
@@ -69,7 +88,11 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(Matcher delegate) {
-		return (delegate != null) ? new IsMatcher("is", delegate) : is((Object) null);
+		if (delegate != null) {
+			ContextSensitive.provideContext(IDENTITY_CONTEXT);
+			return new Is(delegate);
+		}
+		return is((Object) null);
 	}
 
 	/**
@@ -230,6 +253,14 @@ public final class Matchers {
 		return new EqualTo(expected);
 	}
 
+	public static Matcher equalTo(Matcher delegate) {
+		if (delegate != null) {
+			ContextSensitive.provideContext(expected -> new EqualTo("", false, expected));
+			return new Is("equal to", delegate);
+		}
+		return equalTo((Object) null);
+	}
+
 	/**
 	 * Returns a matcher that matches if an object is of a given instance, according to the {@code instanceof} operator.
 	 * The object to match may be {@code null}
@@ -243,6 +274,20 @@ public final class Matchers {
 	}
 
 	/**
+	 * Returns a context-providing matcher that provides the "instance of" context to a context-sensitive matcher such
+	 * as {@link #anyOf(Object...)}.
+	 *
+	 * @param delegate a context-sensitive matcher, not {@code null}.
+	 * @return a context-providing matcher, not {@code null}.
+	 * context-sensitive matcher.
+	 * @since 2.0.0
+	 */
+	public static Matcher instanceOf(Matcher delegate) {
+		ContextSensitive.provideContext(expected -> new InstanceOf("", false, (Class) expected));
+		return new Is("instance of", delegate);
+	}
+
+	/**
 	 * Returns a matcher that matches identical objects, including {@code null}.
 	 * Such a matcher uses the {@code ==} operator.
 	 *
@@ -251,7 +296,23 @@ public final class Matchers {
 	 * @since 1.0.0
 	 */
 	public static Matcher sameAs(Object expected) {
-		return new IsObject("same as", expected);
+		return new IsObject("same as", true, expected);
+	}
+
+	/**
+	 * Returns a context-providing matcher that matches by identity.
+	 * If provides context for a context-sensitive matcher such as {@link #allOf(Object...)}.
+	 *
+	 * @param delegate a context-sensitive matcher, not {@code null}.
+	 * @return a context-providing matcher, not {@code null}.
+	 * @since 2.0.0
+	 */
+	public static Matcher sameAs(Matcher delegate) {
+		if (delegate != null) {
+			ContextSensitive.provideContext(IDENTITY_CONTEXT);
+			return new Is("same as", delegate);
+		}
+		return sameAs((Object) null);
 	}
 
 	/**
@@ -314,7 +375,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher does(Matcher delegate) {
-		return new IsMatcher("does", delegate);
+		return new Is("does", delegate);
 	}
 
 	/**
@@ -339,7 +400,7 @@ public final class Matchers {
 	 * @return a matcher that does not match a given object.
 	 */
 	public static Matcher not(Object expected) {
-		return new Not(new IsObject("", expected));
+		return new Not(new IsObject("", true, expected));
 	}
 
 	/**
@@ -349,6 +410,72 @@ public final class Matchers {
 	 * @return a matcher that matches when a given double value does not.
 	 */
 	public static Matcher not(double expected) {
-		return new Not(new IsDouble("", expected));
+		return new Not(new IsDouble("", true, expected));
+	}
+
+	/**
+	 * Returns a matcher that combines multiple matchers with a logical OR operator.
+	 * If the matchers are empty, the matcher trivially does <i>not</i> match.
+	 *
+	 * @param matchers the matchers to combine with a logical OR operation, which must not be {@code null}.
+	 * @return a matcher that combines multiple matchers with a logical OR operator, not {@code null}.
+	 * @since 2.0.0
+	 */
+	public static Matcher anyOf(Matcher... matchers) {
+		return new AnyOf(matchers);
+	}
+
+	/**
+	 * Returns a context-sensitive matcher that combines multiple values with a logical OR operator.
+	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
+	 * values match.
+	 *
+	 * @param expected multiple values, which must not be {@code null} as an array, although individual elements in the
+	 * array may be {@code null}.
+	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
+	 * @since 2.0.0
+	 */
+	public static Matcher anyOf(Object... expected) {
+		return ContextSensitive.requireContext(Any.of(expected));
+	}
+
+	/***
+	 *
+	 * @param expected
+	 * @return
+	 * @since 2.0.0
+	 */
+	public static Matcher anyOf(double... expected) {
+		return ContextSensitive.requireContext(Any.of(expected));
+	}
+
+	/**
+	 *
+	 * @param delegates
+	 * @return
+	 * @since 2.0.0
+	 */
+	public static Matcher allOf(Matcher... delegates) {
+		return new AllOf(delegates);
+	}
+
+	/**
+	 *
+	 * @param expected
+	 * @return
+	 * @since 2.0.0
+	 */
+	public static Matcher allOf(Object... expected) {
+		return ContextSensitive.requireContext(All.of(expected));
+	}
+
+	/**
+	 *
+	 * @param expected
+	 * @return
+	 * @since 2.0.0
+	 */
+	public static Matcher allOf(double... expected) {
+		return ContextSensitive.requireContext(All.of(expected));
 	}
 }

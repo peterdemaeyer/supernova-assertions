@@ -21,6 +21,11 @@
 * Added a `Matchers.closeTo` matcher matching numbers with a tolerance.
   The expected value defines the type, the tolerance and actual value must be of the same or a compatible type.
 * Added `Matchers.not` and `Matchers.does` matchers to negate other matchers. 
+* Added `Matcher.or(Matcher)` and `Matcher.and(Matcher)` matchers to logically combine two matchers.
+* Added `Matchers.anyOf(Matcher...)` and `Matchers.allOf(Matcher...)` matchers to logically combine multiple matchers.
+* Added context-sensitive matching for `Matchers.andOf(Object/primitive...)`, `Matchers.allOf(Object/primitive)`,
+  `Matcher.or(Object/primitive)` and `Matcher.and(Object/primitive)` so that those matchers behave depending on the
+  context provided by another matcher such as `equalTo`, `is`, `instanceOf`.
 
 # Changes since 1.1.0
 

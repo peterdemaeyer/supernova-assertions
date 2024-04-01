@@ -2,17 +2,17 @@ package internal.su.pernova.assertions.matchers;
 
 import su.pernova.assertions.Description;
 
-public class IsDouble extends DescriptiveMatcher {
+public class IsDouble extends PromptDescriptiveMatcher {
 
 	private final double expected;
 
-	public IsDouble(CharSequence description, double expected) {
-		super(description);
+	public IsDouble(CharSequence description, boolean prompt, double expected) {
+		super(description, prompt);
 		this.expected = expected;
 	}
 
 	public IsDouble(double expected) {
-		this("is", expected);
+		this("is", true, expected);
 	}
 
 	@Override

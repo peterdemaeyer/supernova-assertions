@@ -27,6 +27,6 @@ public class Regex extends DefaultDescribable implements Matcher {
 
 	@Override
 	public Description describe(Description description) {
-		return Matcher.super.describe(description).appendArgument(regex);
+		return Matcher.super.describe(description).appendPrompt().appendArgument(regex);
 	}
 }

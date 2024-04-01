@@ -2,13 +2,17 @@ package internal.su.pernova.assertions.matchers;
 
 import su.pernova.assertions.Description;
 
-public class IsShort extends DescriptiveMatcher {
+public class IsShort extends PromptDescriptiveMatcher {
 
 	private short expected;
 
-	public IsShort(short expected) {
-		super("is");
+	public IsShort(CharSequence description, boolean prompt, short expected) {
+		super(description, prompt);
 		this.expected = expected;
+	}
+
+	public IsShort(short expected) {
+		this("is", true, expected);
 	}
 
 	@Override

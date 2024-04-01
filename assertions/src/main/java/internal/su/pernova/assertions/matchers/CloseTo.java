@@ -1,7 +1,5 @@
 package internal.su.pernova.assertions.matchers;
 
-import static java.lang.Math.max;
-import static java.lang.Math.min;
 import static java.util.Objects.requireNonNull;
 
 import java.math.BigDecimal;
@@ -103,6 +101,7 @@ public class CloseTo extends DescriptiveMatcher {
 	@Override
 	public Description describe(Description description) {
 		return super.describe(description)
+				.appendPrompt()
 				.appendArgument(expected)
 				.appendText(" ± ")
 				.appendText(tolerance.toString())

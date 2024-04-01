@@ -2,13 +2,17 @@ package internal.su.pernova.assertions.matchers;
 
 import su.pernova.assertions.Description;
 
-public class IsByte extends DescriptiveMatcher {
+public class IsByte extends PromptDescriptiveMatcher {
 
 	private final byte expected;
 
-	public IsByte(byte expected) {
-		super("is");
+	private IsByte(CharSequence description, boolean prompt, byte expected) {
+		super(description, prompt);
 		this.expected = expected;
+	}
+
+	public IsByte(byte expected) {
+		this("is", true, expected);
 	}
 
 	@Override

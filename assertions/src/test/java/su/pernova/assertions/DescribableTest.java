@@ -13,7 +13,7 @@ class DescribableTest {
 	@Test
 	void defaultDescriptionWithSingleWordDescribable() {
 		final Describable describable = new Pooh();
-		assertEquals(" pooh", describable.describe(description).toString());
+		assertEquals("pooh", describable.describe(description).toString());
 		assertEquals("", describable.describeMismatch(mismatchDescription).toString());
 	}
 
@@ -24,7 +24,7 @@ class DescribableTest {
 	void defaultDescriptionWithMultiWordDescribable() {
 		final Describable describable = new TestDescribable();
 		final String descriptionText = describable.describe(description).toString();
-		assertEquals(" test describable", descriptionText);
+		assertEquals("test describable", descriptionText);
 		final String mismatchDescriptionText = describable.describeMismatch(mismatchDescription).toString();
 		assertEquals("", mismatchDescriptionText);
 	}
@@ -36,7 +36,7 @@ class DescribableTest {
 	void defaultDescriptionWithSingleDigitNumberInDescribable() {
 		final Describable describable = new Describable1();
 		final String descriptionText = describable.describe(description).toString();
-		assertEquals(" describable 1", descriptionText);
+		assertEquals("describable 1", descriptionText);
 		final String mismatchDescriptionText = describable.describeMismatch(mismatchDescription).toString();
 		assertEquals("", mismatchDescriptionText);
 	}
@@ -47,7 +47,7 @@ class DescribableTest {
 	@Test
 	void defaultDescriptionWithMultiDigitNumberInDescribable() {
 		final Describable describable = new Describable123C456();
-		assertEquals(" describable 123 c 456", describable.describe(description).toString());
+		assertEquals("describable 123 c 456", describable.describe(description).toString());
 		assertEquals("", describable.describeMismatch(mismatchDescription).toString());
 	}
 

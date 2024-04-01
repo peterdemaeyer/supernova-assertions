@@ -10,13 +10,21 @@ public final class AssertionTestUtils {
 	private AssertionTestUtils() {
 	}
 
-	public static <T extends AssertionError> T assertThrowsAssertionErrorWithMessage(Executable executable, String expectedMessage) {
-		return (T) assertThrowsWithMessage(AssertionError.class, executable, expectedMessage);
+	public static <T extends AssertionError> T assertThrowsAssertionErrorWithMessage(Executable executable, String... expectedMessage) {
+		return (T) assertThrowsWithMessage(AssertionError.class, executable, format(expectedMessage));
 	}
 
-	public static <T extends Throwable> T assertThrowsWithMessage(Class<T> expectedType, Executable executable, String expectedMessage) {
+	public static <T extends Throwable> T assertThrowsWithMessage(Class<T> expectedType, Executable executable, String... expectedMessage) {
 		final T throwable = assertThrows(expectedType, executable);
-		assertEquals(expectedMessage, throwable.getMessage());
+		assertEquals(format(expectedMessage), throwable.getMessage());
 		return throwable;
+	}
+
+	private static String format(String... lines) {
+		final StringBuilder builder = new StringBuilder(lines.length * 4).append("%s");
+		for (int i = 1; i < lines.length; i++) {
+			builder.append("%n%s");
+		}
+		return String.format(builder.toString(), lines);
 	}
 }

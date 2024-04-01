@@ -9,7 +9,9 @@ import static su.pernova.assertions.Matchers.nan;
 
 import org.junit.jupiter.api.Test;
 
-class NanTest {
+import su.pernova.design.SingletonContractTest;
+
+class NanTest implements SingletonContractTest {
 
 	/**
 	 * This test illustrates the need for a {@link Nan} matcher.

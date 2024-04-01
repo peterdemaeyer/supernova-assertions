@@ -37,7 +37,11 @@ public final class DescribableUtils {
 			}
 			previousText = text;
 		}
-		return text.replaceAll("([A-Z]|\\d+)", " $1").toLowerCase();
+		text = text.replaceAll("([A-Z]|\\d+)", " $1");
+		if (!text.isEmpty()) {
+			text = text.substring(1);
+		}
+		return text.toLowerCase();
 	}
 
 	private static String stripPrefix(String text, String prefix) {

@@ -19,6 +19,6 @@ public class DefaultSubject implements Subject {
 
 	@Override
 	public Description describeMismatch(Description mismatchDescription) {
-		return mismatchDescription.appendActual(actual);
+		return mismatchDescription.appendPrompt().appendActual(actual);
 	}
 }
