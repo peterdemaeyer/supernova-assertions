@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static su.pernova.assertions.AssertionTestUtils.assertThrowsAssertionErrorWithMessage;
 import static su.pernova.assertions.Assertions.assertThat;
+import static su.pernova.assertions.Matchers.allOf;
 import static su.pernova.assertions.Matchers.anyOf;
 import static su.pernova.assertions.Matchers.equalTo;
 import static su.pernova.assertions.Matchers.instanceOf;
@@ -177,5 +178,30 @@ class AnyOfTest {
 				"expected that subject is same as any of: [\"object\"]",
 				"but was: \"object\""
 		);
+	}
+
+	@Test
+	void anyOfIdenticalPrimitives() {
+		assertThat(0d, is(anyOf(new double[] { 0d, -0d })));
+		assertThat(0f, is(anyOf(new float[] { 0f, -0f })));
+		assertThat(0L, is(anyOf(new long[] { 0L })));
+		assertThat(0, is(anyOf(new int[] { 0 })));
+		assertThat((short) 0, is(anyOf(new short[] { 0 })));
+		assertThat((byte) 0, is(anyOf(new byte[] { 0 })));
+		assertThat(false, is(anyOf(new boolean[] { false })));
+		assertThat('h', is(anyOf(new char[] { 'h' })));
+	}
+
+	@Test
+	void anyOfEqualPrimitives() {
+		// Pick the NaN example because it only works with equality, not with identity!
+		assertThat(Double.NaN, is(equalTo(anyOf(new double[]{ Double.NaN }))));
+		assertThat(Float.NaN, is(equalTo(anyOf(new float[] { Float.NaN }))));
+		assertThat(0L, is(equalTo(anyOf(new long[] { 0L }))));
+		assertThat(0, is(equalTo(anyOf(new int[] { 0 }))));
+		assertThat((short) 0, is(equalTo(anyOf(new short[] { 0 }))));
+		assertThat((byte) 0, is(equalTo(anyOf(new byte[] { 0 }))));
+		assertThat(false, is(equalTo(anyOf(new boolean[] { false }))));
+		assertThat('h', is(equalTo(anyOf(new char[] { 'h' }))));
 	}
 }

@@ -120,4 +120,29 @@ class AllOfTest {
 	void allOfManyDoubles() {
 		assertThat(0d, is(allOf(new double[] { 0d, -0d })));
 	}
+
+	@Test
+	void allOfIdenticalPrimitives() {
+		assertThat(0d, is(allOf(new double[] { 0d, -0d })));
+		assertThat(0f, is(allOf(new float[] { 0f, -0f })));
+		assertThat(0L, is(allOf(new long[] { 0L })));
+		assertThat(0, is(allOf(new int[] { 0 })));
+		assertThat((short) 0, is(allOf(new short[] { 0 })));
+		assertThat((byte) 0, is(allOf(new byte[] { 0 })));
+		assertThat(false, is(allOf(new boolean[] { false })));
+		assertThat('h', is(allOf(new char[] { 'h' })));
+	}
+
+	@Test
+	void allOfEqualPrimitives() {
+		// Pick the NaN example because it only works with equality, not with identity!
+		assertThat(Double.NaN, is(equalTo(allOf(new double[] { Double.NaN }))));
+		assertThat(Float.NaN, is(equalTo(allOf(new float[] { Float.NaN }))));
+		assertThat(0L, is(equalTo(allOf(new long[] { 0L }))));
+		assertThat(0, is(equalTo(allOf(new int[] { 0 }))));
+		assertThat((short) 0, is(equalTo(allOf(new short[] { 0 }))));
+		assertThat((byte) 0, is(equalTo(allOf(new byte[] { 0 }))));
+		assertThat(false, is(equalTo(allOf(new boolean[] { false }))));
+		assertThat('h', is(equalTo(allOf(new char[] { 'h' }))));
+	}
 }

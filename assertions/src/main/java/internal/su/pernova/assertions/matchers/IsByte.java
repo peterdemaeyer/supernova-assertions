@@ -6,7 +6,7 @@ public class IsByte extends PromptDescriptiveMatcher {
 
 	private final byte expected;
 
-	private IsByte(CharSequence description, boolean prompt, byte expected) {
+	public IsByte(CharSequence description, boolean prompt, byte expected) {
 		super(description, prompt);
 		this.expected = expected;
 	}

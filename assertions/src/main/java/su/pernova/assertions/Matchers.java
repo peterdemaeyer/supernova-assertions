@@ -45,6 +45,41 @@ public final class Matchers {
 		public Matcher apply(double expected) {
 			return new IsDouble("", false, expected);
 		}
+
+		@Override
+		public Matcher apply(float expected) {
+			return new IsFloat("", false, expected);
+		}
+
+		@Override
+		public Matcher apply(long expected) {
+			return new IsLong("", false, expected);
+		}
+
+		@Override
+		public Matcher apply(int expected) {
+			return new IsInt("", false, expected);
+		}
+
+		@Override
+		public Matcher apply(short expected) {
+			return new IsShort("", false, expected);
+		}
+
+		@Override
+		public Matcher apply(byte expected) {
+			return new IsByte("", false, expected);
+		}
+
+		@Override
+		public Matcher apply(char expected) {
+			return Context.super.apply(expected);
+		}
+
+		@Override
+		public Matcher apply(boolean expected) {
+			return Context.super.apply(expected);
+		}
 	};
 
 	private Matchers() {
@@ -253,6 +288,14 @@ public final class Matchers {
 		return new EqualTo(expected);
 	}
 
+	/**
+	 * Returns a context-providing matcher that matches by equality.
+	 * It provides context for a context-sensitive matcher such as {@link #allOf(Object...)}.
+	 *
+	 * @param delegate a context-sensitive matcher, not {@code null}.
+	 * @return a context-providing matcher, not {@code null}.
+	 * @since 2.0.0
+	 */
 	public static Matcher equalTo(Matcher delegate) {
 		if (delegate != null) {
 			ContextSensitive.provideContext(expected -> new EqualTo("", false, expected));
@@ -265,12 +308,12 @@ public final class Matchers {
 	 * Returns a matcher that matches if an object is of a given instance, according to the {@code instanceof} operator.
 	 * The object to match may be {@code null}
 	 *
-	 * @param clazz a class to match (including subtypes).
+	 * @param class_ a class to match (including subtypes).
 	 * @return a matcher, not {@code null}, that matches is an object is of a given instance.
 	 * @since 1.0.0
 	 */
-	public static Matcher instanceOf(Class clazz) {
-		return new InstanceOf(clazz);
+	public static Matcher instanceOf(Class class_) {
+		return new InstanceOf(class_);
 	}
 
 	/**
@@ -301,7 +344,7 @@ public final class Matchers {
 
 	/**
 	 * Returns a context-providing matcher that matches by identity.
-	 * If provides context for a context-sensitive matcher such as {@link #allOf(Object...)}.
+	 * It provides context for a context-sensitive matcher such as {@link #allOf(Object...)}.
 	 *
 	 * @param delegate a context-sensitive matcher, not {@code null}.
 	 * @return a context-providing matcher, not {@code null}.
@@ -415,7 +458,7 @@ public final class Matchers {
 
 	/**
 	 * Returns a matcher that combines multiple matchers with a logical OR operator.
-	 * If the matchers are empty, the matcher trivially does <i>not</i> match.
+	 * If the matchers are empty, the matcher trivially does not match.
 	 *
 	 * @param matchers the matchers to combine with a logical OR operation, which must not be {@code null}.
 	 * @return a matcher that combines multiple matchers with a logical OR operator, not {@code null}.
@@ -430,8 +473,8 @@ public final class Matchers {
 	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
 	 * values match.
 	 *
-	 * @param expected multiple values, which must not be {@code null} as an array, although individual elements in the
-	 * array may be {@code null}.
+	 * @param expected multiple values, which must not be {@code null} as an array.
+	 * Individual elements in the array may be {@code null}.
 	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
 	 * @since 2.0.0
 	 */
@@ -439,10 +482,13 @@ public final class Matchers {
 		return ContextSensitive.requireContext(Any.of(expected));
 	}
 
-	/***
+	/**
+	 * Returns a context-sensitive matcher that combines multiple values with a logical OR operator.
+	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
+	 * values match.
 	 *
-	 * @param expected
-	 * @return
+	 * @param expected multiple values, which must not be {@code null}.
+	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(double... expected) {
@@ -450,9 +496,102 @@ public final class Matchers {
 	}
 
 	/**
+	 * Returns a context-sensitive matcher that combines multiple values with a logical OR operator.
+	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
+	 * values match.
 	 *
-	 * @param delegates
-	 * @return
+	 * @param expected multiple values, which must not be {@code null}.
+	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
+	 * @since 2.0.0
+	 */
+	public static Matcher anyOf(float... expected) {
+		return ContextSensitive.requireContext(Any.of(expected));
+	}
+
+	/**
+	 * Returns a context-sensitive matcher that combines multiple values with a logical OR operator.
+	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
+	 * values match.
+	 *
+	 * @param expected multiple values, which must not be {@code null}.
+	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
+	 * @since 2.0.0
+	 */
+	public static Matcher anyOf(long... expected) {
+		return ContextSensitive.requireContext(Any.of(expected));
+	}
+
+	/**
+	 * Returns a context-sensitive matcher that combines multiple values with a logical OR operator.
+	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
+	 * values match.
+	 *
+	 * @param expected multiple values, which must not be {@code null}.
+	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
+	 * @since 2.0.0
+	 */
+	public static Matcher anyOf(int... expected) {
+		return ContextSensitive.requireContext(Any.of(expected));
+	}
+
+	/**
+	 * Returns a context-sensitive matcher that combines multiple values with a logical OR operator.
+	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
+	 * values match.
+	 *
+	 * @param expected multiple values, which must not be {@code null}.
+	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
+	 * @since 2.0.0
+	 */
+	public static Matcher anyOf(short... expected) {
+		return ContextSensitive.requireContext(Any.of(expected));
+	}
+
+	/**
+	 * Returns a context-sensitive matcher that combines multiple values with a logical OR operator.
+	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
+	 * values match.
+	 *
+	 * @param expected multiple values, which must not be {@code null}.
+	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
+	 * @since 2.0.0
+	 */
+	public static Matcher anyOf(byte... expected) {
+		return ContextSensitive.requireContext(Any.of(expected));
+	}
+
+	/**
+	 * Returns a context-sensitive matcher that combines multiple values with a logical OR operator.
+	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
+	 * values match.
+	 *
+	 * @param expected multiple values, which must not be {@code null}.
+	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
+	 * @since 2.0.0
+	 */
+	public static Matcher anyOf(char... expected) {
+		return ContextSensitive.requireContext(Any.of(expected));
+	}
+
+	/**
+	 * Returns a context-sensitive matcher that combines multiple values with a logical OR operator.
+	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
+	 * values match.
+	 *
+	 * @param expected multiple values, which must not be {@code null}.
+	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
+	 * @since 2.0.0
+	 */
+	public static Matcher anyOf(boolean... expected) {
+		return ContextSensitive.requireContext(Any.of(expected));
+	}
+
+	/**
+	 * Returns a matcher that combines multiple matchers with a logical AND operator.
+	 * If the matchers are empty, the matcher trivially matches.
+	 *
+	 * @param delegates the matchers to combine with a logical AND operation, which must not be {@code null}.
+	 * @return a matcher that combines multiple matchers with a logical AND operator, not {@code null}.
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(Matcher... delegates) {
@@ -460,9 +599,13 @@ public final class Matchers {
 	}
 
 	/**
+	 * Returns a context-sensitive matcher that combines multiple values with a logical AND operator.
+	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
+	 * values match.
 	 *
-	 * @param expected
-	 * @return
+	 * @param expected multiple values, which must not be {@code null} as an array.
+	 * Individual elements in the array may be {@code null}.
+	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(Object... expected) {
@@ -470,12 +613,106 @@ public final class Matchers {
 	}
 
 	/**
+	 * Returns a context-sensitive matcher that combines multiple values with a logical OR operator.
+	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
+	 * values match.
 	 *
-	 * @param expected
-	 * @return
+	 * @param expected multiple values, which must not be {@code null}.
+	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(double... expected) {
+		return ContextSensitive.requireContext(All.of(expected));
+	}
+
+	/**
+	 * Returns a context-sensitive matcher that combines multiple values with a logical OR operator.
+	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
+	 * values match.
+	 *
+	 * @param expected multiple values, which must not be {@code null}.
+	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
+	 * @since 2.0.0
+	 */
+	public static Matcher allOf(float... expected) {
+		return ContextSensitive.requireContext(All.of(expected));
+	}
+
+	/**
+	 * Returns a context-sensitive matcher that combines multiple values with a logical OR operator.
+	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
+	 * values match.
+	 *
+	 * @param expected multiple values, which must not be {@code null}.
+	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
+	 * @since 2.0.0
+	 */
+	public static Matcher allOf(long... expected) {
+		return ContextSensitive.requireContext(All.of(expected));
+	}
+
+	/**
+	 * Returns a context-sensitive matcher that combines multiple values with a logical OR operator.
+	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
+	 * values match.
+	 *
+	 * @param expected multiple values, which must not be {@code null}.
+	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
+	 * @since 2.0.0
+	 */
+	public static Matcher allOf(int... expected) {
+		return ContextSensitive.requireContext(All.of(expected));
+	}
+
+	/**
+	 * Returns a context-sensitive matcher that combines multiple values with a logical OR operator.
+	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
+	 * values match.
+	 *
+	 * @param expected multiple values, which must not be {@code null}.
+	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
+	 * @since 2.0.0
+	 */
+	public static Matcher allOf(short... expected) {
+		return ContextSensitive.requireContext(All.of(expected));
+	}
+
+	/**
+	 * Returns a context-sensitive matcher that combines multiple values with a logical OR operator.
+	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
+	 * values match.
+	 *
+	 * @param expected multiple values, which must not be {@code null}.
+	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
+	 * @since 2.0.0
+	 */
+	public static Matcher allOf(byte... expected) {
+		return ContextSensitive.requireContext(All.of(expected));
+	}
+
+	/**
+	 * Returns a context-sensitive matcher that combines multiple values with a logical OR operator.
+	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
+	 * values match.
+	 *
+	 * @param expected multiple values, which must not be {@code null}.
+	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
+	 * @since 2.0.0
+	 */
+	public static Matcher allOf(char... expected) {
+		return ContextSensitive.requireContext(All.of(expected));
+	}
+
+	/**
+	 * Returns a context-sensitive matcher that combines multiple values with a logical OR operator.
+	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
+	 * values match.
+	 *
+	 * @param expected multiple values, which must not be {@code null}.
+	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
+	 * @since 2.0.0
+	 */
+	public static Matcher allOf(boolean... expected) {
 		return ContextSensitive.requireContext(All.of(expected));
 	}
 }
