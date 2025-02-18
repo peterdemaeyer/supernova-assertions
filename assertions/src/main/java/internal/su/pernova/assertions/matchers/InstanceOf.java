@@ -8,6 +8,8 @@ import su.pernova.assertions.Matcher;
 
 public class InstanceOf extends PromptDescriptiveMatcher {
 
+	public static final Context CONTEXT = expected -> new InstanceOf("", false, (Class) expected);
+
 	private final Class class_;
 
 	public InstanceOf(CharSequence description, boolean prompt, Class class_) {

@@ -7,6 +7,7 @@ import static su.pernova.assertions.Subjects.defaultSubject;
 
 import internal.su.pernova.assertions.AssertionFailureThrower;
 import internal.su.pernova.assertions.FailureThrower;
+import internal.su.pernova.assertions.matchers.ContextSensitive;
 
 /**
  * This is the main utility class for writing assertions.
@@ -62,18 +63,22 @@ public final class Assertions {
 		if (matchers.length == 0) {
 			matchers = new Matcher[]{ is(true) };
 		}
-		for (Matcher matcher: matchers) {
-			if (!subject.match(matcher)) {
-				final Description description = new AppendableDescription(new StringBuilder())
-						.appendText("expected that");
-				subject.describe(description);
-				matcher.describe(description);
-				description.appendText(lineSeparator())
-						.appendText("but");
-				matcher.describeMismatch(description);
-				subject.describeMismatch(description);
-				thrower.throwFailure(description.toString(), description.getExpected(), description.getActual());
+		try {
+			for (Matcher matcher : matchers) {
+				if (!subject.match(matcher)) {
+					final Description description = new AppendableDescription(new StringBuilder())
+							.appendText("expected that");
+					subject.describe(description);
+					matcher.describe(description);
+					description.appendText(lineSeparator())
+							.appendText("but");
+					matcher.describeMismatch(description);
+					subject.describeMismatch(description);
+					thrower.throwFailure(description.toString(), description.getExpected(), description.getActual());
+				}
 			}
+		} finally {
+			ContextSensitive.clear();
 		}
 	}
 

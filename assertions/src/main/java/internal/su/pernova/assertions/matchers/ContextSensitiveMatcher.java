@@ -33,6 +33,11 @@ public class ContextSensitiveMatcher implements ContextSensitive, Matcher {
 	}
 
 	@Override
+	public Description describeMismatch(Description mismatchDescription) {
+		return requireDelegate().describeMismatch(mismatchDescription);
+	}
+
+	@Override
 	public void apply(Context context) {
 		delegate = function.apply(context);
 	}

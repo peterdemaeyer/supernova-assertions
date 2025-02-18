@@ -31,4 +31,22 @@ class AndTest {
 						String.class.getName())
 		);
 	}
+
+	@Test
+	void contextSensitiveMatching() {
+		assertThat("this", is("this").and("this"));
+		assertThat(1d, is(1d).and(1d));
+		assertThrowsAssertionErrorWithMessage(
+				() -> assertThat(1d, is(1d).and(2d)),
+				"expected that subject is: 1.0 and: 2.0",
+				"but was: 1.0"
+		);
+		assertThat(1f, is(1f).and(1f));
+		assertThat(1L, is(1L).and(1L));
+		assertThat(1, is(1).and(1));
+		assertThat((short) 1, is((short) 1).and((short) 1));
+		assertThat((byte) 1, is((byte) 1).and((byte) 1));
+		assertThat('1', is('1').and('1'));
+		assertThat(false, is(false).and(false));
+	}
 }

@@ -4,6 +4,8 @@ import java.util.Objects;
 
 public class EqualTo extends ObjectMatcher {
 
+	public static final Context CONTEXT = expected -> new EqualTo("", false, expected);
+
 	public EqualTo(CharSequence description, boolean prompt, Object expected) {
 		super(description, prompt, expected);
 	}

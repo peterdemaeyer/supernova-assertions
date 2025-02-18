@@ -1,5 +1,8 @@
 package su.pernova.assertions;
 
+import static internal.su.pernova.assertions.matchers.ContextSensitive.provideContext;
+import static internal.su.pernova.assertions.matchers.ContextSensitive.requireBackwardContext;
+
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -33,54 +36,6 @@ import internal.su.pernova.assertions.matchers.Regex;
  * @since 1.0.0
  */
 public final class Matchers {
-
-	private static final Context IDENTITY_CONTEXT = new Context() {
-
-		@Override
-		public Matcher apply(Object expected) {
-			return new IsObject("", false, expected);
-		}
-
-		@Override
-		public Matcher apply(double expected) {
-			return new IsDouble("", false, expected);
-		}
-
-		@Override
-		public Matcher apply(float expected) {
-			return new IsFloat("", false, expected);
-		}
-
-		@Override
-		public Matcher apply(long expected) {
-			return new IsLong("", false, expected);
-		}
-
-		@Override
-		public Matcher apply(int expected) {
-			return new IsInt("", false, expected);
-		}
-
-		@Override
-		public Matcher apply(short expected) {
-			return new IsShort("", false, expected);
-		}
-
-		@Override
-		public Matcher apply(byte expected) {
-			return new IsByte("", false, expected);
-		}
-
-		@Override
-		public Matcher apply(char expected) {
-			return Context.super.apply(expected);
-		}
-
-		@Override
-		public Matcher apply(boolean expected) {
-			return Context.super.apply(expected);
-		}
-	};
 
 	private Matchers() {
 	}
@@ -124,8 +79,7 @@ public final class Matchers {
 	 */
 	public static Matcher is(Matcher delegate) {
 		if (delegate != null) {
-			ContextSensitive.provideContext(IDENTITY_CONTEXT);
-			return new Is(delegate);
+			return provideContext(new Is(delegate), Is.CONTEXT);
 		}
 		return is((Object) null);
 	}
@@ -139,7 +93,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(Object expected) {
-		return new IsObject(expected);
+		return provideContext(new IsObject(expected), Is.CONTEXT);
 	}
 
 	/**
@@ -165,7 +119,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(double expected) {
-		return new IsDouble(expected);
+		return provideContext(new IsDouble(expected), Is.CONTEXT);
 	}
 
 	/**
@@ -191,7 +145,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(float expected) {
-		return new IsFloat(expected);
+		return provideContext(new IsFloat(expected), Is.CONTEXT);
 	}
 
 	/**
@@ -204,7 +158,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(long expected) {
-		return new IsLong(expected);
+		return provideContext(new IsLong(expected), Is.CONTEXT);
 	}
 
 	/**
@@ -217,7 +171,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(int expected) {
-		return new IsInt(expected);
+		return provideContext(new IsInt(expected), Is.CONTEXT);
 	}
 
 	/**
@@ -231,7 +185,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(short expected) {
-		return new IsShort(expected);
+		return provideContext(new IsShort(expected), Is.CONTEXT);
 	}
 
 	/**
@@ -245,7 +199,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(byte expected) {
-		return new IsByte(expected);
+		return provideContext(new IsByte(expected), Is.CONTEXT);
 	}
 
 	/**
@@ -259,7 +213,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(char expected) {
-		return new IsChar(expected);
+		return provideContext(new IsChar(expected), Is.CONTEXT);
 	}
 
 	/**
@@ -273,7 +227,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(boolean expected) {
-		return new IsBoolean(expected);
+		return provideContext(new IsBoolean(expected), Is.CONTEXT);
 	}
 
 	/**
@@ -285,7 +239,7 @@ public final class Matchers {
 	 * @since 1.0.0
 	 */
 	public static Matcher equalTo(Object expected) {
-		return new EqualTo(expected);
+		return provideContext(new EqualTo(expected), EqualTo.CONTEXT);
 	}
 
 	/**
@@ -298,8 +252,7 @@ public final class Matchers {
 	 */
 	public static Matcher equalTo(Matcher delegate) {
 		if (delegate != null) {
-			ContextSensitive.provideContext(expected -> new EqualTo("", false, expected));
-			return new Is("equal to", delegate);
+			return provideContext(new Is("equal to", delegate), EqualTo.CONTEXT);
 		}
 		return equalTo((Object) null);
 	}
@@ -313,7 +266,7 @@ public final class Matchers {
 	 * @since 1.0.0
 	 */
 	public static Matcher instanceOf(Class class_) {
-		return new InstanceOf(class_);
+		return provideContext(new InstanceOf(class_), InstanceOf.CONTEXT);
 	}
 
 	/**
@@ -326,8 +279,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher instanceOf(Matcher delegate) {
-		ContextSensitive.provideContext(expected -> new InstanceOf("", false, (Class) expected));
-		return new Is("instance of", delegate);
+		return provideContext(new Is("instance of", delegate), InstanceOf.CONTEXT);
 	}
 
 	/**
@@ -339,7 +291,7 @@ public final class Matchers {
 	 * @since 1.0.0
 	 */
 	public static Matcher sameAs(Object expected) {
-		return new IsObject("same as", true, expected);
+		return provideContext(new IsObject("same as", true, expected), Is.CONTEXT);
 	}
 
 	/**
@@ -352,8 +304,7 @@ public final class Matchers {
 	 */
 	public static Matcher sameAs(Matcher delegate) {
 		if (delegate != null) {
-			ContextSensitive.provideContext(IDENTITY_CONTEXT);
-			return new Is("same as", delegate);
+			return provideContext(new Is("same as", delegate), Is.CONTEXT);
 		}
 		return sameAs((Object) null);
 	}
@@ -479,7 +430,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(Object... expected) {
-		return ContextSensitive.requireContext(Any.of(expected));
+		return requireBackwardContext(Any.of(expected));
 	}
 
 	/**
@@ -492,7 +443,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(double... expected) {
-		return ContextSensitive.requireContext(Any.of(expected));
+		return requireBackwardContext(Any.of(expected));
 	}
 
 	/**
@@ -505,7 +456,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(float... expected) {
-		return ContextSensitive.requireContext(Any.of(expected));
+		return requireBackwardContext(Any.of(expected));
 	}
 
 	/**
@@ -518,7 +469,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(long... expected) {
-		return ContextSensitive.requireContext(Any.of(expected));
+		return requireBackwardContext(Any.of(expected));
 	}
 
 	/**
@@ -531,7 +482,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(int... expected) {
-		return ContextSensitive.requireContext(Any.of(expected));
+		return requireBackwardContext(Any.of(expected));
 	}
 
 	/**
@@ -544,7 +495,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(short... expected) {
-		return ContextSensitive.requireContext(Any.of(expected));
+		return requireBackwardContext(Any.of(expected));
 	}
 
 	/**
@@ -557,7 +508,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(byte... expected) {
-		return ContextSensitive.requireContext(Any.of(expected));
+		return requireBackwardContext(Any.of(expected));
 	}
 
 	/**
@@ -570,7 +521,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(char... expected) {
-		return ContextSensitive.requireContext(Any.of(expected));
+		return requireBackwardContext(Any.of(expected));
 	}
 
 	/**
@@ -583,7 +534,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(boolean... expected) {
-		return ContextSensitive.requireContext(Any.of(expected));
+		return requireBackwardContext(Any.of(expected));
 	}
 
 	/**
@@ -609,7 +560,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(Object... expected) {
-		return ContextSensitive.requireContext(All.of(expected));
+		return requireBackwardContext(All.of(expected));
 	}
 
 	/**
@@ -622,7 +573,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(double... expected) {
-		return ContextSensitive.requireContext(All.of(expected));
+		return requireBackwardContext(All.of(expected));
 	}
 
 	/**
@@ -635,7 +586,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(float... expected) {
-		return ContextSensitive.requireContext(All.of(expected));
+		return requireBackwardContext(All.of(expected));
 	}
 
 	/**
@@ -648,7 +599,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(long... expected) {
-		return ContextSensitive.requireContext(All.of(expected));
+		return requireBackwardContext(All.of(expected));
 	}
 
 	/**
@@ -661,7 +612,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(int... expected) {
-		return ContextSensitive.requireContext(All.of(expected));
+		return requireBackwardContext(All.of(expected));
 	}
 
 	/**
@@ -674,7 +625,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(short... expected) {
-		return ContextSensitive.requireContext(All.of(expected));
+		return requireBackwardContext(All.of(expected));
 	}
 
 	/**
@@ -687,7 +638,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(byte... expected) {
-		return ContextSensitive.requireContext(All.of(expected));
+		return requireBackwardContext(All.of(expected));
 	}
 
 	/**
@@ -700,7 +651,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(char... expected) {
-		return ContextSensitive.requireContext(All.of(expected));
+		return requireBackwardContext(All.of(expected));
 	}
 
 	/**
@@ -713,6 +664,6 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(boolean... expected) {
-		return ContextSensitive.requireContext(All.of(expected));
+		return requireBackwardContext(All.of(expected));
 	}
 }
