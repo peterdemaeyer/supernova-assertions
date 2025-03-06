@@ -107,4 +107,8 @@ public class CloseTo extends DescriptiveMatcher {
 				.appendText(tolerance.toString())
 				.appendText(" [" + minimum + ", " + maximum + "]");
 	}
+
+	public static Context context(Number tolerance) {
+		return expected -> new CloseTo((Number) expected, tolerance);
+	}
 }

@@ -352,7 +352,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher closeTo(Number expected, Number tolerance) {
-		return new CloseTo(expected, tolerance);
+		return Context.provideContext(new CloseTo(expected, tolerance), CloseTo.context(tolerance));
 	}
 
 	/**

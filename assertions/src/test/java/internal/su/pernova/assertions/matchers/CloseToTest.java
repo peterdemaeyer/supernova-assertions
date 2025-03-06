@@ -17,6 +17,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.junit.jupiter.api.Test;
 
+import su.pernova.assertions.Matcher;
+
 class CloseToTest {
 
 	@Test
@@ -29,7 +31,7 @@ class CloseToTest {
 
 	@Test
 	void closeToDoesNotMatchAnyObject() {
-		final Object anyObject = new Object();
+		Object anyObject = new Object();
 		assertThrowsAssertionErrorWithMessage(
 				() -> assertThat(anyObject, is(closeTo(1d, 0d))),
 				String.format("expected that subject is close to: 1.0 ± 0.0 [1.0, 1.0]%nbut was: \"%s\"", anyObject)
@@ -38,7 +40,7 @@ class CloseToTest {
 
 	@Test
 	void closeToDoesNotMatchAnyNumber() {
-		final AtomicLong anyNumber = new AtomicLong(0L);
+		AtomicLong anyNumber = new AtomicLong(0L);
 		assertThrowsWithMessage(
 				IllegalArgumentException.class,
 				() -> assertThat(anyNumber, is(closeTo(new AtomicLong(0L), new AtomicLong(0L)))),
@@ -99,5 +101,17 @@ class CloseToTest {
 		assertDoesNotThrow(() -> assertThat(Integer.MIN_VALUE, is(closeTo(Integer.MIN_VALUE, 1))));
 		assertDoesNotThrow(() -> assertThat(Short.MIN_VALUE, is(closeTo(Short.MIN_VALUE, (short) 1))));
 		assertDoesNotThrow(() -> assertThat(Byte.MIN_VALUE, is(closeTo(Byte.MIN_VALUE, (byte) 1))));
+	}
+
+	@Test
+	void contextSensitiveMatching() {
+		Matcher isCloseToOneOrTwo = is(closeTo(1., .01).or(2.));
+		assertThat(.995, isCloseToOneOrTwo);
+		assertThat(2.005, isCloseToOneOrTwo);
+		assertThrowsAssertionErrorWithMessage(
+				() -> assertThat(1.5, isCloseToOneOrTwo),
+				"expected that subject is close to: 1.0 ± 0.01 [0.99, 1.01] or: close to: 2.0 ± 0.01 [1.99, 2.01]",
+						"but was: 1.5"
+		);
 	}
 }
