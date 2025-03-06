@@ -2,7 +2,7 @@ package internal.su.pernova.assertions.matchers;
 
 import su.pernova.assertions.Matcher;
 
-public class Not extends PrefixingMatcher {
+public class Not extends DelegatingMatcher {
 
 	public Not(Matcher delegate) {
 		super("not", delegate);

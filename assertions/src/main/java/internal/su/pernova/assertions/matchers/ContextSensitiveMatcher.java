@@ -1,18 +1,34 @@
 package internal.su.pernova.assertions.matchers;
 
-import java.util.function.Function;
-
 import su.pernova.assertions.Description;
 import su.pernova.assertions.Matcher;
 
-public class ContextSensitiveMatcher implements ContextSensitive, Matcher {
+/**
+ * A context-sensitive matcher is a matcher that cannot be used without context.
+ * It is for example an "anyOf" matcher that can only be used in the context of another context-providing matcher such
+ * as "is" or "equalTo" matcher.
+ * "assert that subject is any of ..." or "assert that subject is equal to any of".
+ * Matchers such as "is", "equal to" or "instance of" which provide context for context-sensitive matchers are
+ * context-providing matchers.
+ *
+ * Contexts to be forwarded to context-sensitives in a left-to-right context.
+ * For example:
+ * <pre>{@code
+ * assertThat(1, is(2).or(1));
+ *               |     |
+ *               |     L context-sensitive "or" matcher is evaluated LAST.
+ *               |
+ *               L context-providing "is" matcher is evaluated FIRST.
+ * }</pre>
+ */
+ public class ContextSensitiveMatcher implements ContextSensitive, Matcher {
 
-	private final Function<Context, Matcher> function;
+	private final ContextSensitive contextSensitive;
 
 	private Matcher delegate;
 
-	public ContextSensitiveMatcher(Function<Context, Matcher> function) {
-		this.function = function;
+	public ContextSensitiveMatcher(ContextSensitive contextSensitive) {
+		this.contextSensitive = contextSensitive;
 	}
 
 	private Matcher requireDelegate() {
@@ -38,7 +54,7 @@ public class ContextSensitiveMatcher implements ContextSensitive, Matcher {
 	}
 
 	@Override
-	public void apply(Context context) {
-		delegate = function.apply(context);
+	public Matcher evaluate(Context context) {
+		return delegate = contextSensitive.evaluate(context);
 	}
 }

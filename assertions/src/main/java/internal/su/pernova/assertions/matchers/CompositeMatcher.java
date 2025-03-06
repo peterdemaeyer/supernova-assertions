@@ -32,9 +32,9 @@ public abstract class CompositeMatcher extends DefaultDescribable implements Mat
 	@Override
 	public Description describe(Description description) {
 		super.describe(description).appendPrompt().appendText(startDelimiter);
-		int i = 0;
+		int index = 0;
 		for (Matcher delegate : delegates) {
-			if (i++ > 0) {
+			if (index++ > 0) {
 				description.appendText(separator);
 			}
 			delegate.describe(description);
@@ -43,62 +43,62 @@ public abstract class CompositeMatcher extends DefaultDescribable implements Mat
 	}
 
 	static Matcher[] apply(Context context, Object... values) {
-		return stream(values).map(context::apply).toArray(Matcher[]::new);
+		return stream(values).map(context::evaluate).toArray(Matcher[]::new);
 	}
 
 	static Matcher[] apply(Context context, double... values) {
-		return stream(values).mapToObj(context::apply).toArray(Matcher[]::new);
+		return stream(values).mapToObj(context::evaluate).toArray(Matcher[]::new);
 	}
 
 	static Matcher[] apply(Context context, float... values) {
-		final Matcher[] matchers = new Matcher[values.length];
+		Matcher[] matchers = new Matcher[values.length];
 		int i = 0;
 		for (float value : values) {
-			matchers[i++] = context.apply(value);
+			matchers[i++] = context.evaluate(value);
 		}
 		return matchers;
 	}
 
 	static Matcher[] apply(Context context, long... values) {
-		return stream(values).mapToObj(context::apply).toArray(Matcher[]::new);
+		return stream(values).mapToObj(context::evaluate).toArray(Matcher[]::new);
 	}
 
 	static Matcher[] apply(Context context, int... values) {
-		return stream(values).mapToObj(context::apply).toArray(Matcher[]::new);
+		return stream(values).mapToObj(context::evaluate).toArray(Matcher[]::new);
 	}
 
 	static Matcher[] apply(Context context, short... values) {
-		final Matcher[] matchers = new Matcher[values.length];
+		Matcher[] matchers = new Matcher[values.length];
 		int i = 0;
 		for (short value : values) {
-			matchers[i++] = context.apply(value);
+			matchers[i++] = context.evaluate(value);
 		}
 		return matchers;
 	}
 
 	static Matcher[] apply(Context context, byte... values) {
-		final Matcher[] matchers = new Matcher[values.length];
+		Matcher[] matchers = new Matcher[values.length];
 		int i = 0;
 		for (byte value : values) {
-			matchers[i++] = context.apply(value);
+			matchers[i++] = context.evaluate(value);
 		}
 		return matchers;
 	}
 
 	static Matcher[] apply(Context context, char... values) {
-		final Matcher[] matchers = new Matcher[values.length];
+		Matcher[] matchers = new Matcher[values.length];
 		int i = 0;
 		for (char value : values) {
-			matchers[i++] = context.apply(value);
+			matchers[i++] = context.evaluate(value);
 		}
 		return matchers;
 	}
 
 	static Matcher[] apply(Context context, boolean... values) {
-		final Matcher[] matchers = new Matcher[values.length];
+		Matcher[] matchers = new Matcher[values.length];
 		int i = 0;
 		for (boolean value : values) {
-			matchers[i++] = context.apply(value);
+			matchers[i++] = context.evaluate(value);
 		}
 		return matchers;
 	}

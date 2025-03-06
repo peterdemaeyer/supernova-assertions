@@ -15,16 +15,16 @@ public final class AssertionTestUtils {
 	}
 
 	public static <T extends Throwable> T assertThrowsWithMessage(Class<T> expectedType, Executable executable, String... expectedMessage) {
-		final T throwable = assertThrows(expectedType, executable);
+		T throwable = assertThrows(expectedType, executable);
 		assertEquals(format(expectedMessage), throwable.getMessage());
 		return throwable;
 	}
 
 	private static String format(String... lines) {
-		final StringBuilder builder = new StringBuilder(lines.length * 4).append("%s");
+		StringBuilder builder = new StringBuilder(lines.length * 4).append("%s");
 		for (int i = 1; i < lines.length; i++) {
 			builder.append("%n%s");
 		}
-		return String.format(builder.toString(), lines);
+		return String.format(builder.toString(), (Object[]) lines);
 	}
 }

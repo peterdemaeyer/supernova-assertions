@@ -4,7 +4,7 @@ import su.pernova.assertions.Description;
 
 public class IsShort extends PromptDescriptiveMatcher {
 
-	private short expected;
+	private final short expected;
 
 	public IsShort(CharSequence description, boolean prompt, short expected) {
 		super(description, prompt);

@@ -1,6 +1,10 @@
 package su.pernova.assertions;
 
+import java.nio.charset.Charset;
+
+import internal.su.pernova.assertions.subjects.CharacterEncodedContent;
 import internal.su.pernova.assertions.subjects.Condition;
+import internal.su.pernova.assertions.subjects.Content;
 import internal.su.pernova.assertions.subjects.DefaultSubject;
 
 /**
@@ -40,6 +44,28 @@ public final class Subjects {
 	 */
 	public static Subject condition(Object actual) {
 		return new Condition(actual);
+	}
+
+	/**
+	 * Creates content for a given object.
+	 *
+	 * @param actual an object to create content for, possibly {@code null}.
+	 * @return content, not {@code null}.
+	 * @since 2.0.0
+	 */
+	public static Subject contentOf(Object actual) {
+		return new Content(actual);
+	}
+
+	/**
+	 * Creates character-encoded content for a given object.
+	 *
+	 * @param actual an object to create content for, possibly {@code null}.
+	 * @param charset a charset, not {@code null}.
+	 * @return character-encoded content, not {@code null}.
+	 */
+	public static Subject contentOf(Object actual, Charset charset) {
+		return new CharacterEncodedContent(actual, charset);
 	}
 
 	static Subject defaultSubject(Object actual, Matcher... matchers) {

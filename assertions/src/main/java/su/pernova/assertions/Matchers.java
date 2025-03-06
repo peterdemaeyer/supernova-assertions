@@ -1,8 +1,5 @@
 package su.pernova.assertions;
 
-import static internal.su.pernova.assertions.matchers.ContextSensitive.provideContext;
-import static internal.su.pernova.assertions.matchers.ContextSensitive.requireBackwardContext;
-
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -11,8 +8,9 @@ import internal.su.pernova.assertions.matchers.AllOf;
 import internal.su.pernova.assertions.matchers.Any;
 import internal.su.pernova.assertions.matchers.AnyOf;
 import internal.su.pernova.assertions.matchers.CloseTo;
+import internal.su.pernova.assertions.matchers.Contains;
 import internal.su.pernova.assertions.matchers.Context;
-import internal.su.pernova.assertions.matchers.ContextSensitive;
+import internal.su.pernova.assertions.matchers.DelegatingMatcher;
 import internal.su.pernova.assertions.matchers.EqualTo;
 import internal.su.pernova.assertions.matchers.InstanceOf;
 import internal.su.pernova.assertions.matchers.Is;
@@ -52,7 +50,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher matches(Matcher delegate) {
-		return new Is("matches", delegate);
+		return new DelegatingMatcher("matches", delegate);
 	}
 
 	/**
@@ -67,7 +65,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher match(Matcher delegate) {
-		return new Is("match", delegate);
+		return new DelegatingMatcher("match", delegate);
 	}
 
 	/**
@@ -79,7 +77,7 @@ public final class Matchers {
 	 */
 	public static Matcher is(Matcher delegate) {
 		if (delegate != null) {
-			return provideContext(new Is(delegate), Is.CONTEXT);
+			return Context.provideContext(new Is(delegate), Is.CONTEXT);
 		}
 		return is((Object) null);
 	}
@@ -93,7 +91,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(Object expected) {
-		return provideContext(new IsObject(expected), Is.CONTEXT);
+		return Context.provideContext(new IsObject(expected), Is.CONTEXT);
 	}
 
 	/**
@@ -119,7 +117,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(double expected) {
-		return provideContext(new IsDouble(expected), Is.CONTEXT);
+		return Context.provideContext(new IsDouble(expected), Is.CONTEXT);
 	}
 
 	/**
@@ -145,7 +143,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(float expected) {
-		return provideContext(new IsFloat(expected), Is.CONTEXT);
+		return Context.provideContext(new IsFloat(expected), Is.CONTEXT);
 	}
 
 	/**
@@ -158,7 +156,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(long expected) {
-		return provideContext(new IsLong(expected), Is.CONTEXT);
+		return Context.provideContext(new IsLong(expected), Is.CONTEXT);
 	}
 
 	/**
@@ -171,7 +169,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(int expected) {
-		return provideContext(new IsInt(expected), Is.CONTEXT);
+		return Context.provideContext(new IsInt(expected), Is.CONTEXT);
 	}
 
 	/**
@@ -185,7 +183,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(short expected) {
-		return provideContext(new IsShort(expected), Is.CONTEXT);
+		return Context.provideContext(new IsShort(expected), Is.CONTEXT);
 	}
 
 	/**
@@ -199,7 +197,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(byte expected) {
-		return provideContext(new IsByte(expected), Is.CONTEXT);
+		return Context.provideContext(new IsByte(expected), Is.CONTEXT);
 	}
 
 	/**
@@ -213,7 +211,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(char expected) {
-		return provideContext(new IsChar(expected), Is.CONTEXT);
+		return Context.provideContext(new IsChar(expected), Is.CONTEXT);
 	}
 
 	/**
@@ -227,7 +225,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(boolean expected) {
-		return provideContext(new IsBoolean(expected), Is.CONTEXT);
+		return Context.provideContext(new IsBoolean(expected), Is.CONTEXT);
 	}
 
 	/**
@@ -239,7 +237,7 @@ public final class Matchers {
 	 * @since 1.0.0
 	 */
 	public static Matcher equalTo(Object expected) {
-		return provideContext(new EqualTo(expected), EqualTo.CONTEXT);
+		return Context.provideContext(new EqualTo(expected), EqualTo.CONTEXT);
 	}
 
 	/**
@@ -252,7 +250,7 @@ public final class Matchers {
 	 */
 	public static Matcher equalTo(Matcher delegate) {
 		if (delegate != null) {
-			return provideContext(new Is("equal to", delegate), EqualTo.CONTEXT);
+			return Context.provideContext(new DelegatingMatcher("equal to", delegate), EqualTo.CONTEXT);
 		}
 		return equalTo((Object) null);
 	}
@@ -266,7 +264,7 @@ public final class Matchers {
 	 * @since 1.0.0
 	 */
 	public static Matcher instanceOf(Class class_) {
-		return provideContext(new InstanceOf(class_), InstanceOf.CONTEXT);
+		return Context.provideContext(new InstanceOf(class_), InstanceOf.CONTEXT);
 	}
 
 	/**
@@ -279,7 +277,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher instanceOf(Matcher delegate) {
-		return provideContext(new Is("instance of", delegate), InstanceOf.CONTEXT);
+		return Context.provideContext(new DelegatingMatcher("instance of", delegate), InstanceOf.CONTEXT);
 	}
 
 	/**
@@ -291,7 +289,7 @@ public final class Matchers {
 	 * @since 1.0.0
 	 */
 	public static Matcher sameAs(Object expected) {
-		return provideContext(new IsObject("same as", true, expected), Is.CONTEXT);
+		return Context.provideContext(new IsObject("same as", true, expected), Is.CONTEXT);
 	}
 
 	/**
@@ -304,7 +302,7 @@ public final class Matchers {
 	 */
 	public static Matcher sameAs(Matcher delegate) {
 		if (delegate != null) {
-			return provideContext(new Is("same as", delegate), Is.CONTEXT);
+			return Context.provideContext(new DelegatingMatcher("same as", delegate), Is.CONTEXT);
 		}
 		return sameAs((Object) null);
 	}
@@ -369,7 +367,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher does(Matcher delegate) {
-		return new Is("does", delegate);
+		return new DelegatingMatcher("does", delegate);
 	}
 
 	/**
@@ -430,7 +428,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(Object... expected) {
-		return requireBackwardContext(Any.of(expected));
+		return Context.evaluateLater(Any.of(expected));
 	}
 
 	/**
@@ -443,7 +441,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(double... expected) {
-		return requireBackwardContext(Any.of(expected));
+		return Context.evaluateLater(Any.of(expected));
 	}
 
 	/**
@@ -456,7 +454,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(float... expected) {
-		return requireBackwardContext(Any.of(expected));
+		return Context.evaluateLater(Any.of(expected));
 	}
 
 	/**
@@ -469,7 +467,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(long... expected) {
-		return requireBackwardContext(Any.of(expected));
+		return Context.evaluateLater(Any.of(expected));
 	}
 
 	/**
@@ -482,7 +480,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(int... expected) {
-		return requireBackwardContext(Any.of(expected));
+		return Context.evaluateLater(Any.of(expected));
 	}
 
 	/**
@@ -495,7 +493,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(short... expected) {
-		return requireBackwardContext(Any.of(expected));
+		return Context.evaluateLater(Any.of(expected));
 	}
 
 	/**
@@ -508,7 +506,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(byte... expected) {
-		return requireBackwardContext(Any.of(expected));
+		return Context.evaluateLater(Any.of(expected));
 	}
 
 	/**
@@ -521,7 +519,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(char... expected) {
-		return requireBackwardContext(Any.of(expected));
+		return Context.evaluateLater(Any.of(expected));
 	}
 
 	/**
@@ -534,7 +532,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(boolean... expected) {
-		return requireBackwardContext(Any.of(expected));
+		return Context.evaluateLater(Any.of(expected));
 	}
 
 	/**
@@ -560,110 +558,130 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(Object... expected) {
-		return requireBackwardContext(All.of(expected));
+		return Context.evaluateLater(All.of(expected));
 	}
 
 	/**
-	 * Returns a context-sensitive matcher that combines multiple values with a logical OR operator.
+	 * Returns a context-sensitive matcher that combines multiple values with a logical AND operator.
 	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
 	 * values match.
 	 *
 	 * @param expected multiple values, which must not be {@code null}.
-	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
+	 * @return a context-sensitive matcher that combines multiple values with a logical AND operator, not {@code null}.
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(double... expected) {
-		return requireBackwardContext(All.of(expected));
+		return Context.evaluateLater(All.of(expected));
 	}
 
 	/**
-	 * Returns a context-sensitive matcher that combines multiple values with a logical OR operator.
+	 * Returns a context-sensitive matcher that combines multiple values with a logical AND operator.
 	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
 	 * values match.
 	 *
 	 * @param expected multiple values, which must not be {@code null}.
-	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
+	 * @return a context-sensitive matcher that combines multiple values with a logical AND operator, not {@code null}.
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(float... expected) {
-		return requireBackwardContext(All.of(expected));
+		return Context.evaluateLater(All.of(expected));
 	}
 
 	/**
-	 * Returns a context-sensitive matcher that combines multiple values with a logical OR operator.
+	 * Returns a context-sensitive matcher that combines multiple values with a logical AND operator.
 	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
 	 * values match.
 	 *
 	 * @param expected multiple values, which must not be {@code null}.
-	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
+	 * @return a context-sensitive matcher that combines multiple values with a logical AND operator, not {@code null}.
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(long... expected) {
-		return requireBackwardContext(All.of(expected));
+		return Context.evaluateLater(All.of(expected));
 	}
 
 	/**
-	 * Returns a context-sensitive matcher that combines multiple values with a logical OR operator.
+	 * Returns a context-sensitive matcher that combines multiple values with a logical AND operator.
 	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
 	 * values match.
 	 *
 	 * @param expected multiple values, which must not be {@code null}.
-	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
+	 * @return a context-sensitive matcher that combines multiple values with a logical AND operator, not {@code null}.
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(int... expected) {
-		return requireBackwardContext(All.of(expected));
+		return Context.evaluateLater(All.of(expected));
 	}
 
 	/**
-	 * Returns a context-sensitive matcher that combines multiple values with a logical OR operator.
+	 * Returns a context-sensitive matcher that combines multiple values with a logical AND operator.
 	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
 	 * values match.
 	 *
 	 * @param expected multiple values, which must not be {@code null}.
-	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
+	 * @return a context-sensitive matcher that combines multiple values with a logical AND operator, not {@code null}.
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(short... expected) {
-		return requireBackwardContext(All.of(expected));
+		return Context.evaluateLater(All.of(expected));
 	}
 
 	/**
-	 * Returns a context-sensitive matcher that combines multiple values with a logical OR operator.
+	 * Returns a context-sensitive matcher that combines multiple values with a logical AND operator.
 	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
 	 * values match.
 	 *
 	 * @param expected multiple values, which must not be {@code null}.
-	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
+	 * @return a context-sensitive matcher that combines multiple values with a logical AND operator, not {@code null}.
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(byte... expected) {
-		return requireBackwardContext(All.of(expected));
+		return Context.evaluateLater(All.of(expected));
 	}
 
 	/**
-	 * Returns a context-sensitive matcher that combines multiple values with a logical OR operator.
+	 * Returns a context-sensitive matcher that combines multiple values with a logical AND operator.
 	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
 	 * values match.
 	 *
 	 * @param expected multiple values, which must not be {@code null}.
-	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
+	 * @return a context-sensitive matcher that combines multiple values with a logical AND operator, not {@code null}.
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(char... expected) {
-		return requireBackwardContext(All.of(expected));
+		return Context.evaluateLater(All.of(expected));
 	}
 
 	/**
-	 * Returns a context-sensitive matcher that combines multiple values with a logical OR operator.
+	 * Returns a context-sensitive matcher that combines multiple values with a logical AND operator.
 	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
 	 * values match.
 	 *
 	 * @param expected multiple values, which must not be {@code null}.
-	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
+	 * @return a context-sensitive matcher that combines multiple values with a logical AND operator, not {@code null}.
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(boolean... expected) {
-		return requireBackwardContext(All.of(expected));
+		return Context.evaluateLater(All.of(expected));
+	}
+
+	/**
+	 * Returns a matcher that matches when the actual contains the expected.
+	 *
+	 * @param expected the expected to be contained in the actual, possibly {@code null}.
+	 * @return a matcher, not {@code null}.
+	 * @since 2.0.0
+	 */
+	public static Matcher contains(Object expected) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param delegate
+	 * @return
+	 * @since 2.0.0
+	 */
+	public static Matcher contains(Matcher delegate) {
+		return new Contains(delegate);
 	}
 }

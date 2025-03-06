@@ -1,9 +1,7 @@
 package su.pernova.assertions;
 
-import static internal.su.pernova.assertions.matchers.ContextSensitive.requireForwardContext;
-
 import internal.su.pernova.assertions.matchers.And;
-import internal.su.pernova.assertions.matchers.ContextSensitive;
+import internal.su.pernova.assertions.matchers.Context;
 import internal.su.pernova.assertions.matchers.Or;
 
 /**
@@ -34,43 +32,43 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(Matcher matcher) {
-		return new And(this, matcher);
+		return Context.fork(this, new And(this, matcher));
 	}
 
 	default Matcher and(Object value) {
-		return requireForwardContext(And.of(this, value));
+		return Context.evaluateNowAndFork(this, And.of(this, value));
 	}
 
 	default Matcher and(double value) {
-		return requireForwardContext(And.of(this, value));
+		return Context.evaluateNowAndFork(this, And.of(this, value));
 	}
 
 	default Matcher and(float value) {
-		return requireForwardContext(And.of(this, value));
+		return Context.evaluateNowAndFork(this, And.of(this, value));
 	}
 
 	default Matcher and(long value) {
-		return requireForwardContext(And.of(this, value));
+		return Context.evaluateNowAndFork(this, And.of(this, value));
 	}
 
 	default Matcher and(int value) {
-		return requireForwardContext(And.of(this, value));
+		return Context.evaluateNowAndFork(this, And.of(this, value));
 	}
 
 	default Matcher and(short value) {
-		return requireForwardContext(And.of(this, value));
+		return Context.evaluateNowAndFork(this, And.of(this, value));
 	}
 
 	default Matcher and(byte value) {
-		return requireForwardContext(And.of(this, value));
+		return Context.evaluateNowAndFork(this, And.of(this, value));
 	}
 
 	default Matcher and(char value) {
-		return requireForwardContext(And.of(this, value));
+		return Context.evaluateNowAndFork(this, And.of(this, value));
 	}
 
 	default Matcher and(boolean value) {
-		return requireForwardContext(And.of(this, value));
+		return Context.evaluateNowAndFork(this, And.of(this, value));
 	}
 
 	/**
@@ -82,42 +80,51 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher or(Matcher matcher) {
-		return new Or(this, matcher);
+		return Context.fork(this, new Or(this, matcher));
 	}
 
+	/**
+	 * Composes this matcher with a logical OR matcher for a given value.
+	 * The behavior of the matcher depends on the context.
+	 * It could for example behave as an "equal to", an "instance of", or any other matcher.
+	 *
+	 * @param value a value, possibly {@code null}.
+	 * @return a matcher, not {@code null}.
+	 * @since 2.0.0
+	 */
 	default Matcher or(Object value) {
-		return requireForwardContext(Or.of(this, value));
+		return Context.evaluateNowAndFork(this, Or.of(this, value));
 	}
 
 	default Matcher or(double value) {
-		return requireForwardContext(Or.of(this, value));
+		return Context.evaluateNowAndFork(this, Or.of(this, value));
 	}
 
 	default Matcher or(float value) {
-		return requireForwardContext(Or.of(this, value));
+		return Context.evaluateNowAndFork(this, Or.of(this, value));
 	}
 
 	default Matcher or(long value) {
-		return requireForwardContext(Or.of(this, value));
+		return Context.evaluateNowAndFork(this, Or.of(this, value));
 	}
 
 	default Matcher or(int value) {
-		return requireForwardContext(Or.of(this, value));
+		return Context.evaluateNowAndFork(this, Or.of(this, value));
 	}
 
 	default Matcher or(short value) {
-		return requireForwardContext(Or.of(this, value));
+		return Context.evaluateNowAndFork(this, Or.of(this, value));
 	}
 
 	default Matcher or(byte value) {
-		return requireForwardContext(Or.of(this, value));
+		return Context.evaluateNowAndFork(this, Or.of(this, value));
 	}
 
 	default Matcher or(char value) {
-		return requireForwardContext(Or.of(this, value));
+		return Context.evaluateNowAndFork(this, Or.of(this, value));
 	}
 
 	default Matcher or(boolean value) {
-		return requireForwardContext(Or.of(this, value));
+		return Context.evaluateNowAndFork(this, Or.of(this, value));
 	}
 }
