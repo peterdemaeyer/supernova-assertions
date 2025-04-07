@@ -1,6 +1,8 @@
 package internal.su.pernova.assertions.subjects;
 
-public class Condition extends DefaultSubject {
+import su.pernova.assertions.Subject;
+
+public class Condition extends Subject {
 
 	public Condition(Object actual) {
 		super(actual);

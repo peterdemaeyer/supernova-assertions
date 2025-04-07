@@ -2,6 +2,7 @@ package internal.su.pernova.assertions.matchers;
 
 import static java.util.Objects.requireNonNull;
 
+import su.pernova.assertions.Context;
 import su.pernova.assertions.Description;
 import su.pernova.assertions.Matcher;
 
@@ -18,6 +19,7 @@ public abstract class BiMatcher extends DescriptiveMatcher {
 		super(description);
 		this.left = requireNonNull(left, "left is null");
 		this.right = requireNonNull(right, "right is null");
+		Context.set(this).forwardTo(left, right);
 	}
 
 	@Override

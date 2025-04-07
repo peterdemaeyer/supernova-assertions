@@ -1,4 +1,4 @@
-package internal.su.pernova.nio;
+package internal.su.pernova.nio.channels;
 
 import static java.util.Objects.requireNonNull;
 

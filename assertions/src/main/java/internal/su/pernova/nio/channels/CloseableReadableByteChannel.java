@@ -1,4 +1,4 @@
-package internal.su.pernova.nio;
+package internal.su.pernova.nio.channels;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

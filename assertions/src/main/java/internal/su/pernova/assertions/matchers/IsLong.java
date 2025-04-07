@@ -1,14 +1,12 @@
 package internal.su.pernova.assertions.matchers;
 
-import su.pernova.assertions.Description;
+import su.pernova.assertions.Context;
 
-public class IsLong extends PromptDescriptiveMatcher {
-
-	private final long expected;
+public class IsLong extends LongMatcher {
 
 	public IsLong(CharSequence description, boolean prompt, long expected) {
-		super(description, prompt);
-		this.expected = expected;
+		super(description, prompt, expected);
+		Context.set(this).matcherFactory(Is.MATCHER_FACTORY);
 	}
 
 	public IsLong(long expected) {
@@ -24,10 +22,5 @@ public class IsLong extends PromptDescriptiveMatcher {
 			return expected == (Character) actual;
 		}
 		return false;
-	}
-
-	@Override
-	public Description describe(Description description) {
-		return super.describe(description).appendExpected(expected);
 	}
 }

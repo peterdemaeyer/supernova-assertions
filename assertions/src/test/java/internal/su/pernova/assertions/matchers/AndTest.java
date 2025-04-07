@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 class AndTest {
 
 	@Test
-	void andMatcher() {
+	void andMatchesOrNot() {
 		assertDoesNotThrow(() -> assertThat("abc",
 				is(instanceOf(String.class).and(is(equalTo("abc"))))));
 		assertThrowsAssertionErrorWithMessage(
@@ -33,7 +33,7 @@ class AndTest {
 	}
 
 	@Test
-	void contextSensitiveMatching() {
+	void andMatchesContextually() {
 		assertThat("this", is("this").and("this"));
 		assertThat(1d, is(1d).and(1d));
 		assertThrowsAssertionErrorWithMessage(
@@ -51,12 +51,12 @@ class AndTest {
 	}
 
 	@Test
-	void contextSensitiveMatchingWithDualContext() {
+	void andMatchesContextuallyWithDualContext() {
 		assertThat("this", is(equalTo("this")).and(instanceOf(Object.class).and(CharSequence.class)));
 		assertThrowsAssertionErrorWithMessage(
 				() -> assertThat("this", is(equalTo("this")).and(instanceOf(Object.class)).and(CharSequence.class)),
 				"expected that subject is equal to: \"this\" and instance of: java.lang.Object and: java.lang.CharSequence",
-						"but was: \"this\""
+				"but was: \"this\""
 		);
 		assertThat("this", is(equalTo("this")).and(is(instanceOf(Object.class).and(CharSequence.class))));
 		assertThrowsAssertionErrorWithMessage(

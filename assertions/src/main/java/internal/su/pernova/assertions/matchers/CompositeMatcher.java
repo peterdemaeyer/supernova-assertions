@@ -1,10 +1,9 @@
 package internal.su.pernova.assertions.matchers;
 
-import static java.lang.System.lineSeparator;
-import static java.util.Arrays.stream;
 import static java.util.Objects.requireNonNull;
 
 import internal.su.pernova.assertions.DefaultDescribable;
+import su.pernova.assertions.Context;
 import su.pernova.assertions.Description;
 import su.pernova.assertions.Matcher;
 
@@ -23,10 +22,7 @@ public abstract class CompositeMatcher extends DefaultDescribable implements Mat
 		this.startDelimiter = startDelimiter;
 		this.separator = separator;
 		this.endDelimiter = endDelimiter;
-	}
-
-	public CompositeMatcher(Matcher... delegates) {
-		this(lineSeparator() + "\t", lineSeparator() + "\t", "", delegates);
+		Context.set(this).forwardTo(delegates);
 	}
 
 	@Override
@@ -40,66 +36,5 @@ public abstract class CompositeMatcher extends DefaultDescribable implements Mat
 			delegate.describe(description);
 		}
 		return description.appendText(endDelimiter);
-	}
-
-	static Matcher[] apply(Context context, Object... values) {
-		return stream(values).map(context::evaluate).toArray(Matcher[]::new);
-	}
-
-	static Matcher[] apply(Context context, double... values) {
-		return stream(values).mapToObj(context::evaluate).toArray(Matcher[]::new);
-	}
-
-	static Matcher[] apply(Context context, float... values) {
-		Matcher[] matchers = new Matcher[values.length];
-		int i = 0;
-		for (float value : values) {
-			matchers[i++] = context.evaluate(value);
-		}
-		return matchers;
-	}
-
-	static Matcher[] apply(Context context, long... values) {
-		return stream(values).mapToObj(context::evaluate).toArray(Matcher[]::new);
-	}
-
-	static Matcher[] apply(Context context, int... values) {
-		return stream(values).mapToObj(context::evaluate).toArray(Matcher[]::new);
-	}
-
-	static Matcher[] apply(Context context, short... values) {
-		Matcher[] matchers = new Matcher[values.length];
-		int i = 0;
-		for (short value : values) {
-			matchers[i++] = context.evaluate(value);
-		}
-		return matchers;
-	}
-
-	static Matcher[] apply(Context context, byte... values) {
-		Matcher[] matchers = new Matcher[values.length];
-		int i = 0;
-		for (byte value : values) {
-			matchers[i++] = context.evaluate(value);
-		}
-		return matchers;
-	}
-
-	static Matcher[] apply(Context context, char... values) {
-		Matcher[] matchers = new Matcher[values.length];
-		int i = 0;
-		for (char value : values) {
-			matchers[i++] = context.evaluate(value);
-		}
-		return matchers;
-	}
-
-	static Matcher[] apply(Context context, boolean... values) {
-		Matcher[] matchers = new Matcher[values.length];
-		int i = 0;
-		for (boolean value : values) {
-			matchers[i++] = context.evaluate(value);
-		}
-		return matchers;
 	}
 }

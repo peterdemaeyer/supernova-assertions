@@ -13,7 +13,7 @@ public abstract class DefaultDescribable implements Describable {
 
 	@Override
 	public String toString() {
-		final Description description = new AppendableDescription(new StringBuilder());
+		Description description = new AppendableDescription(new StringBuilder());
 		describe(description);
 		return description.toString().trim();
 	}

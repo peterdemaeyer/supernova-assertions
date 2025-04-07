@@ -104,13 +104,13 @@ class CloseToTest {
 	}
 
 	@Test
-	void contextSensitiveMatching() {
+	void closeToProvidesContext() {
 		Matcher isCloseToOneOrTwo = is(closeTo(1., .01).or(2.));
 		assertThat(.995, isCloseToOneOrTwo);
 		assertThat(2.005, isCloseToOneOrTwo);
 		assertThrowsAssertionErrorWithMessage(
 				() -> assertThat(1.5, isCloseToOneOrTwo),
-				"expected that subject is close to: 1.0 ± 0.01 [0.99, 1.01] or: close to: 2.0 ± 0.01 [1.99, 2.01]",
+				"expected that subject is close to: 1.0 ± 0.01 [0.99, 1.01] or: 2.0",
 						"but was: 1.5"
 		);
 	}

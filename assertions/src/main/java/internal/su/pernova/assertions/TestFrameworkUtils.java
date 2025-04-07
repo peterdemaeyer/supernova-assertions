@@ -27,10 +27,10 @@ final class TestFrameworkUtils {
 	}
 
 	private static boolean matches(Predicate<ThreadInfo> filter, Predicate<StackTraceElement> accept, Predicate<StackTraceElement> reject) {
-		final ThreadInfo[] threadInfoArray = getThreadMXBean().dumpAllThreads(false, false);
+		ThreadInfo[] threadInfoArray = getThreadMXBean().dumpAllThreads(false, false);
 		for (ThreadInfo threadInfo : threadInfoArray) {
 			if (filter.test(threadInfo)) {
-				final StackTraceElement[] stackTrace = threadInfo.getStackTrace();
+				StackTraceElement[] stackTrace = threadInfo.getStackTrace();
 				if (matches(stackTrace, accept)) {
 					return true;
 				} else if (matches(stackTrace, reject)) {

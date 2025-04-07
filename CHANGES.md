@@ -6,6 +6,8 @@
 
 * Replaced the `assertThat(subject).matches(matcher)` paradigm with the `assertThat(subject, matches(matcher))`
   paradigm, eliminating the need for a `Assertion` class.
+* Replaced `boolean Subject.match(Matcher matcher)` with `Object evaluate(Object object)`.
+* `Subject` is now a class that can be extended, instead of an interface that can be `implemented`.
 
 # Changes since 2.0.0
 
@@ -23,7 +25,7 @@
 * Added `Matchers.not` and `Matchers.does` matchers to negate other matchers. 
 * Added `Matcher.or(Matcher)` and `Matcher.and(Matcher)` matchers to logically combine two matchers.
 * Added `Matchers.anyOf(Matcher...)` and `Matchers.allOf(Matcher...)` matchers to logically combine multiple matchers.
-* Added context-sensitive matching for `Matchers.andOf(Object/primitive...)`, `Matchers.allOf(Object/primitive)`,
+* Added contextual matching for `Matchers.andOf(Object/primitive...)`, `Matchers.allOf(Object/primitive)`,
   `Matcher.or(Object/primitive)` and `Matcher.and(Object/primitive)` so that those matchers behave depending on the
   context provided by another matcher such as `equalTo`, `is`, `instanceOf`.
 

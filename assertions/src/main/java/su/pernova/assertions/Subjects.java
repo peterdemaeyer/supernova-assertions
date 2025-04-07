@@ -1,11 +1,13 @@
 package su.pernova.assertions;
 
-import java.nio.charset.Charset;
+import static java.util.ServiceLoader.load;
 
-import internal.su.pernova.assertions.subjects.CharacterEncodedContent;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+
 import internal.su.pernova.assertions.subjects.Condition;
-import internal.su.pernova.assertions.subjects.Content;
-import internal.su.pernova.assertions.subjects.DefaultSubject;
+import internal.su.pernova.assertions.subjects.ContentOf;
 
 /**
  * This utility class provides factory methods for all subjects.
@@ -21,6 +23,20 @@ import internal.su.pernova.assertions.subjects.DefaultSubject;
  */
 public final class Subjects {
 
+	private static final List<MatcherProvider> MATCHER_PROVIDERS = loadMatcherProviders();
+
+	private static List<MatcherProvider> loadMatcherProviders() {
+		ArrayList<MatcherProvider> matcherProviders = new ArrayList<>();
+		for (MatcherProvider matcherProvider : load(MatcherProvider.class)) {
+			matcherProviders.add(matcherProvider);
+		}
+		matcherProviders.trimToSize();
+		matcherProviders.sort((p1, p2) -> p2.order() - p1.order());
+		return matcherProviders;
+	}
+
+	private static final MethodFamily CONTENT_OF = new MethodFamily(Subjects.class, "contentOf");
+
 	private Subjects() {
 	}
 
@@ -32,7 +48,7 @@ public final class Subjects {
 	 * @since 1.0.0
 	 */
 	public static Subject subject(Object actual) {
-		return new DefaultSubject(actual);
+		return new Subject(actual);
 	}
 
 	/**
@@ -54,7 +70,7 @@ public final class Subjects {
 	 * @since 2.0.0
 	 */
 	public static Subject contentOf(Object actual) {
-		return new Content(actual);
+		return contentOf(actual, null);
 	}
 
 	/**
@@ -63,12 +79,25 @@ public final class Subjects {
 	 * @param actual an object to create content for, possibly {@code null}.
 	 * @param charset a charset, not {@code null}.
 	 * @return character-encoded content, not {@code null}.
+	 * @since 2.0.0
 	 */
 	public static Subject contentOf(Object actual, Charset charset) {
-		return new CharacterEncodedContent(actual, charset);
+		return Context.set(new ContentOf(actual))
+				.transformation(ContentOf.transformation(charset))
+				.get();
 	}
 
 	static Subject defaultSubject(Object actual, Matcher... matchers) {
 		return (matchers.length == 0) ? condition(actual) : subject(actual);
+	}
+
+	private static Matcher loadMatcher(MethodFamily methodFamily, Object actual) {
+		for (MatcherProvider matcherProvider : MATCHER_PROVIDERS) {
+			Matcher matcher = matcherProvider.provide(methodFamily, actual);
+			if (matcher != null) {
+				return matcher;
+			}
+		}
+		return null;
 	}
 }

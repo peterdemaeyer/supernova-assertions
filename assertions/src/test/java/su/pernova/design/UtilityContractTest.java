@@ -15,23 +15,23 @@ public interface UtilityContractTest extends ContractTest {
 
 	@Test
 	default void utilityClassHasSinglePrivateParameterlessConstructor() throws Exception {
-		final Constructor<?>[] constructors = getClassUnderTest().getDeclaredConstructors();
+		Constructor<?>[] constructors = getClassUnderTest().getDeclaredConstructors();
 		assertEquals(1, constructors.length);
-		final Constructor<?> constructor = constructors[0];
+		Constructor<?> constructor = constructors[0];
 		assertEquals(PRIVATE, constructor.getModifiers() & PRIVATE);
 		assertEquals(0, constructor.getParameterCount());
 	}
 
 	@Test
 	default void utilityClassOnlyHasStaticMethods() throws Exception {
-		for (final Method method : getClassUnderTest().getDeclaredMethods()) {
+		for (Method method : getClassUnderTest().getDeclaredMethods()) {
 			assertEquals(STATIC, method.getModifiers() & STATIC);
 		}
 	}
 
 	@Test
 	default void utilityClassOnlyHasStaticFields() throws Exception {
-		for (final Field field : getClassUnderTest().getDeclaredFields()) {
+		for (Field field : getClassUnderTest().getDeclaredFields()) {
 			assertEquals(STATIC, field.getModifiers() & STATIC);
 		}
 	}

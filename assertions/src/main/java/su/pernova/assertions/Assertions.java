@@ -1,13 +1,11 @@
 package su.pernova.assertions;
 
 import static java.lang.System.lineSeparator;
-
 import static su.pernova.assertions.Matchers.is;
 import static su.pernova.assertions.Subjects.defaultSubject;
 
 import internal.su.pernova.assertions.AssertionFailureThrower;
 import internal.su.pernova.assertions.FailureThrower;
-import internal.su.pernova.assertions.matchers.Context;
 
 /**
  * This is the main utility class for writing assertions.
@@ -64,6 +62,7 @@ public final class Assertions {
 			matchers = new Matcher[]{ is(true) };
 		}
 		for (Matcher matcher : matchers) {
+			Context.set(subject).forwardTo(matcher);
 			try {
 				if (!subject.match(matcher)) {
 					Description description = new AppendableDescription(new StringBuilder())
@@ -77,7 +76,7 @@ public final class Assertions {
 					thrower.throwFailure(description.toString(), description.getExpected(), description.getActual());
 				}
 			} finally {
-				Context.clear();
+				Context.unset(subject);
 			}
 		}
 	}

@@ -1,7 +1,6 @@
-package internal.su.pernova.nio;
+package internal.su.pernova.nio.channels;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.spy;
 
@@ -9,10 +8,8 @@ import static java.nio.ByteBuffer.allocate;
 import static java.nio.ByteBuffer.wrap;
 
 import java.nio.ByteBuffer;
-import java.nio.channels.ClosedChannelException;
 import java.nio.channels.ReadableByteChannel;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class NoCloseReadableByteChannelTest implements ReadableByteChannelContractTest {

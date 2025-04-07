@@ -1,59 +1,62 @@
 package internal.su.pernova.assertions.matchers;
 
+import su.pernova.assertions.Context;
 import su.pernova.assertions.Matcher;
+import su.pernova.assertions.MatcherFactory;
 
 public class Is extends DelegatingMatcher {
 
-	public static final Context CONTEXT = new Context() {
+	public static final MatcherFactory MATCHER_FACTORY = new MatcherFactory() {
 
 		@Override
-		public Matcher evaluate(Object expected) {
+		public Matcher create(Object expected) {
 			return new IsObject("", false, expected);
 		}
 
 		@Override
-		public Matcher evaluate(double expected) {
+		public Matcher create(double expected) {
 			return new IsDouble("", false, expected);
 		}
 
 		@Override
-		public Matcher evaluate(float expected) {
+		public Matcher create(float expected) {
 			return new IsFloat("", false, expected);
 		}
 
 		@Override
-		public Matcher evaluate(long expected) {
+		public Matcher create(long expected) {
 			return new IsLong("", false, expected);
 		}
 
 		@Override
-		public Matcher evaluate(int expected) {
+		public Matcher create(int expected) {
 			return new IsInt("", false, expected);
 		}
 
 		@Override
-		public Matcher evaluate(short expected) {
+		public Matcher create(short expected) {
 			return new IsShort("", false, expected);
 		}
 
 		@Override
-		public Matcher evaluate(byte expected) {
+		public Matcher create(byte expected) {
 			return new IsByte("", false, expected);
 		}
 
 		@Override
-		public Matcher evaluate(char expected) {
-			return Context.super.evaluate(expected);
+		public Matcher create(char expected) {
+			return new IsChar("", false, expected);
 		}
 
 		@Override
-		public Matcher evaluate(boolean expected) {
-			return Context.super.evaluate(expected);
+		public Matcher create(boolean expected) {
+			return new IsBoolean("", false, expected);
 		}
 	};
 
 	public Is(CharSequence description, Matcher delegate) {
 		super(description, delegate);
+		Context.set(this).matcherFactory(Is.MATCHER_FACTORY);
 	}
 
 	public Is(Matcher delegate) {

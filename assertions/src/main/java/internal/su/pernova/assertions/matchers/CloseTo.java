@@ -5,7 +5,9 @@ import static java.util.Objects.requireNonNull;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import su.pernova.assertions.Context;
 import su.pernova.assertions.Description;
+import su.pernova.assertions.MatcherFactory;
 
 public class CloseTo extends DescriptiveMatcher {
 
@@ -51,6 +53,7 @@ public class CloseTo extends DescriptiveMatcher {
 		} else {
 			throw new IllegalArgumentException(String.format("illegal number class: %s", expected.getClass().getName()));
 		}
+		Context.set(this).matcherFactory(matcherFactory(tolerance));
 	}
 
 	private static long cappedMin(long expected, long tolerance) {
@@ -108,7 +111,7 @@ public class CloseTo extends DescriptiveMatcher {
 				.appendText(" [" + minimum + ", " + maximum + "]");
 	}
 
-	public static Context context(Number tolerance) {
+	public static MatcherFactory matcherFactory(Number tolerance) {
 		return expected -> new CloseTo((Number) expected, tolerance);
 	}
 }

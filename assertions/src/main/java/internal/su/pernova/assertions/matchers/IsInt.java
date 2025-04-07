@@ -1,14 +1,12 @@
 package internal.su.pernova.assertions.matchers;
 
-import su.pernova.assertions.Description;
+import su.pernova.assertions.Context;
 
-public class IsInt extends PromptDescriptiveMatcher {
-
-	private final int expected;
+public class IsInt extends IntMatcher {
 
 	public IsInt(CharSequence description, boolean prompt, int expected) {
-		super(description, prompt);
-		this.expected = expected;
+		super(description, prompt, expected);
+		Context.set(this).matcherFactory(Is.MATCHER_FACTORY);
 	}
 
 	public IsInt(int expected) {
@@ -24,10 +22,5 @@ public class IsInt extends PromptDescriptiveMatcher {
 			return expected == (Character) actual;
 		}
 		return false;
-	}
-
-	@Override
-	public Description describe(Description description) {
-		return super.describe(description).appendExpected(expected);
 	}
 }

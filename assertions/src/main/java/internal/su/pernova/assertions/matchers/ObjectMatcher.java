@@ -6,7 +6,7 @@ public abstract class ObjectMatcher extends PromptDescriptiveMatcher {
 
 	protected final Object expected;
 
-	protected ObjectMatcher(CharSequence description, boolean prompt, Object expected) {
+	public ObjectMatcher(CharSequence description, boolean prompt, Object expected) {
 		super(description, prompt);
 		this.expected = expected;
 	}

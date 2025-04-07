@@ -1,4 +1,4 @@
-package internal.su.pernova.nio;
+package internal.su.pernova.nio.channels;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

@@ -1,7 +1,15 @@
 package su.pernova.assertions;
 
 import internal.su.pernova.assertions.matchers.And;
-import internal.su.pernova.assertions.matchers.Context;
+import internal.su.pernova.assertions.matchers.ContextualBooleanMatcher;
+import internal.su.pernova.assertions.matchers.ContextualByteMatcher;
+import internal.su.pernova.assertions.matchers.ContextualCharMatcher;
+import internal.su.pernova.assertions.matchers.ContextualDoubleMatcher;
+import internal.su.pernova.assertions.matchers.ContextualFloatMatcher;
+import internal.su.pernova.assertions.matchers.ContextualIntMatcher;
+import internal.su.pernova.assertions.matchers.ContextualLongMatcher;
+import internal.su.pernova.assertions.matchers.ContextualObjectMatcher;
+import internal.su.pernova.assertions.matchers.ContextualShortMatcher;
 import internal.su.pernova.assertions.matchers.Or;
 
 /**
@@ -25,62 +33,133 @@ public interface Matcher extends Describable {
 	boolean match(Object actual);
 
 	/**
-	 * Composes this matcher with another one to create a logical AND matcher that matches if both matchers match.
+	 * Returns a logical AND matcher that matches if both this and another given matcher match.
 	 *
-	 * @param matcher another matcher to compose a logical AND matcher with, not {@code null}.
+	 * @param matcher another matcher, not {@code null}.
 	 * @return a logical AND matcher, not {@code null}.
 	 * @since 2.0.0
 	 */
 	default Matcher and(Matcher matcher) {
-		return Context.fork(this, new And(this, matcher));
-	}
-
-	default Matcher and(Object value) {
-		return Context.evaluateNowAndFork(this, And.of(this, value));
-	}
-
-	default Matcher and(double value) {
-		return Context.evaluateNowAndFork(this, And.of(this, value));
-	}
-
-	default Matcher and(float value) {
-		return Context.evaluateNowAndFork(this, And.of(this, value));
-	}
-
-	default Matcher and(long value) {
-		return Context.evaluateNowAndFork(this, And.of(this, value));
-	}
-
-	default Matcher and(int value) {
-		return Context.evaluateNowAndFork(this, And.of(this, value));
-	}
-
-	default Matcher and(short value) {
-		return Context.evaluateNowAndFork(this, And.of(this, value));
-	}
-
-	default Matcher and(byte value) {
-		return Context.evaluateNowAndFork(this, And.of(this, value));
-	}
-
-	default Matcher and(char value) {
-		return Context.evaluateNowAndFork(this, And.of(this, value));
-	}
-
-	default Matcher and(boolean value) {
-		return Context.evaluateNowAndFork(this, And.of(this, value));
+		return Context.set(new And(this, matcher)).replaceForwardingTo(this).get();
 	}
 
 	/**
-	 * Composes this matcher with another one to create a logical OR matcher that matches if any of the matchers
-	 * matches.
+	 * Returns a logical AND matcher that matches if both this and another given expected value match.
 	 *
-	 * @param matcher another matcher to compose a logical OR matcher with, not {@code null}.
+	 * @param expected another expected value, possibly {@code null}.
+	 * @return a logical AND matcher, not {@code null}.
+	 * @since 2.0.0
+	 */
+	default Matcher and(Object expected) {
+		return Context.set(new And(this, new ContextualObjectMatcher(expected, true)))
+				.replaceForwardingTo(this).get();
+	}
+
+	/**
+	 * Returns a logical AND matcher that matches if both this and another given expected value match.
+	 *
+	 * @param expected another expected value, possibly {@code null}.
+	 * @return a logical AND matcher, not {@code null}.
+	 * @since 2.0.0
+	 */
+	default Matcher and(double expected) {
+		return Context.set(new And(this, new ContextualDoubleMatcher(expected, true)))
+				.replaceForwardingTo(this).get();
+	}
+
+	/**
+	 * Returns a logical AND matcher that matches if both this and another given expected value match.
+	 *
+	 * @param expected another expected value, possibly {@code null}.
+	 * @return a logical AND matcher, not {@code null}.
+	 * @since 2.0.0
+	 */
+	default Matcher and(float expected) {
+		return Context.set(new And(this, new ContextualFloatMatcher(expected, true)))
+				.replaceForwardingTo(this).get();
+	}
+
+	/**
+	 * Returns a logical AND matcher that matches if both this and another given expected value match.
+	 *
+	 * @param expected another expected value, possibly {@code null}.
+	 * @return a logical AND matcher, not {@code null}.
+	 * @since 2.0.0
+	 */
+	default Matcher and(long expected) {
+		return Context.set(new And(this, new ContextualLongMatcher(expected, true)))
+				.replaceForwardingTo(this).get();
+	}
+
+	/**
+	 * Returns a logical AND matcher that matches if both this and another given expected value match.
+	 *
+	 * @param expected another expected value, possibly {@code null}.
+	 * @return a logical AND matcher, not {@code null}.
+	 * @since 2.0.0
+	 */
+	default Matcher and(int expected) {
+		return Context.set(new And(this, new ContextualIntMatcher(expected, true)))
+				.replaceForwardingTo(this).get();
+	}
+
+	/**
+	 * Returns a logical AND matcher that matches if both this and another given expected value match.
+	 *
+	 * @param expected another expected value, possibly {@code null}.
+	 * @return a logical AND matcher, not {@code null}.
+	 * @since 2.0.0
+	 */
+	default Matcher and(short expected) {
+		return Context.set(new And(this, new ContextualShortMatcher(expected, true)))
+				.replaceForwardingTo(this).get();
+	}
+
+	/**
+	 * Returns a logical AND matcher that matches if both this and another given expected value match.
+	 *
+	 * @param expected another expected value, possibly {@code null}.
+	 * @return a logical AND matcher, not {@code null}.
+	 * @since 2.0.0
+	 */
+	default Matcher and(byte expected) {
+		return Context.set(new And(this, new ContextualByteMatcher(expected, true)))
+				.replaceForwardingTo(this).get();
+	}
+
+	/**
+	 * Returns a logical AND matcher that matches if both this and another given expected value match.
+	 *
+	 * @param expected another expected value, possibly {@code null}.
+	 * @return a logical AND matcher, not {@code null}.
+	 * @since 2.0.0
+	 */
+	default Matcher and(char expected) {
+		return Context.set(new And(this, new ContextualCharMatcher(expected, true)))
+				.replaceForwardingTo(this).get();
+	}
+
+	/**
+	 * Returns a logical AND matcher that matches if both this and another given expected value match.
+	 *
+	 * @param expected another expected value, possibly {@code null}.
+	 * @return a logical AND matcher, not {@code null}.
+	 * @since 2.0.0
+	 */
+	default Matcher and(boolean expected) {
+		return Context.set(new And(this, new ContextualBooleanMatcher(expected, true)))
+				.replaceForwardingTo(this).get();
+	}
+
+	/**
+	 * Returns a logical OR matcher that matches if either this or another given matcher match.
+	 *
+	 * @param matcher another matcher, not {@code null}.
 	 * @return a logical OR matcher, not {@code null}.
 	 * @since 2.0.0
 	 */
 	default Matcher or(Matcher matcher) {
-		return Context.fork(this, new Or(this, matcher));
+		return Context.set(new Or(this, matcher)).replaceForwardingTo(this).get();
 	}
 
 	/**
@@ -88,43 +167,108 @@ public interface Matcher extends Describable {
 	 * The behavior of the matcher depends on the context.
 	 * It could for example behave as an "equal to", an "instance of", or any other matcher.
 	 *
-	 * @param value a value, possibly {@code null}.
+	 * @param expected a value, possibly {@code null}.
 	 * @return a matcher, not {@code null}.
 	 * @since 2.0.0
 	 */
-	default Matcher or(Object value) {
-		return Context.evaluateNowAndFork(this, Or.of(this, value));
+	default Matcher or(Object expected) {
+		return Context.set(new Or(this, new ContextualObjectMatcher(expected, true)))
+				.replaceForwardingTo(this).get();
 	}
 
-	default Matcher or(double value) {
-		return Context.evaluateNowAndFork(this, Or.of(this, value));
+	/**
+	 * Returns a logical OR matcher that matches if either this or another given expected value match.
+	 *
+	 * @param expected another expected value, possibly {@code null}.
+	 * @return a logical OR matcher, not {@code null}.
+	 * @since 2.0.0
+	 */
+	default Matcher or(double expected) {
+		return Context.set(new Or(this, new ContextualDoubleMatcher(expected, true)))
+				.replaceForwardingTo(this).get();
 	}
 
-	default Matcher or(float value) {
-		return Context.evaluateNowAndFork(this, Or.of(this, value));
+	/**
+	 * Returns a logical OR matcher that matches if either this or another given expected value match.
+	 *
+	 * @param expected another expected value, possibly {@code null}.
+	 * @return a logical OR matcher, not {@code null}.
+	 * @since 2.0.0
+	 */
+	default Matcher or(float expected) {
+		return Context.set(new Or(this, new ContextualFloatMatcher(expected, true)))
+				.replaceForwardingTo(this).get();
 	}
 
-	default Matcher or(long value) {
-		return Context.evaluateNowAndFork(this, Or.of(this, value));
+	/**
+	 * Returns a logical OR matcher that matches if either this or another given expected value match.
+	 *
+	 * @param expected another expected value, possibly {@code null}.
+	 * @return a logical OR matcher, not {@code null}.
+	 * @since 2.0.0
+	 */
+	default Matcher or(long expected) {
+		return Context.set(new Or(this, new ContextualLongMatcher(expected, true)))
+				.replaceForwardingTo(this).get();
 	}
 
-	default Matcher or(int value) {
-		return Context.evaluateNowAndFork(this, Or.of(this, value));
+	/**
+	 * Returns a logical OR matcher that matches if either this or another given expected value match.
+	 *
+	 * @param expected another expected value, possibly {@code null}.
+	 * @return a logical OR matcher, not {@code null}.
+	 * @since 2.0.0
+	 */
+	default Matcher or(int expected) {
+		return Context.set(new Or(this, new ContextualIntMatcher(expected, true)))
+				.replaceForwardingTo(this).get();
 	}
 
-	default Matcher or(short value) {
-		return Context.evaluateNowAndFork(this, Or.of(this, value));
+	/**
+	 * Returns a logical OR matcher that matches if either this or another given expected value match.
+	 *
+	 * @param expected another expected value, possibly {@code null}.
+	 * @return a logical OR matcher, not {@code null}.
+	 * @since 2.0.0
+	 */
+	default Matcher or(short expected) {
+		return Context.set(new Or(this, new ContextualShortMatcher(expected, true)))
+				.replaceForwardingTo(this).get();
 	}
 
-	default Matcher or(byte value) {
-		return Context.evaluateNowAndFork(this, Or.of(this, value));
+	/**
+	 * Returns a logical OR matcher that matches if either this or another given expected value match.
+	 *
+	 * @param expected another expected value, possibly {@code null}.
+	 * @return a logical OR matcher, not {@code null}.
+	 * @since 2.0.0
+	 */
+	default Matcher or(byte expected) {
+		return Context.set(new Or(this, new ContextualByteMatcher(expected, true)))
+				.replaceForwardingTo(this).get();
 	}
 
-	default Matcher or(char value) {
-		return Context.evaluateNowAndFork(this, Or.of(this, value));
+	/**
+	 * Returns a logical OR matcher that matches if either this or another given expected value match.
+	 *
+	 * @param expected another expected value, possibly {@code null}.
+	 * @return a logical OR matcher, not {@code null}.
+	 * @since 2.0.0
+	 */
+	default Matcher or(char expected) {
+		return Context.set(new Or(this, new ContextualCharMatcher(expected, true)))
+				.replaceForwardingTo(this).get();
 	}
 
-	default Matcher or(boolean value) {
-		return Context.evaluateNowAndFork(this, Or.of(this, value));
+	/**
+	 * Returns a logical OR matcher that matches if either this or another given expected value match.
+	 *
+	 * @param expected another expected value, possibly {@code null}.
+	 * @return a logical OR matcher, not {@code null}.
+	 * @since 2.0.0
+	 */
+	default Matcher or(boolean expected) {
+		return Context.set(new Or(this, new ContextualBooleanMatcher(expected, true)))
+				.replaceForwardingTo(this).get();
 	}
 }

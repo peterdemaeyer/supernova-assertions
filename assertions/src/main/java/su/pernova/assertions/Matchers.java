@@ -3,13 +3,18 @@ package su.pernova.assertions;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-import internal.su.pernova.assertions.matchers.All;
 import internal.su.pernova.assertions.matchers.AllOf;
-import internal.su.pernova.assertions.matchers.Any;
 import internal.su.pernova.assertions.matchers.AnyOf;
 import internal.su.pernova.assertions.matchers.CloseTo;
-import internal.su.pernova.assertions.matchers.Contains;
-import internal.su.pernova.assertions.matchers.Context;
+import internal.su.pernova.assertions.matchers.ContextualBooleanMatcher;
+import internal.su.pernova.assertions.matchers.ContextualByteMatcher;
+import internal.su.pernova.assertions.matchers.ContextualCharMatcher;
+import internal.su.pernova.assertions.matchers.ContextualDoubleMatcher;
+import internal.su.pernova.assertions.matchers.ContextualFloatMatcher;
+import internal.su.pernova.assertions.matchers.ContextualIntMatcher;
+import internal.su.pernova.assertions.matchers.ContextualLongMatcher;
+import internal.su.pernova.assertions.matchers.ContextualObjectMatcher;
+import internal.su.pernova.assertions.matchers.ContextualShortMatcher;
 import internal.su.pernova.assertions.matchers.DelegatingMatcher;
 import internal.su.pernova.assertions.matchers.EqualTo;
 import internal.su.pernova.assertions.matchers.InstanceOf;
@@ -34,6 +39,17 @@ import internal.su.pernova.assertions.matchers.Regex;
  * @since 1.0.0
  */
 public final class Matchers {
+
+	/**
+	 * @see #equalTo
+	 */
+	public static final MethodFamily EQUAL_TO = new MethodFamily(Matchers.class, "equalTo");
+
+	/**
+	 * @see #is
+	 * @see #sameAs
+	 */
+	public static final MethodFamily IDENTICAL_TO = new MethodFamily(Matchers.class, "identicalTo");
 
 	private Matchers() {
 	}
@@ -77,7 +93,7 @@ public final class Matchers {
 	 */
 	public static Matcher is(Matcher delegate) {
 		if (delegate != null) {
-			return Context.provideContext(new Is(delegate), Is.CONTEXT);
+			return new Is(delegate);
 		}
 		return is((Object) null);
 	}
@@ -91,7 +107,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(Object expected) {
-		return Context.provideContext(new IsObject(expected), Is.CONTEXT);
+		return new IsObject(expected);
 	}
 
 	/**
@@ -117,7 +133,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(double expected) {
-		return Context.provideContext(new IsDouble(expected), Is.CONTEXT);
+		return new IsDouble(expected);
 	}
 
 	/**
@@ -143,7 +159,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(float expected) {
-		return Context.provideContext(new IsFloat(expected), Is.CONTEXT);
+		return new IsFloat(expected);
 	}
 
 	/**
@@ -156,7 +172,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(long expected) {
-		return Context.provideContext(new IsLong(expected), Is.CONTEXT);
+		return new IsLong(expected);
 	}
 
 	/**
@@ -169,7 +185,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(int expected) {
-		return Context.provideContext(new IsInt(expected), Is.CONTEXT);
+		return new IsInt(expected);
 	}
 
 	/**
@@ -183,7 +199,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(short expected) {
-		return Context.provideContext(new IsShort(expected), Is.CONTEXT);
+		return new IsShort(expected);
 	}
 
 	/**
@@ -197,7 +213,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(byte expected) {
-		return Context.provideContext(new IsByte(expected), Is.CONTEXT);
+		return new IsByte(expected);
 	}
 
 	/**
@@ -211,7 +227,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(char expected) {
-		return Context.provideContext(new IsChar(expected), Is.CONTEXT);
+		return new IsChar(expected);
 	}
 
 	/**
@@ -225,7 +241,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(boolean expected) {
-		return Context.provideContext(new IsBoolean(expected), Is.CONTEXT);
+		return new IsBoolean(expected);
 	}
 
 	/**
@@ -237,7 +253,7 @@ public final class Matchers {
 	 * @since 1.0.0
 	 */
 	public static Matcher equalTo(Object expected) {
-		return Context.provideContext(new EqualTo(expected), EqualTo.CONTEXT);
+		return Context.set(new EqualTo(expected)).matcherFactory(EqualTo.MATCHER_FACTORY).get();
 	}
 
 	/**
@@ -250,7 +266,8 @@ public final class Matchers {
 	 */
 	public static Matcher equalTo(Matcher delegate) {
 		if (delegate != null) {
-			return Context.provideContext(new DelegatingMatcher("equal to", delegate), EqualTo.CONTEXT);
+			return Context.set(new DelegatingMatcher("equal to", delegate))
+					.matcherFactory(EqualTo.MATCHER_FACTORY).get();
 		}
 		return equalTo((Object) null);
 	}
@@ -263,8 +280,8 @@ public final class Matchers {
 	 * @return a matcher, not {@code null}, that matches is an object is of a given instance.
 	 * @since 1.0.0
 	 */
-	public static Matcher instanceOf(Class class_) {
-		return Context.provideContext(new InstanceOf(class_), InstanceOf.CONTEXT);
+	public static Matcher instanceOf(Class<?> class_) {
+		return new InstanceOf(class_);
 	}
 
 	/**
@@ -277,34 +294,66 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher instanceOf(Matcher delegate) {
-		return Context.provideContext(new DelegatingMatcher("instance of", delegate), InstanceOf.CONTEXT);
+		return Context.set(new DelegatingMatcher("instance of", delegate))
+				.matcherFactory(InstanceOf.MATCHER_FACTORY).get();
 	}
 
 	/**
 	 * Returns a matcher that matches identical objects, including {@code null}.
 	 * Such a matcher uses the {@code ==} operator.
 	 *
-	 * @param expected the object to match
+	 * @param expected the object to match.
 	 * @return a matcher that matches identical objects, not {@code null}.
+	 * @see #identicalTo(Object)
 	 * @since 1.0.0
 	 */
 	public static Matcher sameAs(Object expected) {
-		return Context.provideContext(new IsObject("same as", true, expected), Is.CONTEXT);
+		return identicalTo("same as", expected);
 	}
 
 	/**
 	 * Returns a context-providing matcher that matches by identity.
 	 * It provides context for a context-sensitive matcher such as {@link #allOf(Object...)}.
+	 * This method exists for compatibility with other assertion frameworks.
+	 * It is recommended to use {@link #identicalTo(Matcher)} instead.
 	 *
 	 * @param delegate a context-sensitive matcher, not {@code null}.
 	 * @return a context-providing matcher, not {@code null}.
 	 * @since 2.0.0
 	 */
 	public static Matcher sameAs(Matcher delegate) {
+		return identicalTo("same as", delegate);
+	}
+
+	/**
+	 * @param expected the object to match.
+	 * @return a matcher that matches identical objects, not {@code null}.
+	 * @since 2.0.0
+	 */
+	public static Matcher identicalTo(Object expected) {
+		return identicalTo("identical to", expected);
+	}
+
+	/**
+	 * Returns a context-providing matcher that matches by identity.
+	 *
+	 * @param delegate a context-sensitive matcher, not {@code null}.
+	 * @return a context-providing matcher, not {@code null}.
+	 * @since 2.0.0
+	 */
+	public static Matcher identicalTo(Matcher delegate) {
+		return identicalTo("identical to", delegate);
+	}
+
+	private static Matcher identicalTo(String description, Object expected) {
+		return new IsObject(description, true, expected);
+	}
+
+	public static Matcher identicalTo(String description, Matcher delegate) {
 		if (delegate != null) {
-			return Context.provideContext(new DelegatingMatcher("same as", delegate), Is.CONTEXT);
+			return new Is(description, delegate);
 		}
-		return sameAs((Object) null);
+		return identicalTo(description, (Object) null);
 	}
 
 	/**
@@ -352,7 +401,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher closeTo(Number expected, Number tolerance) {
-		return Context.provideContext(new CloseTo(expected, tolerance), CloseTo.context(tolerance));
+		return new CloseTo(expected, tolerance);
 	}
 
 	/**
@@ -414,7 +463,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(Matcher... matchers) {
-		return new AnyOf(matchers);
+		return AnyOf.multiLine(matchers);
 	}
 
 	/**
@@ -428,7 +477,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(Object... expected) {
-		return Context.evaluateLater(Any.of(expected));
+		return AnyOf.singleLine(ContextualObjectMatcher.arrayOf(expected));
 	}
 
 	/**
@@ -441,7 +490,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(double... expected) {
-		return Context.evaluateLater(Any.of(expected));
+		return AnyOf.singleLine(ContextualDoubleMatcher.arrayOf(expected));
 	}
 
 	/**
@@ -454,7 +503,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(float... expected) {
-		return Context.evaluateLater(Any.of(expected));
+		return AnyOf.singleLine(ContextualFloatMatcher.arrayOf(expected));
 	}
 
 	/**
@@ -467,7 +516,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(long... expected) {
-		return Context.evaluateLater(Any.of(expected));
+		return AnyOf.singleLine(ContextualLongMatcher.arrayOf(expected));
 	}
 
 	/**
@@ -480,7 +529,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(int... expected) {
-		return Context.evaluateLater(Any.of(expected));
+		return AnyOf.singleLine(ContextualIntMatcher.arrayOf(expected));
 	}
 
 	/**
@@ -493,7 +542,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(short... expected) {
-		return Context.evaluateLater(Any.of(expected));
+		return AnyOf.singleLine(ContextualShortMatcher.arrayOf(expected));
 	}
 
 	/**
@@ -506,7 +555,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(byte... expected) {
-		return Context.evaluateLater(Any.of(expected));
+		return AnyOf.singleLine(ContextualByteMatcher.arrayOf(expected));
 	}
 
 	/**
@@ -519,7 +568,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(char... expected) {
-		return Context.evaluateLater(Any.of(expected));
+		return AnyOf.singleLine(ContextualCharMatcher.arrayOf(expected));
 	}
 
 	/**
@@ -532,7 +581,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(boolean... expected) {
-		return Context.evaluateLater(Any.of(expected));
+		return AnyOf.singleLine(ContextualBooleanMatcher.arrayOf(expected));
 	}
 
 	/**
@@ -544,7 +593,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(Matcher... delegates) {
-		return new AllOf(delegates);
+		return AllOf.multiLine(delegates);
 	}
 
 	/**
@@ -558,7 +607,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(Object... expected) {
-		return Context.evaluateLater(All.of(expected));
+		return AllOf.singleLine(ContextualObjectMatcher.arrayOf(expected));
 	}
 
 	/**
@@ -571,7 +620,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(double... expected) {
-		return Context.evaluateLater(All.of(expected));
+		return AllOf.singleLine(ContextualDoubleMatcher.arrayOf(expected));
 	}
 
 	/**
@@ -584,7 +633,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(float... expected) {
-		return Context.evaluateLater(All.of(expected));
+		return AllOf.singleLine(ContextualFloatMatcher.arrayOf(expected));
 	}
 
 	/**
@@ -597,7 +646,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(long... expected) {
-		return Context.evaluateLater(All.of(expected));
+		return AllOf.singleLine(ContextualLongMatcher.arrayOf(expected));
 	}
 
 	/**
@@ -610,7 +659,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(int... expected) {
-		return Context.evaluateLater(All.of(expected));
+		return AllOf.singleLine(ContextualIntMatcher.arrayOf(expected));
 	}
 
 	/**
@@ -623,7 +672,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(short... expected) {
-		return Context.evaluateLater(All.of(expected));
+		return AllOf.singleLine(ContextualShortMatcher.arrayOf(expected));
 	}
 
 	/**
@@ -636,7 +685,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(byte... expected) {
-		return Context.evaluateLater(All.of(expected));
+		return AllOf.singleLine(ContextualByteMatcher.arrayOf(expected));
 	}
 
 	/**
@@ -649,7 +698,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(char... expected) {
-		return Context.evaluateLater(All.of(expected));
+		return AllOf.singleLine(ContextualCharMatcher.arrayOf(expected));
 	}
 
 	/**
@@ -662,26 +711,6 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(boolean... expected) {
-		return Context.evaluateLater(All.of(expected));
-	}
-
-	/**
-	 * Returns a matcher that matches when the actual contains the expected.
-	 *
-	 * @param expected the expected to be contained in the actual, possibly {@code null}.
-	 * @return a matcher, not {@code null}.
-	 * @since 2.0.0
-	 */
-	public static Matcher contains(Object expected) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param delegate
-	 * @return
-	 * @since 2.0.0
-	 */
-	public static Matcher contains(Matcher delegate) {
-		return new Contains(delegate);
+		return AllOf.singleLine(ContextualBooleanMatcher.arrayOf(expected));
 	}
 }

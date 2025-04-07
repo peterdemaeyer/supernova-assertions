@@ -1,14 +1,12 @@
 package internal.su.pernova.assertions.matchers;
 
-import su.pernova.assertions.Description;
+import su.pernova.assertions.Context;
 
-public class IsFloat extends PromptDescriptiveMatcher {
-
-	private final float expected;
+public class IsFloat extends FloatMatcher {
 
 	public IsFloat(CharSequence description, boolean prompt, float expected) {
-		super(description, prompt);
-		this.expected = expected;
+		super(description, prompt, expected);
+		Context.set(this).matcherFactory(Is.MATCHER_FACTORY);
 	}
 
 	public IsFloat(float expected) {
@@ -23,10 +21,5 @@ public class IsFloat extends PromptDescriptiveMatcher {
 			return expected == (Character) actual;
 		}
 		return false;
-	}
-
-	@Override
-	public Description describe(Description description) {
-		return super.describe(description).appendExpected(expected);
 	}
 }

@@ -2,6 +2,7 @@ package internal.su.pernova.assertions.matchers;
 
 import static java.util.Objects.requireNonNull;
 
+import su.pernova.assertions.Context;
 import su.pernova.assertions.Description;
 import su.pernova.assertions.Matcher;
 
@@ -12,6 +13,7 @@ public class DelegatingMatcher extends DescriptiveMatcher {
 	public DelegatingMatcher(CharSequence description, Matcher delegate) {
 		super(description);
 		this.delegate = requireNonNull(delegate, "delegate is null");
+		Context.set(this).forwardTo(this.delegate);
 	}
 
 	@Override
