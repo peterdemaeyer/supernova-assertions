@@ -1,24 +1,21 @@
 package internal.su.pernova.assertions.matchers;
 
-import su.pernova.assertions.Context;
-
 public class IsFloat extends FloatMatcher {
 
-	public IsFloat(CharSequence description, boolean prompt, float expected) {
-		super(description, prompt, expected);
-		Context.set(this).matcherFactory(Is.MATCHER_FACTORY);
+	public IsFloat(CharSequence name, boolean prompt, float expectedValue) {
+		super(name, prompt, expectedValue);
 	}
 
-	public IsFloat(float expected) {
-		this("is", true, expected);
+	public IsFloat(float expectedValue) {
+		this("is", true, expectedValue);
 	}
 
 	@Override
-	public boolean match(Object actual) {
-		if (actual instanceof Number) {
-			return expected == ((Number) actual).floatValue();
-		} else if (actual instanceof Character) {
-			return expected == (Character) actual;
+	public boolean match(Object actualValue) {
+		if (actualValue instanceof Number) {
+			return expectedValue == ((Number) actualValue).floatValue();
+		} else if (actualValue instanceof Character) {
+			return expectedValue == (Character) actualValue;
 		}
 		return false;
 	}

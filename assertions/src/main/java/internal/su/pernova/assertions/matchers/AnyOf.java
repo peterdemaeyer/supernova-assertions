@@ -4,16 +4,16 @@ import static java.lang.System.lineSeparator;
 
 import su.pernova.assertions.Matcher;
 
-public class AnyOf extends CompositeMatcher {
+public class AnyOf extends CompositeMatcher<AnyOf> {
 
 	public AnyOf(CharSequence prefix, CharSequence separator, CharSequence suffix, Matcher... delegates) {
 		super(prefix, separator, suffix, delegates);
 	}
 
 	@Override
-	public boolean match(Object actual) {
+	public boolean match(Object actualValue) {
 		for (Matcher delegate : delegates) {
-			if (delegate.match(actual)) {
+			if (delegate.match(actualValue)) {
 				return true;
 			}
 		}

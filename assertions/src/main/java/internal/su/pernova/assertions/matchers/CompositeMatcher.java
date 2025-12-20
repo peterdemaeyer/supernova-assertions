@@ -2,12 +2,12 @@ package internal.su.pernova.assertions.matchers;
 
 import static java.util.Objects.requireNonNull;
 
-import internal.su.pernova.assertions.DefaultDescribable;
 import su.pernova.assertions.Context;
+import su.pernova.assertions.Describable;
 import su.pernova.assertions.Description;
 import su.pernova.assertions.Matcher;
 
-public abstract class CompositeMatcher extends DefaultDescribable implements Matcher {
+public abstract class CompositeMatcher<M extends CompositeMatcher<M>> implements Matcher {
 
 	protected final CharSequence startDelimiter;
 
@@ -22,12 +22,11 @@ public abstract class CompositeMatcher extends DefaultDescribable implements Mat
 		this.startDelimiter = startDelimiter;
 		this.separator = separator;
 		this.endDelimiter = endDelimiter;
-		Context.set(this).forwardTo(delegates);
 	}
 
 	@Override
 	public Description describe(Description description) {
-		super.describe(description).appendPrompt().appendText(startDelimiter);
+		Matcher.super.describe(description).appendPrompt().appendText(startDelimiter);
 		int index = 0;
 		for (Matcher delegate : delegates) {
 			if (index++ > 0) {
@@ -36,5 +35,10 @@ public abstract class CompositeMatcher extends DefaultDescribable implements Mat
 			delegate.describe(description);
 		}
 		return description.appendText(endDelimiter);
+	}
+
+	@SuppressWarnings("unchecked")
+	public M contextualize() {
+		return (M) Context.set(this).forward(delegates).get();
 	}
 }

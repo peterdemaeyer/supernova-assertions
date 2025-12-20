@@ -18,7 +18,7 @@ public class ByteBuffersReadableByteChannel extends CloseableReadableByteChannel
 
 	@Override
 	public synchronized int read(ByteBuffer dst) throws IOException {
-		super.read(dst);
+		throwIfClosed();
 		final int initialPosition = dst.position();
 		while (index < buffers.length && dst.hasRemaining()) {
 			final ByteBuffer src = buffers[index];

@@ -37,7 +37,7 @@ public interface ObjectContractTest {
 	 * @return an object of the class under test not equal to the one provided by {@link #getInstance()}, or
 	 * {@code null} if not applicable.
 	 */
-	Object getNonEqualInstance() throws Exception;
+	Object[] getNonEqualInstances() throws Exception;
 
 	@Test
 	default void equalityWithNull() throws Exception {
@@ -70,15 +70,17 @@ public interface ObjectContractTest {
 
 	@Test
 	default void equalityWithNonEqualObject() throws Exception {
-		final Object nonEqualObject = getNonEqualInstance();
-		assumeTrue(nonEqualObject != null, "No non-equal object exists. This is typically the case singletons.");
+		final Object[] nonEqualObjects = getNonEqualInstances();
+		assumeTrue(nonEqualObjects != null, "No non-equal object exists. This is typically the case for singletons.");
 		final Object object = getInstance();
 		assertNotNull(object);
-		// Assert that the "is equal to" relation is symmetric.
-		assertFalse(object.equals(nonEqualObject));
-		assertFalse(nonEqualObject.equals(object));
-		// We can't assert anything on the hash code.
-		// The hash codes are likely to be different, but it's not a guarantee and not a strict requirement.
+		for (Object nonEqualObject : nonEqualObjects) {
+			// Assert that the "is equal to" relation is symmetric.
+			assertFalse(object.equals(nonEqualObjects));
+			assertFalse(nonEqualObjects.equals(object));
+			// We can't assert anything on the hash code.
+			// The hash codes are likely to be different, but it's not a guarantee and not a strict requirement.
+		}
 	}
 
 	@Test

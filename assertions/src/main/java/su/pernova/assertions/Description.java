@@ -44,23 +44,23 @@ public interface Description {
 	/**
 	 * Appends an expected value to this description.
 	 *
-	 * @param expected an expected value to append to this description, possibly {@code null}.
+	 * @param expectedValue an expected value to append to this description, possibly {@code null}.
 	 * @return this description.
 	 * @since 2.0.0
 	 */
-	default Description appendExpected(Object expected) {
-		return appendArgument(expected);
+	default Description appendExpectedValue(Object expectedValue) {
+		return appendArgument(expectedValue);
 	}
 
 	/**
 	 * Appends an actual value to this description.
 	 *
-	 * @param actual an actual value to append to this description, possibly {@code null}.
+	 * @param actualValue an actual value to append to this description, possibly {@code null}.
 	 * @return this description.
 	 * @since 2.0.0
 	 */
-	default Description appendActual(Object actual) {
-		return appendArgument(actual);
+	default Description appendActualValue(Object actualValue) {
+		return appendArgument(actualValue);
 	}
 
 	/**
@@ -72,7 +72,7 @@ public interface Description {
 	 * @return the expected value(s), possibly {@code null}, or possibly a list of multiple values.
 	 * @since 2.0.0
 	 */
-	Object getExpected();
+	Object getExpectedValue();
 
 	/**
 	 * Gets the actual value(s) appended to this description so far.
@@ -83,5 +83,5 @@ public interface Description {
 	 * @return the actual values(s), possibly {@code null}, or possibly a list of multiple values.
 	 * @since 2.0.0
 	 */
-	Object getActual();
+	Object getActualValue();
 }

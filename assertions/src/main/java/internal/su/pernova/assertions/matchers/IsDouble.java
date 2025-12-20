@@ -1,24 +1,21 @@
 package internal.su.pernova.assertions.matchers;
 
-import su.pernova.assertions.Context;
-
 public class IsDouble extends DoubleMatcher {
 
-	public IsDouble(CharSequence description, boolean prompt, double expected) {
-		super(description, prompt, expected);
-		Context.set(this).matcherFactory(Is.MATCHER_FACTORY);
+	public IsDouble(CharSequence name, boolean prompt, double expectedValue) {
+		super(name, prompt, expectedValue);
 	}
 
-	public IsDouble(double expected) {
-		this("is", true, expected);
+	public IsDouble(double expectedValue) {
+		this("is", true, expectedValue);
 	}
 
 	@Override
-	public boolean match(Object actual) {
-		if (actual instanceof Number) {
-			return expected == ((Number) actual).doubleValue();
-		} else if (actual instanceof Character) {
-			return expected == (Character) actual;
+	public boolean match(Object actualValue) {
+		if (actualValue instanceof Number) {
+			return expectedValue == ((Number) actualValue).doubleValue();
+		} else if (actualValue instanceof Character) {
+			return expectedValue == (Character) actualValue;
 		}
 		return false;
 	}

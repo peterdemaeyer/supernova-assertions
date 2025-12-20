@@ -1,10 +1,11 @@
 package internal.su.pernova.assertions;
 
+import static java.lang.Character.isLetterOrDigit;
 import static java.lang.Character.isLowerCase;
+import static java.lang.Character.isSpaceChar;
+import static java.lang.Character.toUpperCase;
 
-import su.pernova.assertions.AppendableDescription;
 import su.pernova.assertions.Describable;
-import su.pernova.assertions.Description;
 
 public final class DescribableUtils {
 
@@ -22,7 +23,7 @@ public final class DescribableUtils {
 	private DescribableUtils() {
 	}
 
-	public static CharSequence getDefaultDescriptionText(Describable describable) {
+	public static CharSequence getDefaultName(Describable describable) {
 		String text = describable.getClass().getSimpleName();
 		String previousText = text;
 		while (true) {
@@ -42,6 +43,37 @@ public final class DescribableUtils {
 			text = text.substring(1);
 		}
 		return text.toLowerCase();
+	}
+
+	public static String toLowerCamelCase(CharSequence sentenceCase) {
+		final StringBuilder builder = new StringBuilder(sentenceCase.length());
+		boolean capitalize = false;
+		for (int index = 0, length = sentenceCase.length(); index != length; index++) {
+			final char c = sentenceCase.charAt(index);
+			if (c == ' ') {
+				capitalize = true;
+			} else if (capitalize) {
+				builder.append(toUpperCase(c));
+				capitalize = false;
+			} else {
+				builder.append(c);
+			}
+		}
+		return builder.toString();
+	}
+
+	public static String toStrikethrough(CharSequence camelCase) {
+		final StringBuilder builder = new StringBuilder(camelCase.length() * 2);
+		for (int index = 0, length = camelCase.length(); index != length; index++) {
+			final char c = camelCase.charAt(index);
+			if (c != '\u0336') {
+				builder.append(c);
+			}
+			if (isLetterOrDigit(c)) {
+				builder.append('\u0336');
+			}
+		}
+		return builder.toString();
 	}
 
 	private static String stripPrefix(String text, String prefix) {

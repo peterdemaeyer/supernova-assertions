@@ -1,6 +1,6 @@
 package internal.su.pernova.assertions.matchers;
 
-public class Nan extends DescriptiveMatcher {
+public class Nan extends PromptedNamedMatcher {
 
 	private static class Singleton {
 
@@ -8,16 +8,16 @@ public class Nan extends DescriptiveMatcher {
 	}
 
 	private Nan() {
-		super("NaN");
+		super("NaN", false);
 	}
 
 	@Override
-	public boolean match(Object actual) {
-		if (actual instanceof Double) {
-			return ((Double) actual).isNaN();
+	public boolean match(Object actualValue) {
+		if (actualValue instanceof Double) {
+			return ((Double) actualValue).isNaN();
 		}
-		if (actual instanceof Float) {
-			return ((Float) actual).isNaN();
+		if (actualValue instanceof Float) {
+			return ((Float) actualValue).isNaN();
 		}
 		return false;
 	}

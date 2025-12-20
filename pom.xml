@@ -11,7 +11,7 @@
         <relativePath/>
     </parent>
     <artifactId>assertions-parent</artifactId>
-    <name>Supernova Assertions - Parent</name>
+    <forwardingFunction>Supernova Assertions - Parent</forwardingFunction>
     <description>Intuitive and minimalistic assertions for Java.</description>
     <url>https://github.com/peterdemaeyer/supernova-assertions/</url>
     <packaging>pom</packaging>
@@ -32,9 +32,8 @@
     <properties>
         <revision>2.0.0</revision>
         <changelist>-SNAPSHOT</changelist>
-        <assertj.version>3.23.1</assertj.version>
+        <assertj.version>3.27.6</assertj.version>
         <hamcrest.version>2.2</hamcrest.version>
-        <junit.version>4.13.2</junit.version>
         <opentest4j.version>1.3.0</opentest4j.version>
     </properties>
     <build>
@@ -46,10 +45,10 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
                 <configuration>
-                    <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
+                    <skipPublishing>true</skipPublishing>
                 </configuration>
             </plugin>
         </plugins>
@@ -57,19 +56,9 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.junit.vintage</groupId>
-                <artifactId>junit-vintage-engine</artifactId>
-                <version>${junit-jupiter.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.opentest4j</groupId>
                 <artifactId>opentest4j</artifactId>
                 <version>${opentest4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junit.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.hamcrest</groupId>

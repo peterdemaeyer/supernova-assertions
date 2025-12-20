@@ -1,22 +1,19 @@
 package internal.su.pernova.assertions.matchers;
 
-import su.pernova.assertions.Context;
-
 public class IsBoolean extends BooleanMatcher {
 
-	public IsBoolean(CharSequence description, boolean prompt, boolean expected) {
-		super(description, prompt, expected);
+	public IsBoolean(CharSequence name, boolean prompt, boolean expectedValue) {
+		super(name, prompt, expectedValue);
 	}
 
-	public IsBoolean(boolean expected) {
-		this("is", true, expected);
-		Context.set(this).matcherFactory(Is.MATCHER_FACTORY);
+	public IsBoolean(boolean expectedValue) {
+		this("is", true, expectedValue);
 	}
 
 	@Override
-	public boolean match(Object actual) {
-		if (actual instanceof Boolean) {
-			return expected == (Boolean) actual;
+	public boolean match(Object actualValue) {
+		if (actualValue instanceof Boolean) {
+			return expectedValue == (Boolean) actualValue;
 		}
 		return false;
 	}

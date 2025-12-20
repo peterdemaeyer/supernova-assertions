@@ -7,29 +7,16 @@ package su.pernova.assertions;
  * The default subject "is" the actual object, not transforming it, but for example a "content of" subject transformq an
  * actual object into its content before subjecting it to the relation test.
  *
- * @since 2.0.0
+ * @since 1.0.0
  */
-public class Subject implements Describable {
-
-	protected final Object actual;
-
-	public Subject(Object actual) {
-		this.actual = actual;
-	}
+public interface Subject extends Describable {
 
 	/**
 	 * Matches this subject against a given matcher.
 	 *
-	 * @param matcher a matcher to match against, not {@code null}.
+	 * @param matcher a matcher to evaluate this subject against, not {@code null}.
 	 * @return {@code true} if the matcher matches, {@code false} otherwise.
 	 * @since 1.0.0
 	 */
-	public boolean match(Matcher matcher) {
-		return matcher.match(Context.get(this).actualTransformation().apply(actual));
-	}
-
-	@Override
-	public Description describeMismatch(Description mismatchDescription) {
-		return mismatchDescription.appendPrompt().appendActual(actual);
-	}
+	boolean match(Matcher matcher);
 }

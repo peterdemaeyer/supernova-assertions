@@ -1,15 +1,6 @@
 package su.pernova.assertions;
 
 import internal.su.pernova.assertions.matchers.And;
-import internal.su.pernova.assertions.matchers.ContextualBooleanMatcher;
-import internal.su.pernova.assertions.matchers.ContextualByteMatcher;
-import internal.su.pernova.assertions.matchers.ContextualCharMatcher;
-import internal.su.pernova.assertions.matchers.ContextualDoubleMatcher;
-import internal.su.pernova.assertions.matchers.ContextualFloatMatcher;
-import internal.su.pernova.assertions.matchers.ContextualIntMatcher;
-import internal.su.pernova.assertions.matchers.ContextualLongMatcher;
-import internal.su.pernova.assertions.matchers.ContextualObjectMatcher;
-import internal.su.pernova.assertions.matchers.ContextualShortMatcher;
 import internal.su.pernova.assertions.matchers.Or;
 
 /**
@@ -26,11 +17,22 @@ public interface Matcher extends Describable {
 	/**
 	 * Matches this matcher against a given object, returning {@code true} in case of match and {@code false} otherwise.
 	 *
-	 * @param actual a given object to match, which may be {@code null}.
+	 * @param actualValue a given object to match, which may be {@code null}.
 	 * @return {@code true} in case of match, {@code false} otherwise.
 	 * @since 1.0.0
 	 */
-	boolean match(Object actual);
+	boolean match(Object actualValue);
+
+	/**
+	 * Appends "was" to a given mismatch description and returns the same mismatch description.
+	 *
+	 * @param mismatchDescription a mismatch description, not {@code null}.
+	 * @return the mismatch description which is given as parameter.
+	 */
+	@Override
+	default Description describeMismatch(Description mismatchDescription) {
+		return mismatchDescription.appendText("was");
+	}
 
 	/**
 	 * Returns a logical AND matcher that matches if both this and another given matcher match.
@@ -40,115 +42,106 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(Matcher matcher) {
-		return Context.set(new And(this, matcher)).replaceForwardingTo(this).get();
+		return Context.cloneAndCombine(this, matcher, And::new);
 	}
 
 	/**
 	 * Returns a logical AND matcher that matches if both this and another given expected value match.
 	 *
-	 * @param expected another expected value, possibly {@code null}.
+	 * @param expectedValue another expected value, possibly {@code null}.
 	 * @return a logical AND matcher, not {@code null}.
 	 * @since 2.0.0
 	 */
-	default Matcher and(Object expected) {
-		return Context.set(new And(this, new ContextualObjectMatcher(expected, true)))
-				.replaceForwardingTo(this).get();
+	default Matcher and(Object expectedValue) {
+		return Context.cloneCreateAndCombine(this, factory -> factory.create(expectedValue), And::new);
 	}
 
 	/**
 	 * Returns a logical AND matcher that matches if both this and another given expected value match.
 	 *
-	 * @param expected another expected value, possibly {@code null}.
+	 * @param expectedValue another expected value, possibly {@code null}.
 	 * @return a logical AND matcher, not {@code null}.
 	 * @since 2.0.0
 	 */
-	default Matcher and(double expected) {
-		return Context.set(new And(this, new ContextualDoubleMatcher(expected, true)))
-				.replaceForwardingTo(this).get();
+	default Matcher and(double expectedValue) {
+		return Context.cloneCreateAndCombine(this, factory -> factory.create(expectedValue), And::new);
 	}
 
 	/**
 	 * Returns a logical AND matcher that matches if both this and another given expected value match.
 	 *
-	 * @param expected another expected value, possibly {@code null}.
+	 * @param expectedValue another expected value, possibly {@code null}.
 	 * @return a logical AND matcher, not {@code null}.
 	 * @since 2.0.0
 	 */
-	default Matcher and(float expected) {
-		return Context.set(new And(this, new ContextualFloatMatcher(expected, true)))
-				.replaceForwardingTo(this).get();
+	default Matcher and(float expectedValue) {
+		return Context.cloneCreateAndCombine(this, factory -> factory.create(expectedValue), And::new);
 	}
 
 	/**
 	 * Returns a logical AND matcher that matches if both this and another given expected value match.
 	 *
-	 * @param expected another expected value, possibly {@code null}.
+	 * @param expectedValue another expected value, possibly {@code null}.
 	 * @return a logical AND matcher, not {@code null}.
 	 * @since 2.0.0
 	 */
-	default Matcher and(long expected) {
-		return Context.set(new And(this, new ContextualLongMatcher(expected, true)))
-				.replaceForwardingTo(this).get();
+	default Matcher and(long expectedValue) {
+		return Context.cloneCreateAndCombine(this, factory -> factory.create(expectedValue), And::new);
 	}
 
 	/**
 	 * Returns a logical AND matcher that matches if both this and another given expected value match.
 	 *
-	 * @param expected another expected value, possibly {@code null}.
+	 * @param expectedValue another expected value, possibly {@code null}.
 	 * @return a logical AND matcher, not {@code null}.
 	 * @since 2.0.0
 	 */
-	default Matcher and(int expected) {
-		return Context.set(new And(this, new ContextualIntMatcher(expected, true)))
-				.replaceForwardingTo(this).get();
+	default Matcher and(int expectedValue) {
+		return Context.cloneCreateAndCombine(this, factory -> factory.create(expectedValue), And::new);
 	}
 
 	/**
 	 * Returns a logical AND matcher that matches if both this and another given expected value match.
 	 *
-	 * @param expected another expected value, possibly {@code null}.
+	 * @param expectedValue another expected value, possibly {@code null}.
 	 * @return a logical AND matcher, not {@code null}.
 	 * @since 2.0.0
 	 */
-	default Matcher and(short expected) {
-		return Context.set(new And(this, new ContextualShortMatcher(expected, true)))
-				.replaceForwardingTo(this).get();
+	default Matcher and(short expectedValue) {
+		return Context.cloneCreateAndCombine(this, factory -> factory.create(expectedValue), And::new);
 	}
 
 	/**
 	 * Returns a logical AND matcher that matches if both this and another given expected value match.
 	 *
-	 * @param expected another expected value, possibly {@code null}.
+	 * @param expectedValue another expected value, possibly {@code null}.
 	 * @return a logical AND matcher, not {@code null}.
 	 * @since 2.0.0
 	 */
-	default Matcher and(byte expected) {
-		return Context.set(new And(this, new ContextualByteMatcher(expected, true)))
-				.replaceForwardingTo(this).get();
+	default Matcher and(byte expectedValue) {
+		return Context.cloneCreateAndCombine(this, factory -> factory.create(expectedValue), And::new);
 	}
 
 	/**
 	 * Returns a logical AND matcher that matches if both this and another given expected value match.
 	 *
-	 * @param expected another expected value, possibly {@code null}.
+	 * @param expectedValue another expected value, possibly {@code null}.
 	 * @return a logical AND matcher, not {@code null}.
 	 * @since 2.0.0
 	 */
-	default Matcher and(char expected) {
-		return Context.set(new And(this, new ContextualCharMatcher(expected, true)))
-				.replaceForwardingTo(this).get();
+	default Matcher and(char expectedValue) {
+		return Context.cloneCreateAndCombine(this, factory -> factory.create(expectedValue), And::new);
 	}
 
 	/**
 	 * Returns a logical AND matcher that matches if both this and another given expected value match.
 	 *
-	 * @param expected another expected value, possibly {@code null}.
+	 * @param expectedValue another expected value, possibly {@code null}.
 	 * @return a logical AND matcher, not {@code null}.
 	 * @since 2.0.0
 	 */
-	default Matcher and(boolean expected) {
-		return Context.set(new And(this, new ContextualBooleanMatcher(expected, true)))
-				.replaceForwardingTo(this).get();
+	default Matcher and(boolean expectedValue) {
+		return Context.cloneCreateAndCombine(this, factory -> factory.create(expectedValue), And::new);
 	}
 
 	/**
@@ -159,7 +152,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher or(Matcher matcher) {
-		return Context.set(new Or(this, matcher)).replaceForwardingTo(this).get();
+		return Context.cloneAndCombine(this, matcher, Or::new);
 	}
 
 	/**
@@ -167,108 +160,99 @@ public interface Matcher extends Describable {
 	 * The behavior of the matcher depends on the context.
 	 * It could for example behave as an "equal to", an "instance of", or any other matcher.
 	 *
-	 * @param expected a value, possibly {@code null}.
+	 * @param expectedValue a value, possibly {@code null}.
 	 * @return a matcher, not {@code null}.
 	 * @since 2.0.0
 	 */
-	default Matcher or(Object expected) {
-		return Context.set(new Or(this, new ContextualObjectMatcher(expected, true)))
-				.replaceForwardingTo(this).get();
+	default Matcher or(Object expectedValue) {
+		return Context.cloneCreateAndCombine(this, factory -> factory.create(expectedValue), Or::new);
 	}
 
 	/**
 	 * Returns a logical OR matcher that matches if either this or another given expected value match.
 	 *
-	 * @param expected another expected value, possibly {@code null}.
+	 * @param expectedValue another expected value, possibly {@code null}.
 	 * @return a logical OR matcher, not {@code null}.
 	 * @since 2.0.0
 	 */
-	default Matcher or(double expected) {
-		return Context.set(new Or(this, new ContextualDoubleMatcher(expected, true)))
-				.replaceForwardingTo(this).get();
+	default Matcher or(double expectedValue) {
+		return Context.cloneCreateAndCombine(this, factory -> factory.create(expectedValue), Or::new);
 	}
 
 	/**
 	 * Returns a logical OR matcher that matches if either this or another given expected value match.
 	 *
-	 * @param expected another expected value, possibly {@code null}.
+	 * @param expectedValue another expected value, possibly {@code null}.
 	 * @return a logical OR matcher, not {@code null}.
 	 * @since 2.0.0
 	 */
-	default Matcher or(float expected) {
-		return Context.set(new Or(this, new ContextualFloatMatcher(expected, true)))
-				.replaceForwardingTo(this).get();
+	default Matcher or(float expectedValue) {
+		return Context.cloneCreateAndCombine(this, factory -> factory.create(expectedValue), Or::new);
 	}
 
 	/**
 	 * Returns a logical OR matcher that matches if either this or another given expected value match.
 	 *
-	 * @param expected another expected value, possibly {@code null}.
+	 * @param expectedValue another expected value, possibly {@code null}.
 	 * @return a logical OR matcher, not {@code null}.
 	 * @since 2.0.0
 	 */
-	default Matcher or(long expected) {
-		return Context.set(new Or(this, new ContextualLongMatcher(expected, true)))
-				.replaceForwardingTo(this).get();
+	default Matcher or(long expectedValue) {
+		return Context.cloneCreateAndCombine(this, factory -> factory.create(expectedValue), Or::new);
 	}
 
 	/**
 	 * Returns a logical OR matcher that matches if either this or another given expected value match.
 	 *
-	 * @param expected another expected value, possibly {@code null}.
+	 * @param expectedValue another expected value, possibly {@code null}.
 	 * @return a logical OR matcher, not {@code null}.
 	 * @since 2.0.0
 	 */
-	default Matcher or(int expected) {
-		return Context.set(new Or(this, new ContextualIntMatcher(expected, true)))
-				.replaceForwardingTo(this).get();
+	default Matcher or(int expectedValue) {
+		return Context.cloneCreateAndCombine(this, factory -> factory.create(expectedValue), Or::new);
 	}
 
 	/**
 	 * Returns a logical OR matcher that matches if either this or another given expected value match.
 	 *
-	 * @param expected another expected value, possibly {@code null}.
+	 * @param expectedValue another expected value, possibly {@code null}.
 	 * @return a logical OR matcher, not {@code null}.
 	 * @since 2.0.0
 	 */
-	default Matcher or(short expected) {
-		return Context.set(new Or(this, new ContextualShortMatcher(expected, true)))
-				.replaceForwardingTo(this).get();
+	default Matcher or(short expectedValue) {
+		return Context.cloneCreateAndCombine(this, factory -> factory.create(expectedValue), Or::new);
 	}
 
 	/**
 	 * Returns a logical OR matcher that matches if either this or another given expected value match.
 	 *
-	 * @param expected another expected value, possibly {@code null}.
+	 * @param expectedValue another expected value, possibly {@code null}.
 	 * @return a logical OR matcher, not {@code null}.
 	 * @since 2.0.0
 	 */
-	default Matcher or(byte expected) {
-		return Context.set(new Or(this, new ContextualByteMatcher(expected, true)))
-				.replaceForwardingTo(this).get();
+	default Matcher or(byte expectedValue) {
+		return Context.cloneCreateAndCombine(this, factory -> factory.create(expectedValue), Or::new);
 	}
 
 	/**
 	 * Returns a logical OR matcher that matches if either this or another given expected value match.
 	 *
-	 * @param expected another expected value, possibly {@code null}.
+	 * @param expectedValue another expected value, possibly {@code null}.
 	 * @return a logical OR matcher, not {@code null}.
 	 * @since 2.0.0
 	 */
-	default Matcher or(char expected) {
-		return Context.set(new Or(this, new ContextualCharMatcher(expected, true)))
-				.replaceForwardingTo(this).get();
+	default Matcher or(char expectedValue) {
+		return Context.cloneCreateAndCombine(this, factory -> factory.create(expectedValue), Or::new);
 	}
 
 	/**
 	 * Returns a logical OR matcher that matches if either this or another given expected value match.
 	 *
-	 * @param expected another expected value, possibly {@code null}.
+	 * @param expectedValue another expected value, possibly {@code null}.
 	 * @return a logical OR matcher, not {@code null}.
 	 * @since 2.0.0
 	 */
-	default Matcher or(boolean expected) {
-		return Context.set(new Or(this, new ContextualBooleanMatcher(expected, true)))
-				.replaceForwardingTo(this).get();
+	default Matcher or(boolean expectedValue) {
+		return Context.cloneCreateAndCombine(this, factory -> factory.create(expectedValue), Or::new);
 	}
 }

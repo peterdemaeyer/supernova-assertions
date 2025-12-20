@@ -25,6 +25,9 @@ class AppendableDescriptionTest {
 
 	private final Appendable throwingAppendable = mockThrowingAppendable(new IOException("induced by test"));
 
+	AppendableDescriptionTest() throws IOException {
+	}
+
 	@Test
 	void constructionThrowsWhenAppendableIsNull() {
 		final NullPointerException expected = assertThrows(NullPointerException.class, () -> new AppendableDescription(null));
@@ -193,15 +196,11 @@ class AppendableDescriptionTest {
 		assertEquals("map: {5=\"five\", \"seven point five\"=7.5}", appendable.toString());
 	}
 
-	private static Appendable mockThrowingAppendable(IOException exception) {
+	private static Appendable mockThrowingAppendable(IOException exception) throws IOException {
 		final Appendable appendable = mock(Appendable.class);
-		try {
-			when(appendable.append(any(CharSequence.class))).thenThrow(exception);
-			when(appendable.append(any(CharSequence.class), anyInt(), anyInt())).thenThrow(exception);
-			when(appendable.append(anyChar())).thenThrow(exception);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		when(appendable.append(any(CharSequence.class))).thenThrow(exception);
+		when(appendable.append(any(CharSequence.class), anyInt(), anyInt())).thenThrow(exception);
+		when(appendable.append(anyChar())).thenThrow(exception);
 		return appendable;
 	}
 
@@ -253,9 +252,9 @@ class AppendableDescriptionTest {
 		Object expected = new Object();
 		Object actual = new Object();
 		Description description = new AppendableDescription(appendable)
-				.appendActual(actual)
-				.appendExpected(expected);
-		assertEquals(expected, description.getExpected());
-		assertEquals(actual, description.getActual());
+				.appendActualValue(actual)
+				.appendExpectedValue(expected);
+		assertEquals(expected, description.getExpectedValue());
+		assertEquals(actual, description.getActualValue());
 	}
 }

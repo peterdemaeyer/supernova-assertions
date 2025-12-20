@@ -1,8 +1,9 @@
 package su.pernova.assertions;
 
 import static java.lang.System.lineSeparator;
+
 import static su.pernova.assertions.Matchers.is;
-import static su.pernova.assertions.Subjects.defaultSubject;
+import static su.pernova.assertions.Subjects.implicitSubject;
 
 import internal.su.pernova.assertions.AssertionFailureThrower;
 import internal.su.pernova.assertions.FailureThrower;
@@ -29,7 +30,7 @@ public final class Assertions {
 	 * @since 2.0.0
 	 */
 	public static void assertThat(Object actual, Matcher... matchers) {
-		assertThat(defaultSubject(actual, matchers), matchers);
+		assertThat(implicitSubject(actual, matchers), matchers);
 	}
 
 	/**
@@ -56,14 +57,14 @@ public final class Assertions {
 	 */
 	static void verifyThat(FailureThrower thrower, Subject subject, Matcher... matchers) {
 		if (subject == null) {
-			subject = defaultSubject(null, matchers);
+			subject = implicitSubject(null, matchers);
 		}
 		if (matchers.length == 0) {
-			matchers = new Matcher[]{ is(true) };
+			matchers = new Matcher[] { is(true) };
 		}
+		Context.set(subject).forward(matchers);
 		for (Matcher matcher : matchers) {
-			Context.set(subject).forwardTo(matcher);
-			try {
+//			try (Context context = new Context(subject)) {
 				if (!subject.match(matcher)) {
 					Description description = new AppendableDescription(new StringBuilder())
 							.appendText("expected that");
@@ -73,11 +74,9 @@ public final class Assertions {
 							.appendText("but");
 					matcher.describeMismatch(description);
 					subject.describeMismatch(description);
-					thrower.throwFailure(description.toString(), description.getExpected(), description.getActual());
+					thrower.throwFailure(description.toString(), description.getExpectedValue(), description.getActualValue());
 				}
-			} finally {
-				Context.unset(subject);
-			}
+//			}
 		}
 	}
 

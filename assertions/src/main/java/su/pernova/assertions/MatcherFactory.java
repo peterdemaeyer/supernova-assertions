@@ -1,38 +1,45 @@
 package su.pernova.assertions;
 
+/**
+ * @since 2.0.0
+ */
 public interface MatcherFactory {
 
-	Matcher create(Object expected);
+	Matcher create(Object expectedValue);
 
-	default Matcher create(double expected) {
-		return create((Object) expected);
+	default Matcher create(double expectedValue) {
+		return create(Double.valueOf(expectedValue));
 	}
 
-	default Matcher create(float expected) {
-		return create((Object) expected);
+	default Matcher create(float expectedValue) {
+		return create(Float.valueOf(expectedValue));
 	}
 
-	default Matcher create(long expected) {
-		return create((Object) expected);
+	default Matcher create(long expectedValue) {
+		return create(Long.valueOf(expectedValue));
 	}
 
-	default Matcher create(int expected) {
-		return create((Object) expected);
+	default Matcher create(int expectedValue) {
+		return create(Integer.valueOf(expectedValue));
 	}
 
-	default Matcher create(short expected) {
-		return create((Object) expected);
+	default Matcher create(short expectedValue) {
+		return create(Short.valueOf(expectedValue));
 	}
 
-	default Matcher create(byte expected) {
-		return create((Object) expected);
+	default Matcher create(byte expectedValue) {
+		return create(Byte.valueOf(expectedValue));
 	}
 
-	default Matcher create(char expected) {
-		return create((Object) expected);
+	default Matcher create(char expectedValue) {
+		return create(Character.valueOf(expectedValue));
 	}
 
-	default Matcher create(boolean expected) {
-		return create((Object) expected);
+	default Matcher create(boolean expectedValue) {
+		return create(Boolean.valueOf(expectedValue));
+	}
+
+	default Matcher create(Matcher expectation) {
+		return expectation;
 	}
 }

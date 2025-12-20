@@ -2,17 +2,22 @@ package internal.su.pernova.assertions.matchers;
 
 import su.pernova.assertions.Description;
 
-public abstract class ShortMatcher extends PromptDescriptiveMatcher {
+public abstract class ShortMatcher extends ExpectedValueMatcher {
 
-	protected final short expected;
+	protected final short expectedValue;
 
-	public ShortMatcher(CharSequence description, boolean prompt, short expected) {
-		super(description, prompt);
-		this.expected = expected;
+	public ShortMatcher(CharSequence name, boolean prompt, short expectedValue) {
+		super(name, prompt);
+		this.expectedValue = expectedValue;
 	}
 
 	@Override
 	public Description describe(Description description) {
-		return super.describe(description).appendExpected(expected);
+		return super.describe(description).appendExpectedValue(expectedValue);
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + "(" + expectedValue + ")";
 	}
 }

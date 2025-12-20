@@ -2,14 +2,14 @@ package internal.su.pernova.assertions.matchers;
 
 import su.pernova.assertions.Matcher;
 
-public class Not extends DelegatingMatcher {
+public class Not extends ForwardingMatcher {
 
 	public Not(Matcher delegate) {
-		super("not", delegate);
+		super(null, delegate);
 	}
 
 	@Override
-	public boolean match(Object actual) {
-		return !delegate.match(actual);
+	public boolean match(Object actualValue) {
+		return !destination.match(actualValue);
 	}
 }

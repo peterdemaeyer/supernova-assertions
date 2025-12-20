@@ -28,6 +28,7 @@
 * Added contextual matching for `Matchers.andOf(Object/primitive...)`, `Matchers.allOf(Object/primitive)`,
   `Matcher.or(Object/primitive)` and `Matcher.and(Object/primitive)` so that those matchers behave depending on the
   context provided by another matcher such as `equalTo`, `is`, `instanceOf`.
+* Renamed `Subject.match(Matcher)` tp `Subject.evaluate(Matcher)`.
 
 # Changes since 1.1.0
 

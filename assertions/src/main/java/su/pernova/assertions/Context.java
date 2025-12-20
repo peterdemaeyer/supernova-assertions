@@ -1,198 +1,340 @@
 package su.pernova.assertions;
 
-import static java.util.Arrays.stream;
 import static java.util.Objects.requireNonNull;
 
-import java.util.HashSet;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Objects;
 import java.util.WeakHashMap;
+import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
-public final class Context {
+import internal.su.pernova.assertions.matchers.AnonymousMatcherFactory;
+import internal.su.pernova.assertions.matchers.ForwardingMatcher;
 
-	private static final Supplier<Function<Object, Object>> IDENTITY_TRANSFORMATION_ANSWER = () -> object -> object;
+/**
+ * This class implements a framework that allows providing context to matchers.
+ * The semantic and behavior of such contextual matchers depends on the context.
+ * There are three different categories of contextual matchers.
+ *
+ * <h1>Context-providing matchers</h1>
+ * <p>
+ * Forward-providing context matchers provide context to leaf matchers further in the syntax tree.
+ *
+ * <h1>Contextual leaf matchers</h1>
+ *
+ * @since 2.0.0
+ */
+public final class Context implements AutoCloseable {
 
-	private Context() {
-	}
+	private static final Map<Object, Entry<?>> ENTRIES_BY_ORIGIN = new WeakHashMap<>();
 
-	private static class Singleton {
+	private final Entry<Subject> root;
 
-		private static final Instance INSTANCE = new Instance();
-	}
-
-	private static Instance getInstance() {
-		return Singleton.INSTANCE;
-	}
-
-	private static class Instance {
-
-		final Map<Object, Function<Object, Object>> actualTransformationsByProvider = new WeakHashMap<>();
-
-		final Map<Object, Function<Object, Object>> expectedTransformationsByProvider = new WeakHashMap<>();
-
-		final Map<Object, MatcherFactory> matcherFactoriesByProvider = new WeakHashMap<>();
-
-		final Map<Object, Set<Object>> receiversByProvider = new WeakHashMap<>();
-
-		final Map<Object, Object> providersByReceiver = new WeakHashMap<>();
-
-		synchronized void forwardTo(Object provider, Matcher... receivers) {
-			stream(receivers).forEach(receiver -> {
-				providersByReceiver.put(receiver, provider);
-				receiversByProvider.computeIfAbsent(provider, key -> new HashSet<>()).add(receiver);
-			});
+	/**
+	 * Opens a context for a given subject for internal use only.
+	 *
+	 * @param subject a subject to open a context for.
+	 */
+	Context(Subject subject) {
+		synchronized (ENTRIES_BY_ORIGIN) {
+			root = getEntry(subject);
+			walkAndSetAll(root.destinations, null, null);
 		}
+		this.matcherFactory = null;
+	}
 
-		synchronized void replaceForwardingTo(Matcher oldProvider, Object provider) {
-			Function<Object, Object> expectedTransformation = expectedTransformationsByProvider.get(oldProvider);
-			if (expectedTransformation != null) {
-				expectedTransformationsByProvider.put(provider, expectedTransformation);
+	private final AnonymousMatcherFactory matcherFactory;
+
+	private Context(AnonymousMatcherFactory matcherFactory) {
+		this.matcherFactory = matcherFactory;
+		this.root = null;
+	}
+
+	public MatcherFactory getFactory() {
+		return matcherFactory;
+	}
+
+	public Matcher putMatcherFactory(Matcher prototype) {
+		MATCHER_FACTORIES_BY_PROTOTYPE.put(prototype, matcherFactory);
+		return prototype;
+	}
+
+	/**
+	 * For internal use. Always call this from within a {@code synchronized (ENTRIES_BY_ORIGIN)} block.
+	 */
+	@SuppressWarnings("unchecked")
+	private static <O> Entry<O> getEntry(O origin) {
+		return (Entry<O>) ENTRIES_BY_ORIGIN.get(origin);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <O> Entry<O> computeEntryIfAbsent(O origin) {
+		return (Entry<O>) ENTRIES_BY_ORIGIN.computeIfAbsent(origin, o -> new Entry<>(origin));
+	}
+
+	private void walkAndSetAll(Collection<Entry<?>> entries, Matcher matcher, Descriptor matcherDescriptor) {
+		for (Entry<?> entry : entries) {
+			if ((entry.origin instanceof Matcher) && (entry.descriptor != null)) {
+				matcher = (Matcher) entry.origin;
+				matcherDescriptor = entry.descriptor;
 			}
-			MatcherFactory matcherFactory = matcherFactoriesByProvider.get(oldProvider);
-			if (matcherFactory != null) {
-				matcherFactoriesByProvider.put(provider, matcherFactory);
-			}
-			// Remove all the receivers of the old provider.
-			Set<Object> receivers = receiversByProvider.remove(oldProvider);
-			if (receivers != null) {
-				receiversByProvider.put(provider, receivers);
-				for (Object receiver : receivers) {
-					// Point all the receivers to the new provider.
-					providersByReceiver.put(receiver, provider);
+			for (Iterator<WeakReference<Listener>> it = entry.listeners.iterator(); it.hasNext(); ) {
+				Listener listener = it.next().get();
+				if (listener != null) {
+					listener.allSet(root.origin, root.descriptor, matcher, matcherDescriptor);
+				} else {
+					it.remove();
 				}
 			}
+			walkAndSetAll(entry.destinations, matcher, matcherDescriptor);
 		}
+	}
 
-		synchronized void putMatcherFactory(Object provider, MatcherFactory matcherFactory) {
-			matcherFactoriesByProvider.put(provider, matcherFactory);
+	/**
+	 * Closes this context so that held resources can be garbage collected.
+	 */
+	@Override
+	public void close() {
+		synchronized (ENTRIES_BY_ORIGIN) {
+			walkAndUnsetAll(root.destinations);
 		}
+	}
 
-		synchronized void putActualTransformation(Object provider, Function<Object, Object> actualTransformation) {
-			actualTransformationsByProvider.put(provider, actualTransformation);
-		}
-
-		synchronized void putExpectedTransformation(Object provider, Function<Object, Object> expectedTransformation) {
-			expectedTransformationsByProvider.put(provider, expectedTransformation);
-		}
-
-		synchronized MatcherFactory getMatcherFactory(Object receiver) {
-			return getByReceiver(matcherFactoriesByProvider, receiver, () -> {
-				throw new IllegalStateException("no context");
-			});
-		}
-
-		synchronized Function<Object, Object> getActualTransformation(Object receiver) {
-			return getByReceiver(actualTransformationsByProvider, receiver, IDENTITY_TRANSFORMATION_ANSWER);
-		}
-
-		synchronized Function<Object, Object> getExpectedTransformation(Object receiver) {
-			return getByReceiver(expectedTransformationsByProvider, receiver, IDENTITY_TRANSFORMATION_ANSWER);
-		}
-
-		private <O> O getByReceiver(Map<Object, O> valuesByReceiver, Object receiver, Supplier<O> defaultAnswer) {
-			while (receiver != null) {
-				O value = valuesByReceiver.get(receiver);
-				if (value != null) {
-					return value;
+	private void walkAndUnsetAll(Collection<Entry<?>> entries) {
+		for (Entry<?> entry : entries) {
+			for (Iterator<WeakReference<Listener>> it = entry.listeners.iterator(); it.hasNext(); ) {
+				Listener listener = it.next().get();
+				if (listener != null) {
+					listener.allUnset();
+				} else {
+					it.remove();
 				}
-				receiver = providersByReceiver.get(receiver);
 			}
-			return defaultAnswer.get();
-		}
-
-		synchronized void unset(Object provider) {
-			actualTransformationsByProvider.remove(provider);
-			expectedTransformationsByProvider.remove(provider);
-			Set<Object> receivers = receiversByProvider.remove(provider);
-			for (Object receiver : receivers) {
-				providersByReceiver.remove(receiver);
-			}
+			walkAndUnsetAll(entry.destinations);
 		}
 	}
 
-	public static void unset(Subject provider) {
-		Context.getInstance().unset(provider);
+	/**
+	 * Returns a setter for setting a given matcher's contextual parameters.
+	 *
+	 * @param matcher a matcher to use as origin, not {@code null}.
+	 * @return a setter using the given matcher as origin, not {@code null}.
+	 * @since 2.0.0
+	 */
+	public static <M extends Matcher> Setter<M> set(M matcher) {
+		return new Setter<>(matcher);
 	}
 
-	public static <M extends Matcher> Setter<M> set(M provider) {
-		return new Setter<>(provider);
+	/**
+	 * Returns a setter for setting a given subject's contextual parameters.
+	 *
+	 * @param subject a subject to use as origin, not {@code null}.
+	 * @return a setter using the given subject as origin, not {@code null}.
+	 * @since 2.0.0
+	 */
+	public static <S extends Subject> Setter<S> set(S subject) {
+		return new Setter<>(subject);
 	}
 
-	public static <S extends Subject> Setter<S> set(S provider) {
-		return new Setter<>(provider);
-	}
-
+	/**
+	 * A setter for changing contextual parameters for a given origin.
+	 * Changes to the setter are immediate, meaning there is no "commit" or "save" method.
+	 * To allow using the setter in a fluent style, the {@link #get()} method gets the origin out of the setter.
+	 *
+	 * @since 2.0.0
+	 */
 	public static class Setter<P> {
 
-		private final P provider;
+		private final Entry<P> entry;
 
-		private Setter(P provider) {
-			this.provider = requireNonNull(provider, "provider is null");
+		private Setter(P origin) {
+			synchronized (ENTRIES_BY_ORIGIN) {
+				this.entry = computeEntryIfAbsent(origin);
+			}
 		}
 
-		public Setter<P> transformation(Function<Object, Object> objectTransformation) {
-			return actualTransformation(objectTransformation)
-					.expectedTransformation(objectTransformation);
-		}
-
-		public Setter<P> actualTransformation(Function<Object, Object> actualTransformation) {
-			Context.getInstance().putActualTransformation(provider, actualTransformation);
+		public Setter<P> forward(Matcher... destinations) {
+			synchronized (ENTRIES_BY_ORIGIN) {
+				for (Matcher destination : destinations) {
+					entry.destinations.add(computeEntryIfAbsent(destination));
+				}
+			}
 			return this;
 		}
 
-		public Setter<P> expectedTransformation(Function<Object, Object> expectedTransformation) {
-			Context.getInstance().putExpectedTransformation(provider, expectedTransformation);
+		/**
+		 * Reroutes all destinations for a given (old) origin via this setter's (new) origin.
+		 * This facilitates writing fluent API like this:
+		 *
+		 * <pre>{@code
+		 * Match myMatcher = Context.set(new MyMatcher(destination)).descriptor("forward(destination).get();
+		 * }</pre>
+		 *
+		 * @param oldOrigin an origin to reroute all destinations for, not {@code null}.
+		 * @return this setter.
+		 */
+		public Setter<P> reroute(Matcher oldOrigin) {
+			synchronized (ENTRIES_BY_ORIGIN) {
+				Entry<?> oldEntry = getEntry(oldOrigin);
+				entry.destinations.addAll(oldEntry.destinations);
+				oldEntry.destinations.clear();
+				oldEntry.destinations.add(entry);
+			}
 			return this;
 		}
 
-		public Setter<P> matcherFactory(MatcherFactory matcherFactory) {
-			Context.getInstance().putMatcherFactory(provider, matcherFactory);
+		/**
+		 * Sets a descriptor for this setter's origin.
+		 *
+		 * @param descriptor a descriptor, not {@code null}.
+		 * @return this setter.
+		 */
+		public Setter<P> setDescriptor(Descriptor descriptor) {
+			entry.descriptor = requireNonNull(descriptor, "descriptor is null");
 			return this;
 		}
 
-		public Setter<P> forwardTo(Matcher... receivers) {
-			Context.getInstance().forwardTo(provider, receivers);
+		public Setter<P> addListener(Listener listener) {
+			entry.listeners.add(new WeakElement<>(requireNonNull(listener, "listener is null")));
 			return this;
 		}
 
-		public Setter<P> replaceForwardingTo(Matcher oldProvider) {
-			Context.getInstance().replaceForwardingTo(oldProvider, provider);
-			return this;
-		}
-
+		/**
+		 * Gets this setter's origin.
+		 *
+		 * @return this setter's origin, not {@code null}.
+		 */
 		public P get() {
-			return provider;
+			return entry.origin;
 		}
 	}
 
-	public static <M extends Matcher> Getter<M> get(M receiver) {
-		return new Getter<>(receiver);
+	private static class WeakElement<T> extends WeakReference<T> {
+
+		WeakElement(T referent) {
+			super(referent);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hashCode(get());
+		}
+
+		@Override
+		public boolean equals(Object other) {
+			if (!(other instanceof WeakElement)) {
+				return false;
+			}
+			return Objects.equals(get(), ((WeakElement<?>) other).get());
+		}
 	}
 
-	public static <S extends Subject> Getter<S> get(S receiver) {
-		return new Getter<>(receiver);
+	/**
+	 * @since 2.0.0
+	 */
+	public interface Listener {
+
+		void allSet(Subject subject, Descriptor subjectDescriptor, Matcher matcher, Descriptor matcherDescriptor);
+
+		void allUnset();
 	}
 
-	public static class Getter<P> {
+	private static class Entry<O> {
 
-		private final P receiver;
+		final O origin;
 
-		private Getter(P receiver) {
-			this.receiver = requireNonNull(receiver, "receiver is null");
+		Descriptor descriptor;
+
+		final List<Entry<?>> destinations = new ArrayList<>(1);
+
+		final Collection<WeakReference<Listener>> listeners = new ArrayList<>(1);
+
+		Entry(O origin) {
+			this.origin = origin;
 		}
+	}
 
-		public Function<Object, Object> actualTransformation() {
-			return Context.getInstance().getActualTransformation(receiver);
-		}
+	private static final Map<Matcher, AnonymousMatcherFactory> MATCHER_FACTORIES_BY_PROTOTYPE = new WeakHashMap<>();
 
-		public Function<Object, Object> expectedTransformation() {
-			return Context.getInstance().getExpectedTransformation(receiver);
-		}
+	/**
+	 * Registers a matcher factory for a destination matcher, returning the destination matcher.
+	 * The matcher factory will be used to fork the given destination matcher anonylously
+	 * when a forking method such as {@link Matcher#and} is called on it.
+	 * This method is thread-safe.
+	 *
+	 * @param prototype a prototype matcher, which must not be {@code null}.
+	 * @param matcherFactory a matcher factory, which must not be {@code null}.
+	 * @return the prototype matcher.
+	 */
+	public static synchronized Matcher putMatcherFactory(Matcher prototype, MatcherFactory matcherFactory) {
+		MATCHER_FACTORIES_BY_PROTOTYPE.put(
+				requireNonNull(prototype, "prototype is null"),
+				new AnonymousMatcherFactory(requireNonNull(matcherFactory, "factory is null for prototype: " + prototype))
+		);
+		return prototype;
+	}
 
-		public MatcherFactory matcherFactory() {
-			return Context.getInstance().getMatcherFactory(receiver);
-		}
+	public static Matcher forwardMatcherFactory(Matcher destination, MatcherFactory matcherFactory) {
+		return putMatcherFactory(matcherFactory.create(destination), matcherFactory);
+	}
+
+	public static synchronized Matcher forwardMatcherFactory(Function<Matcher, Matcher> forwardingFunction, CharSequence name, Matcher destination) {
+		requireNonNull(destination, "destination is null");
+		requireNonNull(forwardingFunction, "delegator function is null");
+		final AnonymousMatcherFactory destinationFactory = MATCHER_FACTORIES_BY_PROTOTYPE.get(destination);
+		requireNonNull(destinationFactory, "factory is null for: " + destination);
+		final Matcher forwardMatcher = forwardingFunction.apply(destination);
+		requireNonNull(forwardMatcher, "forwarding function returned null for: " + destination);
+		final ForwardingMatcherFactory forwardingMatcherFactory = new ForwardingMatcherFactory(name, destinationFactory.delegatee(), forwardingFunction);
+		MATCHER_FACTORIES_BY_PROTOTYPE.put(forwardMatcher, new AnonymousMatcherFactory(forwardingMatcherFactory));
+		return forwardMatcher;
+	}
+
+	public static Matcher forwardMatcherFactory(CharSequence name, Matcher destination) {
+		return forwardMatcherFactory(d -> new ForwardingMatcher(name, d), name, destination);
+	}
+
+	/**
+	 * Creates an anonymous clone of a given destination matcher for a given expected value.
+	 * This method is thread-safe.
+	 *
+	 * @param prototype a destination matcher, which must not be {@code null}.
+	 * @param factoryFunction a function that creates a matcher for a given factory, which must not be {@code null}.
+	 *
+	 * @return the bi-matcher, never {@code null}.
+	 * @see #forwardMatcherFactory
+	 */
+	public static synchronized Matcher cloneCreateAndCombine(Matcher prototype, Function<MatcherFactory, Matcher> factoryFunction, BiFunction<Matcher, Matcher, Matcher> biMatcherConstructor) {
+		final AnonymousMatcherFactory matcherFactory = getMatcherFactory(prototype);
+		final Matcher matcher = factoryFunction.apply(matcherFactory);
+		final Matcher biMatcher = biMatcherConstructor.apply(prototype, matcher);
+		requireNonNull(biMatcher, "bi-matcher is null for prototype: " + prototype + ", which means that biMatcherConstructor returned null");
+		MATCHER_FACTORIES_BY_PROTOTYPE.put(biMatcher, matcherFactory);
+		return biMatcher;
+	}
+
+	public static synchronized Matcher cloneAndCombine(Matcher prototype, Matcher matcher, BiFunction<Matcher, Matcher, Matcher> biMatcherConstructor) {
+		final AnonymousMatcherFactory matcherFactory = getMatcherFactory(prototype);
+		final Matcher biMatcher = biMatcherConstructor.apply(prototype, matcherFactory.create(matcher));
+		requireNonNull(biMatcher, "bi-matcher is null for prototype: " + prototype + ", which means that biMatcherConstructor returned null");
+		MATCHER_FACTORIES_BY_PROTOTYPE.put(biMatcher, matcherFactory);
+		return biMatcher;
+	}
+
+	public static synchronized Matcher cloneMatcherFactory(Matcher prototype, Matcher biMatcher) {
+		final AnonymousMatcherFactory matcherFactory = getMatcherFactory(prototype);
+		requireNonNull(biMatcher, "bi-matcher is null for prototype: " + prototype + ", which means that biMatcherConstructor returned null");
+		MATCHER_FACTORIES_BY_PROTOTYPE.put(biMatcher, matcherFactory);
+		return biMatcher;
+	}
+
+	private static AnonymousMatcherFactory getMatcherFactory(Matcher prototype) {
+ 		return requireNonNull(MATCHER_FACTORIES_BY_PROTOTYPE.get(prototype),
+				"matcher factory is null for prototype: " + prototype + ", which means that putMatcherFactory was not correctly called prior");
 	}
 }

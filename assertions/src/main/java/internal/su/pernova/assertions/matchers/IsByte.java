@@ -1,25 +1,22 @@
 package internal.su.pernova.assertions.matchers;
 
-import su.pernova.assertions.Context;
-
 public class IsByte extends ByteMatcher {
 
-	public IsByte(CharSequence description, boolean prompt, byte expected) {
-		super(description, prompt, expected);
-		Context.set(this).matcherFactory(Is.MATCHER_FACTORY);
+	public IsByte(CharSequence name, boolean prompt, byte expectedValue) {
+		super(name, prompt, expectedValue);
 	}
 
-	public IsByte(byte expected) {
-		this("is", true, expected);
+	public IsByte(byte expectedValue) {
+		this("is", true, expectedValue);
 	}
 
 	@Override
-	public boolean match(Object actual) {
-		if (actual instanceof Number) {
-			return expected == ((Number) actual).byteValue();
+	public boolean match(Object actualValue) {
+		if (actualValue instanceof Number) {
+			return expectedValue == ((Number) actualValue).byteValue();
 		}
-		if (actual instanceof Character) {
-			return expected == (Character) actual;
+		if (actualValue instanceof Character) {
+			return expectedValue == (Character) actualValue;
 		}
 		return false;
 	}

@@ -1,20 +1,21 @@
 package internal.su.pernova.assertions.matchers;
 
-import su.pernova.assertions.Context;
-
 public class IsObject extends ObjectMatcher {
 
-	public IsObject(CharSequence description, boolean prompt, Object expected) {
-		super(description, prompt, expected);
-		Context.set(this).matcherFactory(Is.MATCHER_FACTORY);
+	public IsObject(CharSequence name, boolean prompt, Object expectedValue) {
+		super(name, prompt, expectedValue);
 	}
 
-	public IsObject(Object expected) {
-		this("is", true, expected);
+	public IsObject(CharSequence name, Object expectedValue) {
+		this(name, true, expectedValue);
+	}
+
+	public IsObject(Object expectedValue) {
+		this("is", expectedValue);
 	}
 
 	@Override
-	public boolean match(Object actual) {
-		return actual == expected;
+	public boolean match(Object actualValue) {
+		return actualValue == expectedValue;
 	}
 }

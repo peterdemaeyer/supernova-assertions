@@ -1,7 +1,7 @@
 package su.pernova.assertions;
 
 import static su.pernova.assertions.Assertions.verifyThat;
-import static su.pernova.assertions.Subjects.defaultSubject;
+import static su.pernova.assertions.Subjects.implicitSubject;
 
 import internal.su.pernova.assertions.AssumptionFailureThrower;
 
@@ -26,7 +26,7 @@ public final class Assumptions {
 	 * @since 2.0.0
 	 */
 	public static void assumeThat(Object subject, Matcher... matchers) {
-		assumeThat(defaultSubject(subject, matchers), matchers);
+		assumeThat(implicitSubject(subject, matchers), matchers);
 	}
 
 	/**

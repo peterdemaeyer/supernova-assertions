@@ -15,15 +15,13 @@ public abstract class CloseableReadableByteChannel implements ReadableByteChanne
 	}
 
 	@Override
-	public synchronized int read(ByteBuffer dst) throws IOException {
+	public synchronized void close() throws IOException {
+		closed = true;
+	}
+
+	protected void throwIfClosed() throws ClosedChannelException {
 		if (closed) {
 			throw new ClosedChannelException();
 		}
-		return -1;
-	}
-
-	@Override
-	public synchronized void close() throws IOException {
-		closed = true;
 	}
 }

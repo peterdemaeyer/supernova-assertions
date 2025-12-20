@@ -1,25 +1,22 @@
 package internal.su.pernova.assertions.matchers;
 
-import su.pernova.assertions.Context;
-
 public class IsChar extends CharMatcher {
 
-	public IsChar(CharSequence description, boolean prompt, char expected) {
-		super(description, prompt, expected);
-		Context.set(this).matcherFactory(Is.MATCHER_FACTORY);
+	public IsChar(CharSequence name, boolean prompt, char expectedValue) {
+		super(name, prompt, expectedValue);
 	}
 
-	public IsChar(char expected) {
-		this("is", true, expected);
+	public IsChar(char expectedValue) {
+		this("is", true, expectedValue);
 	}
 
 	@Override
-	public boolean match(Object actual) {
-		if (actual instanceof Number) {
-			return expected == ((Number) actual).intValue();
+	public boolean match(Object actualValue) {
+		if (actualValue instanceof Number) {
+			return expectedValue == ((Number) actualValue).intValue();
 		}
-		if (actual instanceof Character) {
-			return expected == (Character) actual;
+		if (actualValue instanceof Character) {
+			return expectedValue == (Character) actualValue;
 		}
 		return false;
 	}

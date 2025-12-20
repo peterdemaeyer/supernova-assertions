@@ -30,7 +30,7 @@ public class CharSequenceReadableByteChannel extends CloseableReadableByteChanne
 
 	@Override
 	public synchronized int read(ByteBuffer dst) throws IOException {
-		super.read(dst);
+		throwIfClosed();
 		final int initialDstPosition = dst.position();
 		if (pendingEncoded.hasRemaining()) {
 			putAsMuchAsPossible(dst, pendingEncoded);

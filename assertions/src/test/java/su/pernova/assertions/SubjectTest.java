@@ -3,10 +3,12 @@ package su.pernova.assertions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import static su.pernova.assertions.Matchers.equalTo;
+import static su.pernova.assertions.Matchers.is;
+
 import org.junit.jupiter.api.Test;
 
-import internal.su.pernova.assertions.matchers.DelegatingMatcher;
-import internal.su.pernova.assertions.matchers.IsObject;
+import internal.su.pernova.assertions.subjects.ObjectSubject;
 
 class SubjectTest {
 
@@ -16,8 +18,8 @@ class SubjectTest {
 
 	@Test
 	void subjectMatchesNull() {
-		final Subject subject = new Subject(null);
-		assertTrue(subject.match(new DelegatingMatcher("", new IsObject(null))));
+		Subject subject = new ObjectSubject(null);
+		assertTrue(subject.match(is(equalTo(null))));
 		subject.describe(description);
 		assertEquals("subject", description.toString());
 		subject.describeMismatch(mismatchDescription);

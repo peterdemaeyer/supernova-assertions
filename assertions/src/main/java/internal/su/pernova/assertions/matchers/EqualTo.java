@@ -2,23 +2,34 @@ package internal.su.pernova.assertions.matchers;
 
 import java.util.Objects;
 
-import su.pernova.assertions.Context;
+import su.pernova.assertions.Matcher;
 import su.pernova.assertions.MatcherFactory;
 
 public class EqualTo extends ObjectMatcher {
 
-	public static final MatcherFactory MATCHER_FACTORY = expected -> new EqualTo("", false, expected);
+	public static final MatcherFactory MATCHER_FACTORY = new MatcherFactory() {
 
-	public EqualTo(CharSequence description, boolean prompt, Object expected) {
-		super(description, prompt, expected);
+		@Override
+		public Matcher create(Object expectedValue) {
+			return new EqualTo(expectedValue);
+		}
+
+		@Override
+		public Matcher create(Matcher expectation) {
+			return new ForwardingMatcher("equal to", expectation);
+		}
+	};
+
+	public EqualTo(CharSequence name, boolean prompt, Object expectedValue) {
+		super(name, prompt, expectedValue);
 	}
 
-	public EqualTo(Object expected) {
-		this(null, true, expected);
+	public EqualTo(Object expectedValue) {
+		this(null, true, expectedValue);
 	}
 
 	@Override
-	public boolean match(Object actual) {
-		return Objects.equals(Context.get(this).expectedTransformation().apply(expected), actual);
+	public boolean match(Object actualValue) {
+		return Objects.equals(expectedValue, actualValue);
 	}
 }

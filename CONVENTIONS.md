@@ -13,7 +13,7 @@ Use proper formatting when referring to code, in particular classes, methods and
 
 Examples:
 
-| Sentence case | Class name | Method name |
+| Sentence case | Class forwardingFunction | Method forwardingFunction |
 | XML output factory | `XmlOutputFactory` | `xmlOutputFactory` |
 | IntelliJ | `IntelliJ` | `intelliJ` |
 | WebLogic | `WebLogic` | `webLogic` |
@@ -23,7 +23,7 @@ Examples:
 
 ### Exception messages
 
-Exception messages must be phrases, without capital at the start (unless it's a proper name) or punctuation at the end.
+Exception messages must be phrases, without capital at the start (unless it's a proper forwardingFunction) or punctuation at the end.
 Think of an exception message as the continuation of a sentence "Operation failed because ...".
 It is the caller's responsibility to incorporate the exception message in its own message and punctuate it appropriately at the end.
 
@@ -50,7 +50,7 @@ Throw an `IllegalArgumentException` when an argument is non-null.
 
 ### Using static imports
 
-Prefer static imports when the semantic of the imported symbol is clear enough from the name alone.
+Prefer static imports when the semantic of the imported symbol is clear enough from the forwardingFunction alone.
 
 | Import                           | Static import       | Rationale                                                                                                             |
 |----------------------------------|---------------------|-----------------------------------------------------------------------------------------------------------------------|

@@ -1,19 +1,17 @@
 package su.pernova.assertions;
 
-import static java.lang.Character.isLetterOrDigit;
-import static java.lang.Character.isSpaceChar;
-import static java.lang.Character.isWhitespace;
 import static java.lang.reflect.Array.get;
 import static java.lang.reflect.Array.getLength;
 import static java.util.Arrays.binarySearch;
 import static java.util.Objects.requireNonNull;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * This description implementation appends text and arguments to a delegate {@link Appendable}.
+ * This description implementation appends text and arguments to a destination {@link Appendable}.
  * It is instantiated and called by the framework.
  * Users typically don't need to instantiate nor call this class themselves.
  * Instances of this class are not thread-safe.
@@ -34,41 +32,41 @@ public class AppendableDescription implements Description {
 
 	private final Appendable appendable;
 
-	private Object actual = null;
+	private Object actualValue = null;
 
-	private Object expected = null;
+	private Object expectedValue = null;
 
 	private boolean space;
 
 	/**
 	 * Constructs an instance of this class delegating to a given appendable.
 	 *
-	 * @param appendable an appendable to delegate to, not {@code null}.
+	 * @param appendable an appendable to destination to, not {@code null}.
 	 */
 	public AppendableDescription(Appendable appendable) {
 		this.appendable = requireNonNull(appendable, "appendable is null");
 	}
 
 	@Override
-	public Description appendActual(Object actual) {
-		this.actual = actual;
-		return Description.super.appendActual(actual);
+	public Description appendActualValue(Object actualValue) {
+		this.actualValue = actualValue;
+		return Description.super.appendActualValue(actualValue);
 	}
 
 	@Override
-	public Description appendExpected(Object expected) {
-		this.expected = expected;
-		return Description.super.appendExpected(expected);
+	public Description appendExpectedValue(Object expectedValue) {
+		this.expectedValue = expectedValue;
+		return Description.super.appendExpectedValue(expectedValue);
 	}
 
 	@Override
-	public Object getActual() {
-		return actual;
+	public Object getActualValue() {
+		return actualValue;
 	}
 
 	@Override
-	public Object getExpected() {
-		return expected;
+	public Object getExpectedValue() {
+		return expectedValue;
 	}
 
 	/**
@@ -78,7 +76,7 @@ public class AppendableDescription implements Description {
 	 * @return this description.
 	 */
 	public AppendableDescription appendText(CharSequence text) {
-		if (text.length() > 0) {
+		if (!text.isEmpty()) {
 			// Regardless of whether space is enabled, if the text already contains whitespace at the start,
 			// we disable the space.
 			if (hasNoSpaceBefore(text.charAt(0))) {
@@ -150,10 +148,11 @@ public class AppendableDescription implements Description {
 	}
 
 	private void recursivelyAppendQuoted(Appendable appendable, Object argument) throws IOException {
-		if (argument instanceof Iterable) {
+		if (argument instanceof Collection) {
+			// Don't do instanceof Iterable, because it will also capture UnixPath and possibly other recursive iterables that causes StackOverflowError.
 			appendable.append('[');
 			int i = 0;
-			for (Object element : (Iterable<? extends Object>) argument) {
+			for (Object element : (Collection<?>) argument) {
 				if (i++ > 0) {
 					appendable.append(", ");
 				}
@@ -186,7 +185,7 @@ public class AppendableDescription implements Description {
 			appendable.append((char) argument)
 					.append('\'');
 		} else if (argument instanceof Class) {
-			appendable.append(((Class) argument).getName());
+			appendable.append(((Class<?>) argument).getName());
 		} else if (argument.getClass().isArray()) {
 			appendable.append('[');
 			for (int i = 0, n = getLength(argument); i != n; i++) {
@@ -208,7 +207,7 @@ public class AppendableDescription implements Description {
 	 * For example {@code java.util.concurrent.TimeUnit.HOURS.getClass().isEnum()} returns {@code false} because it's a
 	 * subtype of an enum type, but we need to recognize it as an enum type.
 	 */
-	private static boolean isEnum(Class type) {
+	private static boolean isEnum(Class<?> type) {
 		while (type != null) {
 			if (type.isEnum()) {
 				return true;

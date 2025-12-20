@@ -6,16 +6,6 @@ import java.util.regex.Pattern;
 import internal.su.pernova.assertions.matchers.AllOf;
 import internal.su.pernova.assertions.matchers.AnyOf;
 import internal.su.pernova.assertions.matchers.CloseTo;
-import internal.su.pernova.assertions.matchers.ContextualBooleanMatcher;
-import internal.su.pernova.assertions.matchers.ContextualByteMatcher;
-import internal.su.pernova.assertions.matchers.ContextualCharMatcher;
-import internal.su.pernova.assertions.matchers.ContextualDoubleMatcher;
-import internal.su.pernova.assertions.matchers.ContextualFloatMatcher;
-import internal.su.pernova.assertions.matchers.ContextualIntMatcher;
-import internal.su.pernova.assertions.matchers.ContextualLongMatcher;
-import internal.su.pernova.assertions.matchers.ContextualObjectMatcher;
-import internal.su.pernova.assertions.matchers.ContextualShortMatcher;
-import internal.su.pernova.assertions.matchers.DelegatingMatcher;
 import internal.su.pernova.assertions.matchers.EqualTo;
 import internal.su.pernova.assertions.matchers.InstanceOf;
 import internal.su.pernova.assertions.matchers.Is;
@@ -23,6 +13,7 @@ import internal.su.pernova.assertions.matchers.IsBoolean;
 import internal.su.pernova.assertions.matchers.IsByte;
 import internal.su.pernova.assertions.matchers.IsChar;
 import internal.su.pernova.assertions.matchers.IsDouble;
+import internal.su.pernova.assertions.matchers.IsFactory;
 import internal.su.pernova.assertions.matchers.IsFloat;
 import internal.su.pernova.assertions.matchers.IsInt;
 import internal.su.pernova.assertions.matchers.IsLong;
@@ -30,6 +21,7 @@ import internal.su.pernova.assertions.matchers.IsObject;
 import internal.su.pernova.assertions.matchers.IsShort;
 import internal.su.pernova.assertions.matchers.Nan;
 import internal.su.pernova.assertions.matchers.Not;
+import internal.su.pernova.assertions.matchers.PromptedNamedMatcher;
 import internal.su.pernova.assertions.matchers.Regex;
 
 /**
@@ -41,15 +33,46 @@ import internal.su.pernova.assertions.matchers.Regex;
 public final class Matchers {
 
 	/**
+	 * A descriptor for {@link #equalTo} matchers.
+	 *
 	 * @see #equalTo
+	 * @since 2.0.0
 	 */
-	public static final MethodFamily EQUAL_TO = new MethodFamily(Matchers.class, "equalTo");
+	public static final Descriptor EQUAL_TO = new Descriptor(Matchers.class, "equal to");
 
 	/**
-	 * @see #is
+	 * A descriptor for {@link #putIsFactory} matchers, including {@link #sameAs} and {@link #putIsFactory}.
+	 *
 	 * @see #sameAs
+	 * @see #putIsFactory
+	 * @see #putIsFactory
+	 * @since 2.0.0
 	 */
-	public static final MethodFamily IDENTICAL_TO = new MethodFamily(Matchers.class, "identicalTo");
+	public static final Descriptor IDENTICAL_TO = new Descriptor(Matchers.class, "identical to");
+
+	/**
+	 * A descriptor for {@link #closeTo} matchers.
+	 *
+	 * @see #closeTo
+	 * @since 2.0.0
+	 */
+	public static final Descriptor CLOSE_TO = new Descriptor(Matchers.class, "close to");
+
+	/**
+	 * @see #matches
+	 * @since 2.0.0
+	 */
+	public static final Descriptor MATCHES = new Descriptor(Matchers.class, "matches");
+
+	/**
+	 * @since 2.0.0
+	 */
+	public static final Descriptor INSTANCE_OF = new Descriptor(Matchers.class, "instance of");
+
+	/**
+	 * @since 2.0.0
+	 */
+	public static final Descriptor REGEX = new Descriptor(Matchers.class, "regex");
 
 	private Matchers() {
 	}
@@ -66,7 +89,14 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher matches(Matcher delegate) {
-		return new DelegatingMatcher("matches", delegate);
+		return forward("matches", delegate);
+	}
+
+	private static Matcher forward(CharSequence name, Matcher delegatee) {
+		if (delegatee != null) {
+			return Context.forwardMatcherFactory(name, delegatee);
+		}
+		return putIsFactory(new IsObject(name, null));
 	}
 
 	/**
@@ -81,19 +111,20 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher match(Matcher delegate) {
-		return new DelegatingMatcher("match", delegate);
+		return forward("match", delegate);
 	}
 
 	/**
-	 * Returns an identity matcher decorating a given matcher.
+	 * Returns an identity matcher decorating a given matcher}.
+	 * When the given matcher is {@code null}, then this method behaves as {@link #is(Object)}.
 	 *
-	 * @param delegate a given matcher to match, which may be {@code null}.
+	 * @param delegatee a given matcher to match, which may be {@code null}.
 	 * @return an identity matcher decorating a given matcher, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher is(Matcher delegate) {
-		if (delegate != null) {
-			return new Is(delegate);
+	public static Matcher is(Matcher delegatee) {
+		if (delegatee != null) {
+			return Context.forwardMatcherFactory(Is::new, "is", delegatee);
 		}
 		return is((Object) null);
 	}
@@ -102,12 +133,12 @@ public final class Matchers {
 	 * Returns a matcher matching a given object using the "==" operator.
 	 * This works for any object, including {@code null}.
 	 *
-	 * @param expected a given object, which may be {@code null}.
+	 * @param expectedValue a given object, which may be {@code null}.
 	 * @return a matcher matching by identity, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher is(Object expected) {
-		return new IsObject(expected);
+	public static Matcher is(Object expectedValue) {
+		return putIsFactory(new IsObject(expectedValue));
 	}
 
 	/**
@@ -133,7 +164,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(double expected) {
-		return new IsDouble(expected);
+		return putIsFactory(new IsDouble(expected));
 	}
 
 	/**
@@ -154,12 +185,12 @@ public final class Matchers {
 	 *     </tr>
 	 * </table>
 	 *
-	 * @param expected an expected float.
+	 * @param expectedValue an expected float.
 	 * @return a matcher using the "==" operator, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher is(float expected) {
-		return new IsFloat(expected);
+	public static Matcher is(float expectedValue) {
+		return putIsFactory(new IsFloat(expectedValue));
 	}
 
 	/**
@@ -167,12 +198,12 @@ public final class Matchers {
 	 * Beware that the "==" operator behaves differently for primitive longs than for {@link Long} objects.
 	 * For example {@code 1L == 1} is {@code true} but {@code Long.valueOf(1L) == Integer.valueOf(1)} is {@code false}.
 	 *
-	 * @param expected an expected long.
+	 * @param expectedValue an expected long.
 	 * @return a matcher using the "==" operator, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher is(long expected) {
-		return new IsLong(expected);
+	public static Matcher is(long expectedValue) {
+		return putIsFactory(new IsLong(expectedValue));
 	}
 
 	/**
@@ -180,12 +211,12 @@ public final class Matchers {
 	 * Beware that the "==" operator behaves differently for primitive ints than for {@link Integer} objects.
 	 * For example {@code 1L == 1} is {@code true} but {@code Long.valueOf(1L) == Integer.valueOf(1)} is {@code false}.
 	 *
-	 * @param expected an expected int.
+	 * @param expectedValue an expected int.
 	 * @return a matcher using the "==" operator, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher is(int expected) {
-		return new IsInt(expected);
+	public static Matcher is(int expectedValue) {
+		return putIsFactory(new IsInt(expectedValue));
 	}
 
 	/**
@@ -194,12 +225,12 @@ public final class Matchers {
 	 * For example {@code ((short) 1) == 1} is {@code true} but {@code Short.valueOf((short) 1) == Integer.valueOf(1)}
 	 * is {@code false}.
 	 *
-	 * @param expected an expected short.
+	 * @param expectedValue an expected short.
 	 * @return a matcher using the "==" operator, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher is(short expected) {
-		return new IsShort(expected);
+	public static Matcher is(short expectedValue) {
+		return putIsFactory(new IsShort(expectedValue));
 	}
 
 	/**
@@ -208,12 +239,12 @@ public final class Matchers {
 	 * For example {@code ((byte) 1) == 1} is {@code true} but {@code Byte.valueOf((byte) 1) == Integer.valueOf(1)}
 	 * is {@code false}.
 	 *
-	 * @param expected an expected byte.
+	 * @param expectedValue an expected byte.
 	 * @return a matcher using the "==" operator, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher is(byte expected) {
-		return new IsByte(expected);
+	public static Matcher is(byte expectedValue) {
+		return putIsFactory(new IsByte(expectedValue));
 	}
 
 	/**
@@ -222,12 +253,12 @@ public final class Matchers {
 	 * For example {@code ('\u0001') == 1} is {@code true} but {@code Character.valueOf('\u0001') == Integer.valueOf(1)}
 	 * is {@code false}.
 	 *
-	 * @param expected an expected char.
+	 * @param expectedValue an expected char.
 	 * @return a matcher using the "==" operator, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher is(char expected) {
-		return new IsChar(expected);
+	public static Matcher is(char expectedValue) {
+		return putIsFactory(new IsChar(expectedValue));
 	}
 
 	/**
@@ -236,79 +267,78 @@ public final class Matchers {
 	 * This method is provided for completeness and consistency with the other {@code is} methods that take a primitive
 	 * type as parameter.
 	 *
-	 * @param expected an expected boolean.
+	 * @param expectedValue an expected value.
 	 * @return a matcher using the "==" operator, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher is(boolean expected) {
-		return new IsBoolean(expected);
+	public static Matcher is(boolean expectedValue) {
+		return putIsFactory(new IsBoolean(expectedValue));
+	}
+
+	private static Matcher putIsFactory(PromptedNamedMatcher prototype) {
+		return Context.putMatcherFactory(prototype, new IsFactory(prototype));
 	}
 
 	/**
 	 * Returns a matcher that matches objects using to the {@link Objects#equals(Object, Object)} operator.
 	 * The object to match may be {@code null}.
 	 *
-	 * @param expected an object to match, which may be {@code null}.
+	 * @param expectedValue an object to match, which may be {@code null}.
 	 * @return a matcher, not {@code null}, that matches equal objects.
 	 * @since 1.0.0
 	 */
-	public static Matcher equalTo(Object expected) {
-		return Context.set(new EqualTo(expected)).matcherFactory(EqualTo.MATCHER_FACTORY).get();
+	public static Matcher equalTo(Object expectedValue) {
+		return Context.putMatcherFactory(EqualTo.MATCHER_FACTORY.create(expectedValue), EqualTo.MATCHER_FACTORY);
 	}
 
 	/**
 	 * Returns a context-providing matcher that matches by equality.
 	 * It provides context for a context-sensitive matcher such as {@link #allOf(Object...)}.
 	 *
-	 * @param delegate a context-sensitive matcher, not {@code null}.
+	 * @param destination a context-sensitive matcher, not {@code null}.
 	 * @return a context-providing matcher, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher equalTo(Matcher delegate) {
-		if (delegate != null) {
-			return Context.set(new DelegatingMatcher("equal to", delegate))
-					.matcherFactory(EqualTo.MATCHER_FACTORY).get();
-		}
-		return equalTo((Object) null);
+	public static Matcher equalTo(Matcher destination) {
+		return Context.forwardMatcherFactory(destination, EqualTo.MATCHER_FACTORY);
 	}
 
 	/**
 	 * Returns a matcher that matches if an object is of a given instance, according to the {@code instanceof} operator.
 	 * The object to match may be {@code null}
 	 *
-	 * @param class_ a class to match (including subtypes).
+	 * @param expectedClass a class to match (including subtypes).
 	 * @return a matcher, not {@code null}, that matches is an object is of a given instance.
 	 * @since 1.0.0
 	 */
-	public static Matcher instanceOf(Class<?> class_) {
-		return new InstanceOf(class_);
+	public static Matcher instanceOf(Class<?> expectedClass) {
+		return Context.putMatcherFactory(new InstanceOf(expectedClass), InstanceOf.MATCHER_FACTORY);
 	}
 
 	/**
 	 * Returns a context-providing matcher that provides the "instance of" context to a context-sensitive matcher such
 	 * as {@link #anyOf(Object...)}.
 	 *
-	 * @param delegate a context-sensitive matcher, not {@code null}.
+	 * @param destination a context-sensitive matcher, not {@code null}.
 	 * @return a context-providing matcher, not {@code null}.
 	 * context-sensitive matcher.
 	 * @since 2.0.0
 	 */
-	public static Matcher instanceOf(Matcher delegate) {
-		return Context.set(new DelegatingMatcher("instance of", delegate))
-				.matcherFactory(InstanceOf.MATCHER_FACTORY).get();
+	public static Matcher instanceOf(Matcher destination) {
+		return Context.forwardMatcherFactory(destination, InstanceOf.MATCHER_FACTORY);
 	}
 
 	/**
 	 * Returns a matcher that matches identical objects, including {@code null}.
 	 * Such a matcher uses the {@code ==} operator.
 	 *
-	 * @param expected the object to match.
+	 * @param expectedValue the object to match.
 	 * @return a matcher that matches identical objects, not {@code null}.
 	 * @see #identicalTo(Object)
 	 * @since 1.0.0
 	 */
-	public static Matcher sameAs(Object expected) {
-		return identicalTo("same as", expected);
+	public static Matcher sameAs(Object expectedValue) {
+		return putIsFactory(new IsObject("same as", expectedValue));
 	}
 
 	/**
@@ -322,16 +352,16 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher sameAs(Matcher delegate) {
-		return identicalTo("same as", delegate);
+		return forward("same as", delegate);
 	}
 
 	/**
-	 * @param expected the object to match.
+	 * @param expectedValue the object to match.
 	 * @return a matcher that matches identical objects, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher identicalTo(Object expected) {
-		return identicalTo("identical to", expected);
+	public static Matcher identicalTo(Object expectedValue) {
+		return putIsFactory(new IsObject("identical to", expectedValue));
 	}
 
 	/**
@@ -342,18 +372,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher identicalTo(Matcher delegate) {
-		return identicalTo("identical to", delegate);
-	}
-
-	private static Matcher identicalTo(String description, Object expected) {
-		return new IsObject(description, true, expected);
-	}
-
-	public static Matcher identicalTo(String description, Matcher delegate) {
-		if (delegate != null) {
-			return new Is(description, delegate);
-		}
-		return identicalTo(description, (Object) null);
+		return forward("identical to", delegate);
 	}
 
 	/**
@@ -364,7 +383,16 @@ public final class Matchers {
 	 * @since 1.1.0
 	 */
 	public static Matcher regex(Pattern regex) {
-		return new Regex(regex);
+		return Context.putMatcherFactory(new Regex(regex), new MatcherFactory() {
+
+			@Override
+			public Matcher create(Object expectedValue) {
+				if (expectedValue instanceof Pattern pattern) {
+
+				}
+				return new Regex((Pattern) expectedValue);
+			}
+		});
 	}
 
 	/**
@@ -375,7 +403,7 @@ public final class Matchers {
 	 * @since 1.1.0
 	 */
 	public static Matcher regex(String regex) {
-		return new Regex(regex);
+		return new Regex(regex).contextualize(REGEX);
 	}
 
 	/**
@@ -405,33 +433,66 @@ public final class Matchers {
 	}
 
 	/**
+	 * Returns a matcher that matches like a given matcher and prefixes its description with "do".
+	 * It is the plural of {@link #does}.
+	 * The method forwardingFunction has a non-US-ASCII character to deconflict with the reserved keyword "do".
+	 * If you find the non-US-ASCII character disturbing, use {@link #do_} instead.
+	 * <p/>
+	 * This method is equivalent to {@link #do_}, but it uses a Unicode
+	 * <a href="https://gist.github.com/StevenACoffman/a5f6f682d94e38ed804182dc2693ed4b">'о'</a> instead of an
+	 * underscore to deconflict with the reserved Java keyword "do".
+	 * It improves readability (no unwanted '_') at the expense of codability (not code-completable when typing "do" in
+	 * US-ASCII).
+	 * It's a matter of taste whether you prefer this method or the equivalent.
+	 *
+	 * @param delegate a destination, not {@code null}.
+	 * @return a matcher that prefixes the description with "do", not {@code null}.
+	 * @see #do_(Matcher)
+	 */
+	public static Matcher dо(Matcher delegate) {
+		return do_(delegate);
+	}
+
+	/**
+	 * Returns a matcher that matches like a given matcher and prefixes its description with "do".
+	 * It is the plural of {@link #does}.
+	 * The method has a trailing underscore to deconflict with the reserved keyword "do".
+	 * If you find the trailing underscore visually disturbing, use {@link #dо} instead.
+	 *
+	 * @param delegatee a destination, not {@code null}.
+	 * @return a matcher that prefixes the description with "do", not {@code null}.
+	 * @see #dо(Matcher)
+	 */
+	public static Matcher do_(Matcher delegatee) {
+		return Context.forwardMatcherFactory("do", delegatee);
+	}
+
+	/**
 	 * Returns a matcher that matches like a given matcher and prefixes its description with "does".
 	 * This is useful for matching negated regular expressions:
 	 * <pre class="code"><code class="java">
 	 * assertThat("apple", does(not(match(regex("[0-9]*")))));
 	 * </code></pre>
 	 *
-	 * @param delegate a given delegate, which must not be {@code null}.
+	 * @param delegate a given destination, which must not be {@code null}.
 	 * @return a matcher that prefixes the description with "does".
 	 * @since 2.0.0
 	 */
 	public static Matcher does(Matcher delegate) {
-		return new DelegatingMatcher("does", delegate);
+		return Context.forwardMatcherFactory("does", delegate);
 	}
 
 	/**
 	 * Returns a matcher that matches when a given matcher does not and vice versa.
 	 * This is useful for matching negations:
-	 * <pre class="code"><code class="java">
-	 * assertThat(1, is(not(equalTo(2))));
-	 * </code></pre>
+	 * <pre class="code"><code class="java">assertThat(1, is(not(equalTo(2))));</code></pre>
 	 *
-	 * @param delegate a given delegate, which must not be {@code null}.
+	 * @param delegatee a given destination, which must not be {@code null}.
 	 * @return a matcher that matches when a given matcher does not and vice versa.
 	 * @since 2.0.0
 	 */
-	public static Matcher not(Matcher delegate) {
-		return new Not(delegate);
+	public static Matcher not(Matcher delegatee) {
+		return Context.forwardMatcherFactory(Not::new, "not", delegatee);
 	}
 
 	/**
@@ -441,17 +502,87 @@ public final class Matchers {
 	 * @return a matcher that does not match a given object.
 	 */
 	public static Matcher not(Object expected) {
-		return new Not(new IsObject("", true, expected));
+		return not(new IsObject("", true, expected));
+	}
+
+	/**
+	 * Returns a matcher that matches when a given long value does not.
+	 *
+	 * @param expectedValue a long value to not match.
+	 * @return a matcher that matches when a given long value does not.
+	 */
+	public static Matcher not(long expectedValue) {
+		return not(new IsLong("", true, expectedValue));
+	}
+
+	/**
+	 * Returns a matcher that matches when a given int value does not.
+	 *
+	 * @param expectedValue an int value to not match.
+	 * @return a matcher that matches when a given int value does not.
+	 */
+	public static Matcher not(int expectedValue) {
+		return not(new IsInt("", true, expectedValue));
+	}
+
+	/**
+	 * Returns a matcher that matches when a given short value does not.
+	 *
+	 * @param expectedValue a short value to not match.
+	 * @return a matcher that matches when a given short value does not.
+	 */
+	public static Matcher not(short expectedValue) {
+		return not(new IsShort("", true, expectedValue));
+	}
+
+	/**
+	 * Returns a matcher that matches when a given byte value does not.
+	 *
+	 * @param expectedValue a byte value to not match.
+	 * @return a matcher that matches when a given byte value does not.
+	 */
+	public static Matcher not(byte expectedValue) {
+		return not(new IsByte("", true, expectedValue));
+	}
+
+	/**
+	 * Returns a matcher that matches when a given char value does not.
+	 *
+	 * @param expectedValue a char value to not match.
+	 * @return a matcher that matches when a given char value does not.
+	 */
+	public static Matcher not(char expectedValue) {
+		return not(new IsChar("", true, expectedValue));
+	}
+
+	/**
+	 * Returns a matcher that matches when a given boolean value does not.
+	 *
+	 * @param expectedValue a boolean value to not match.
+	 * @return a matcher that matches when a given boolean value does not.
+	 */
+	public static Matcher not(boolean expectedValue) {
+		return not(new IsBoolean("", true, expectedValue));
 	}
 
 	/**
 	 * Returns a matcher that matches when a given double value does not.
 	 *
-	 * @param expected a double value to not match.
+	 * @param expectedValue a double value to not match.
 	 * @return a matcher that matches when a given double value does not.
 	 */
-	public static Matcher not(double expected) {
-		return new Not(new IsDouble("", true, expected));
+	public static Matcher not(double expectedValue) {
+		return not(new IsDouble("", true, expectedValue));
+	}
+
+	/**
+	 * Returns a matcher that matches when a given float value does not.
+	 *
+	 * @param expectedValue a float value to not match.
+	 * @return a matcher that matches when a given float value does not.
+	 */
+	public static Matcher not(float expectedValue) {
+		return not(new IsFloat("", true, expectedValue));
 	}
 
 	/**
@@ -463,7 +594,11 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(Matcher... matchers) {
-		return AnyOf.multiLine(matchers);
+		return AnyOf.multiLine(matchers).contextualize();
+	}
+
+	private static Matcher anyOfSingleLine(Matcher... matchers) {
+		return AnyOf.singleLine(matchers).contextualize();
 	}
 
 	/**
@@ -471,13 +606,13 @@ public final class Matchers {
 	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
 	 * values match.
 	 *
-	 * @param expected multiple values, which must not be {@code null} as an array.
+	 * @param expectedValues multiple values, which must not be {@code null} as an array.
 	 * Individual elements in the array may be {@code null}.
 	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher anyOf(Object... expected) {
-		return AnyOf.singleLine(ContextualObjectMatcher.arrayOf(expected));
+	public static Matcher anyOf(Object... expectedValues) {
+		return anyOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
 	}
 
 	/**
@@ -485,12 +620,12 @@ public final class Matchers {
 	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
 	 * values match.
 	 *
-	 * @param expected multiple values, which must not be {@code null}.
+	 * @param expectedValues multiple values, which must not be {@code null}.
 	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher anyOf(double... expected) {
-		return AnyOf.singleLine(ContextualDoubleMatcher.arrayOf(expected));
+	public static Matcher anyOf(double... expectedValues) {
+		return anyOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
 	}
 
 	/**
@@ -498,12 +633,12 @@ public final class Matchers {
 	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
 	 * values match.
 	 *
-	 * @param expected multiple values, which must not be {@code null}.
+	 * @param expectedValues multiple values, which must not be {@code null}.
 	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher anyOf(float... expected) {
-		return AnyOf.singleLine(ContextualFloatMatcher.arrayOf(expected));
+	public static Matcher anyOf(float... expectedValues) {
+		return anyOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
 	}
 
 	/**
@@ -511,12 +646,12 @@ public final class Matchers {
 	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
 	 * values match.
 	 *
-	 * @param expected multiple values, which must not be {@code null}.
+	 * @param expectedValues multiple values, which must not be {@code null}.
 	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher anyOf(long... expected) {
-		return AnyOf.singleLine(ContextualLongMatcher.arrayOf(expected));
+	public static Matcher anyOf(long... expectedValues) {
+		return anyOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
 	}
 
 	/**
@@ -524,12 +659,12 @@ public final class Matchers {
 	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
 	 * values match.
 	 *
-	 * @param expected multiple values, which must not be {@code null}.
+	 * @param expectedValues multiple values, which must not be {@code null}.
 	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher anyOf(int... expected) {
-		return AnyOf.singleLine(ContextualIntMatcher.arrayOf(expected));
+	public static Matcher anyOf(int... expectedValues) {
+		return anyOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
 	}
 
 	/**
@@ -537,12 +672,12 @@ public final class Matchers {
 	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
 	 * values match.
 	 *
-	 * @param expected multiple values, which must not be {@code null}.
+	 * @param expectedValues multiple values, which must not be {@code null}.
 	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher anyOf(short... expected) {
-		return AnyOf.singleLine(ContextualShortMatcher.arrayOf(expected));
+	public static Matcher anyOf(short... expectedValues) {
+		return anyOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
 	}
 
 	/**
@@ -550,12 +685,12 @@ public final class Matchers {
 	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
 	 * values match.
 	 *
-	 * @param expected multiple values, which must not be {@code null}.
+	 * @param expectedValues multiple values, which must not be {@code null}.
 	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher anyOf(byte... expected) {
-		return AnyOf.singleLine(ContextualByteMatcher.arrayOf(expected));
+	public static Matcher anyOf(byte... expectedValues) {
+		return anyOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
 	}
 
 	/**
@@ -563,12 +698,12 @@ public final class Matchers {
 	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
 	 * values match.
 	 *
-	 * @param expected multiple values, which must not be {@code null}.
+	 * @param expectedValues multiple values, which must not be {@code null}.
 	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher anyOf(char... expected) {
-		return AnyOf.singleLine(ContextualCharMatcher.arrayOf(expected));
+	public static Matcher anyOf(char... expectedValues) {
+		return anyOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
 	}
 
 	/**
@@ -576,12 +711,12 @@ public final class Matchers {
 	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
 	 * values match.
 	 *
-	 * @param expected multiple values, which must not be {@code null}.
+	 * @param expectedValues multiple values, which must not be {@code null}.
 	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher anyOf(boolean... expected) {
-		return AnyOf.singleLine(ContextualBooleanMatcher.arrayOf(expected));
+	public static Matcher anyOf(boolean... expectedValues) {
+		return anyOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
 	}
 
 	/**
@@ -593,7 +728,11 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(Matcher... delegates) {
-		return AllOf.multiLine(delegates);
+		return AllOf.multiLine(delegates).contextualize();
+	}
+
+	private static Matcher allOfSingleLine(Matcher... delegates) {
+		return AllOf.singleLine(delegates).contextualize();
 	}
 
 	/**
@@ -601,13 +740,13 @@ public final class Matchers {
 	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
 	 * values match.
 	 *
-	 * @param expected multiple values, which must not be {@code null} as an array.
+	 * @param expectedValues multiple values, which must not be {@code null} as an array.
 	 * Individual elements in the array may be {@code null}.
 	 * @return a context-sensitive matcher that combines multiple values with a logical OR operator, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher allOf(Object... expected) {
-		return AllOf.singleLine(ContextualObjectMatcher.arrayOf(expected));
+	public static Matcher allOf(Object... expectedValues) {
+		return allOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
 	}
 
 	/**
@@ -615,12 +754,12 @@ public final class Matchers {
 	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
 	 * values match.
 	 *
-	 * @param expected multiple values, which must not be {@code null}.
+	 * @param expectedValues multiple values, which must not be {@code null}.
 	 * @return a context-sensitive matcher that combines multiple values with a logical AND operator, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher allOf(double... expected) {
-		return AllOf.singleLine(ContextualDoubleMatcher.arrayOf(expected));
+	public static Matcher allOf(double... expectedValues) {
+		return allOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
 	}
 
 	/**
@@ -628,12 +767,12 @@ public final class Matchers {
 	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
 	 * values match.
 	 *
-	 * @param expected multiple values, which must not be {@code null}.
+	 * @param expectedValues multiple values, which must not be {@code null}.
 	 * @return a context-sensitive matcher that combines multiple values with a logical AND operator, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher allOf(float... expected) {
-		return AllOf.singleLine(ContextualFloatMatcher.arrayOf(expected));
+	public static Matcher allOf(float... expectedValues) {
+		return allOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
 	}
 
 	/**
@@ -641,12 +780,12 @@ public final class Matchers {
 	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
 	 * values match.
 	 *
-	 * @param expected multiple values, which must not be {@code null}.
+	 * @param expectedValues multiple values, which must not be {@code null}.
 	 * @return a context-sensitive matcher that combines multiple values with a logical AND operator, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher allOf(long... expected) {
-		return AllOf.singleLine(ContextualLongMatcher.arrayOf(expected));
+	public static Matcher allOf(long... expectedValues) {
+		return allOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
 	}
 
 	/**
@@ -654,12 +793,12 @@ public final class Matchers {
 	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
 	 * values match.
 	 *
-	 * @param expected multiple values, which must not be {@code null}.
+	 * @param expectedValues multiple values, which must not be {@code null}.
 	 * @return a context-sensitive matcher that combines multiple values with a logical AND operator, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher allOf(int... expected) {
-		return AllOf.singleLine(ContextualIntMatcher.arrayOf(expected));
+	public static Matcher allOf(int... expectedValues) {
+		return allOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
 	}
 
 	/**
@@ -667,12 +806,12 @@ public final class Matchers {
 	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
 	 * values match.
 	 *
-	 * @param expected multiple values, which must not be {@code null}.
+	 * @param expectedValues multiple values, which must not be {@code null}.
 	 * @return a context-sensitive matcher that combines multiple values with a logical AND operator, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher allOf(short... expected) {
-		return AllOf.singleLine(ContextualShortMatcher.arrayOf(expected));
+	public static Matcher allOf(short... expectedValues) {
+		return allOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
 	}
 
 	/**
@@ -680,12 +819,12 @@ public final class Matchers {
 	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
 	 * values match.
 	 *
-	 * @param expected multiple values, which must not be {@code null}.
+	 * @param expectedValues multiple values, which must not be {@code null}.
 	 * @return a context-sensitive matcher that combines multiple values with a logical AND operator, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher allOf(byte... expected) {
-		return AllOf.singleLine(ContextualByteMatcher.arrayOf(expected));
+	public static Matcher allOf(byte... expectedValues) {
+		return allOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
 	}
 
 	/**
@@ -693,12 +832,12 @@ public final class Matchers {
 	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
 	 * values match.
 	 *
-	 * @param expected multiple values, which must not be {@code null}.
+	 * @param expectedValues multiple values, which must not be {@code null}.
 	 * @return a context-sensitive matcher that combines multiple values with a logical AND operator, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher allOf(char... expected) {
-		return AllOf.singleLine(ContextualCharMatcher.arrayOf(expected));
+	public static Matcher allOf(char... expectedValues) {
+		return allOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
 	}
 
 	/**
@@ -706,11 +845,11 @@ public final class Matchers {
 	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
 	 * values match.
 	 *
-	 * @param expected multiple values, which must not be {@code null}.
+	 * @param expectedValues multiple values, which must not be {@code null}.
 	 * @return a context-sensitive matcher that combines multiple values with a logical AND operator, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher allOf(boolean... expected) {
-		return AllOf.singleLine(ContextualBooleanMatcher.arrayOf(expected));
+	public static Matcher allOf(boolean... expectedValues) {
+		return allOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
 	}
 }

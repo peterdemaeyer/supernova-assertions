@@ -1,10 +1,12 @@
 package internal.su.pernova.assertions.subjects;
 
-import su.pernova.assertions.Subject;
+public class Condition extends ObjectSubject {
 
-public class Condition extends Subject {
+	public Condition(CharSequence name, Object actualValue) {
+		super(name, actualValue);
+	}
 
-	public Condition(Object actual) {
-		super(actual);
+	public Condition(Object actualValue) {
+		this(null, actualValue);
 	}
 }

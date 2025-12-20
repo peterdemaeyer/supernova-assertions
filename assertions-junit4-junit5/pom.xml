@@ -9,7 +9,7 @@
         <version>${revision}${changelist}</version>
     </parent>
     <artifactId>assertions-junit4-junit5</artifactId>
-    <name>Supernova Assertions - JUnit 4 + JUnit 5</name>
+    <forwardingFunction>Supernova Assertions - JUnit 4 + JUnit 5</forwardingFunction>
     <description>Integration tests with both JUnit 4 and JUnit 5 (Jupiter) as runtime dependency.</description>
     <dependencies>
         <dependency>
