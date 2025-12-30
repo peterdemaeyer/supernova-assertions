@@ -55,92 +55,146 @@ interface MultiMatcherContractTest extends MatcherContractTest {
 
 	@Test
 	default void matchingObjectsThrowsWhenMatcherIncomplete() {
-		assertThrows(IllegalStateException.class, () -> getIncompleteInstance(this, this).match(this));
+		assertEquals("incomplete matcher",
+				assertThrows(IllegalStateException.class,
+						() -> getIncompleteInstance(this, this).match(this))
+						.getMessage());
 	}
 
 	@Test
 	default void matchingDoublesThrowsWhenMatcherIncomplete() {
-		assertThrows(IllegalStateException.class, () -> getIncompleteInstance(new double[] { 0d, 0d }).match(0d));
+		assertEquals("incomplete matcher",
+				assertThrows(IllegalStateException.class,
+						() -> getIncompleteInstance(new double[] { 0d, 0d }).match(0d))
+						.getMessage());
 	}
 
 	@Test
 	default void matchingFloatsThrowsWhenMatcherIncomplete() {
-		assertThrows(IllegalStateException.class, () -> getIncompleteInstance(new float[] { 0f, 0f }).match(0f));
+		assertEquals("incomplete matcher",
+				assertThrows(IllegalStateException.class,
+						() -> getIncompleteInstance(new float[] { 0f, 0f }).match(0f))
+						.getMessage());
 	}
 
 	@Test
 	default void matchingLongsThrowsWhenMatcherIncomplete() {
-		assertThrows(IllegalStateException.class, () -> getIncompleteInstance(new long[] { 0L, 0L }).match(0L));
+		assertEquals("incomplete matcher",
+			assertThrows(IllegalStateException.class,
+					() -> getIncompleteInstance(new long[] { 0L, 0L }).match(0L))
+					.getMessage());
 	}
 
 	@Test
 	default void matchingIntegersThrowsWhenMatcherIncomplete() {
-		assertThrows(IllegalStateException.class, () -> getIncompleteInstance(new int[] { 0, 0 }).match(0));
+		assertEquals("incomplete matcher",
+				assertThrows(IllegalStateException.class,
+						() -> getIncompleteInstance(new int[] { 0, 0 }).match(0))
+						.getMessage());
 	}
 
 	@Test
 	default void matchingShortsThrowsWhenMatcherIncomplete() {
-		assertThrows(IllegalStateException.class, () -> getIncompleteInstance(new short[] { 0, 0 }).match((short) 0));
+		assertEquals("incomplete matcher",
+				assertThrows(IllegalStateException.class,
+						() -> getIncompleteInstance(new short[] { 0, 0 }).match((short) 0))
+						.getMessage());
 	}
 
 	@Test
 	default void matchingBytesThrowsWhenMatcherIncomplete() {
-		assertThrows(IllegalStateException.class, () -> getIncompleteInstance(new byte[] { 0, 0 }).match((byte) 0));
+		assertEquals("incomplete matcher",
+				assertThrows(IllegalStateException.class,
+						() -> getIncompleteInstance(new byte[] { 0, 0 }).match((byte) 0))
+						.getMessage());
 	}
 
 	@Test
 	default void matchingCharactersThrowsWhenMatcherIncomplete() {
-		assertThrows(IllegalStateException.class, () -> getIncompleteInstance(new char[] { '0', '0' }).match('0'));
+		assertEquals("incomplete matcher",
+				assertThrows(IllegalStateException.class,
+						() -> getIncompleteInstance(new char[] { '0', '0' }).match('0'))
+						.getMessage());
 	}
 
 	@Test
 	default void matchingBooleansThrowsWhenMatcherIncomplete() {
-		assertThrows(IllegalStateException.class, () -> getIncompleteInstance(new boolean[] { false, false }).match(false));
+		assertEquals("incomplete matcher",
+				assertThrows(IllegalStateException.class,
+						() -> getIncompleteInstance(new boolean[] { false, false }).match(false))
+						.getMessage());
 	}
 
 	@Test
 	default void constructionThrowsWhenObjectArrayIsNull() {
-		assertThrows(NullPointerException.class, () -> getIncompleteInstance((Object[]) null));
+		assertEquals("array of expected values is null",
+				assertThrows(NullPointerException.class,
+						() -> getIncompleteInstance((Object[]) null))
+						.getMessage());
 	}
 
 	@Test
 	default void constructionThrowsWhenDoubleArrayIsNull() {
-		assertThrows(NullPointerException.class, () -> getIncompleteInstance((double[]) null));
+		assertEquals("array of expected values is null",
+				assertThrows(NullPointerException.class,
+						() -> getIncompleteInstance((double[]) null))
+						.getMessage());
 	}
 
 	@Test
 	default void constructionThrowsWhenFloatArrayIsNull() {
-		assertThrows(NullPointerException.class, () -> getIncompleteInstance((float[]) null));
+		assertEquals("array of expected values is null",
+				assertThrows(NullPointerException.class,
+						() -> getIncompleteInstance((float[]) null))
+						.getMessage());
 	}
 
 	@Test
-	default void constructionThrowsWhenLongsIsNull() {
-		assertThrows(NullPointerException.class, () -> getIncompleteInstance((long[]) null));
+	default void constructionThrowsWhenLongArrayIsNull() {
+		assertEquals("array of expected values is null",
+				assertThrows(NullPointerException.class,
+						() -> getIncompleteInstance((long[]) null))
+						.getMessage());
 	}
 
 	@Test
-	default void constructionThrowsWhenIntegersIsNull() {
-		assertThrows(NullPointerException.class, () -> getIncompleteInstance((int[]) null));
+	default void constructionThrowsWhenIntegerArrayIsNull() {
+		assertEquals("array of expected values is null",
+				assertThrows(NullPointerException.class,
+						() -> getIncompleteInstance((int[]) null))
+						.getMessage());
 	}
 
 	@Test
-	default void constructionThrowsWhenShortsIsNull() {
-		assertThrows(NullPointerException.class, () -> getIncompleteInstance((short[]) null));
+	default void constructionThrowsWhenShortArrayIsNull() {
+		assertEquals("array of expected values is null",
+				assertThrows(NullPointerException.class,
+						() -> getIncompleteInstance((short[]) null))
+						.getMessage());
 	}
 
 	@Test
-	default void constructionThrowsWhenBytesIsNull() {
-		assertThrows(NullPointerException.class, () -> getIncompleteInstance((byte[]) null));
+	default void constructionThrowsWhenByteArrayIsNull() {
+		assertEquals("array of expected values is null",
+				assertThrows(NullPointerException.class,
+						() -> getIncompleteInstance((byte[]) null))
+						.getMessage());
 	}
 
 	@Test
-	default void constructionThrowsWhenCharactersIsNull() {
-		assertThrows(NullPointerException.class, () -> getIncompleteInstance((char[]) null));
+	default void constructionThrowsWhenCharacterArrayIsNull() {
+		assertEquals("array of expected values is null",
+				assertThrows(NullPointerException.class,
+						() -> getIncompleteInstance((char[]) null))
+						.getMessage());
 	}
 
 	@Test
-	default void constructionThrowsWhenBooleansIsNull() {
-		assertThrows(NullPointerException.class, () -> getIncompleteInstance((boolean[]) null));
+	default void constructionThrowsWhenBooleanArrayIsNull() {
+		assertEquals("array of expected values is null",
+				assertThrows(NullPointerException.class,
+						() -> getIncompleteInstance((boolean[]) null))
+						.getMessage());
 	}
 
 	@Test

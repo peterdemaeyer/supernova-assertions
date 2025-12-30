@@ -458,12 +458,12 @@ public final class Matchers {
 	 * This is useful for matching negations:
 	 * <pre class="code"><code class="java">assertThat(1, is(not(equalTo(2))));</code></pre>
 	 *
-	 * @param delegatee a given destination, which must not be {@code null}.
+	 * @param destination a given destination, which must not be {@code null}.
 	 * @return a matcher that matches when a given matcher does not and vice versa.
 	 * @since 2.0.0
 	 */
-	public static Matcher not(Matcher delegatee) {
-		return Context.forwardMatcherFactory(Not::new, "not", delegatee);
+	public static Matcher not(Matcher destination) {
+		return Context.forwardMatcherFactory(Not::new, "not", destination);
 	}
 
 	/**
@@ -567,6 +567,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(Object... expectedValues) {
+		requireNonNull(expectedValues, "array of expected values is null");
 		return Context.newIncompleteMatcher(matcherFactory -> create(AnyOf::new, matcherFactory, expectedValues));
 	}
 
@@ -580,6 +581,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(double... expectedValues) {
+		requireNonNull(expectedValues, "array of expected values is null");
 		return Context.newIncompleteMatcher(matcherFactory -> create(AnyOf::new, matcherFactory, expectedValues));
 	}
 
@@ -593,6 +595,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(float... expectedValues) {
+		requireNonNull(expectedValues, "array of expected values is null");
 		return Context.newIncompleteMatcher(matcherFactory -> create(AnyOf::new, matcherFactory, expectedValues));
 	}
 
@@ -606,6 +609,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(long... expectedValues) {
+		requireNonNull(expectedValues, "array of expected values is null");
 		return Context.newIncompleteMatcher(matcherFactory -> create(AnyOf::new, matcherFactory, expectedValues));
 	}
 
@@ -619,6 +623,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(int... expectedValues) {
+		requireNonNull(expectedValues, "array of expected values is null");
 		return Context.newIncompleteMatcher(matcherFactory -> create(AnyOf::new, matcherFactory, expectedValues));
 	}
 
@@ -632,6 +637,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(short... expectedValues) {
+		requireNonNull(expectedValues, "array of expected values is null");
 		return Context.newIncompleteMatcher(matcherFactory -> create(AnyOf::new, matcherFactory, expectedValues));
 	}
 
@@ -645,6 +651,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(byte... expectedValues) {
+		requireNonNull(expectedValues, "array of expected values is null");
 		return Context.newIncompleteMatcher(matcherFactory -> create(AnyOf::new, matcherFactory, expectedValues));
 	}
 
@@ -658,6 +665,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(char... expectedValues) {
+		requireNonNull(expectedValues, "array of expected values is null");
 		return Context.newIncompleteMatcher(matcherFactory -> create(AnyOf::new, matcherFactory, expectedValues));
 	}
 
@@ -671,6 +679,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(boolean... expectedValues) {
+		requireNonNull(expectedValues, "array of expected values is null");
 		return Context.newIncompleteMatcher(matcherFactory -> create(AllOf::new, matcherFactory, expectedValues));
 	}
 

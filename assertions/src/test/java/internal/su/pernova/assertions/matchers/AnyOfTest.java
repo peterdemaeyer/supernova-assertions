@@ -1,6 +1,5 @@
 package internal.su.pernova.assertions.matchers;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -21,50 +20,56 @@ import org.junit.jupiter.api.Test;
 
 import su.pernova.assertions.Matcher;
 
-class AnyOfTest {
+class AnyOfTest implements MultiMatcherContractTest{
 
-	/**
-	 * Matchers have their own context, therefore, "any of matchers" is a legal state of the assertion builder,
-	 * even though it's grammatically incorrect and therefore not the preferred syntax.
-	 */
-	@Test
-	void anyOfMatchersWithoutContext() {
-		assertDoesNotThrow(() -> assertThat(null, anyOf(is(null))));
+	@Override
+	public Matcher getInstance() {
+		return is(anyOf(new Object[0]));
 	}
 
-	@Test
-	void anyOfManyMatchers() {
-		final Object object = "object";
-		assertThat(object, is(anyOf(
-				instanceOf(Date.class),
-				equalTo("object"),
-				sameAs(object)
-		)));
-		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(object, is(anyOf(
-						instanceOf(Date.class),
-						equalTo("another object"),
-						sameAs(null)
-				))),
-				"expected that subject is any of:",
-				"\tinstance of: java.util.Date",
-				"\tequal to: \"another object\"",
-				"\tsame as: null",
-				"but was: \"object\""
-		);
+	@Override
+	public Matcher getIncompleteInstance(Object... expectedValues) {
+		return anyOf(expectedValues);
 	}
 
-	/**
-	 * Objects and primitives don't have context of their own.
-	 * Context needs to be provided by another context-providing matcher such as "is", "is equal to" or
-	 * "is instance of".
-	 * Without context, "any of objects" is an illegal state of the assertion builder.
-	 */
-	@Test
-	void anyOfObjectsWithoutContext() {
-		assertEquals("no context",
-				assertThrows(IllegalStateException.class, () -> assertThat(null, anyOf(new Object[] { null })))
-						.getMessage());
+	@Override
+	public Matcher getIncompleteInstance(double... expectedValues) {
+		return anyOf(expectedValues);
+	}
+
+	@Override
+	public Matcher getIncompleteInstance(float... expectedValues) {
+		return anyOf(expectedValues);
+	}
+
+	@Override
+	public Matcher getIncompleteInstance(long... expectedValues) {
+		return anyOf(expectedValues);
+	}
+
+	@Override
+	public Matcher getIncompleteInstance(int... expectedValues) {
+		return anyOf(expectedValues);
+	}
+
+	@Override
+	public Matcher getIncompleteInstance(short... expectedValues) {
+		return anyOf(expectedValues);
+	}
+
+	@Override
+	public Matcher getIncompleteInstance(byte... expectedValues) {
+		return anyOf(expectedValues);
+	}
+
+	@Override
+	public Matcher getIncompleteInstance(char... expectedValues) {
+		return anyOf(expectedValues);
+	}
+
+	@Override
+	public Matcher getIncompleteInstance(boolean... expectedValues) {
+		return anyOf(expectedValues);
 	}
 
 	@Test
@@ -217,7 +222,7 @@ class AnyOfTest {
 	@Test
 	void isAnyOfPrimitiveIntValues() {
 		final Matcher matcher = is(anyOf(new int[] { 0, 1 }));
-		assertEquals("is{anyOf{i̶s̶I̶n̶t̶(0), i̶s̶I̶n̶t̶(1)}}", matcher.toString());
+		assertEquals("is{anyOf{i̶s̶I̶n̶t̶(0)}{i̶s̶I̶n̶t̶(1)}}", matcher.toString());
 		assertTrue(matcher.match(-0d));
 		assertTrue(matcher.match(1));
 		assertFalse(matcher.match(-1));
