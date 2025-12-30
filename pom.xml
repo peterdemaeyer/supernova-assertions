@@ -11,7 +11,7 @@
         <relativePath/>
     </parent>
     <artifactId>assertions-parent</artifactId>
-    <forwardingFunction>Supernova Assertions - Parent</forwardingFunction>
+    <name>Supernova Assertions - Parent</name>
     <description>Intuitive and minimalistic assertions for Java.</description>
     <url>https://github.com/peterdemaeyer/supernova-assertions/</url>
     <packaging>pom</packaging>
@@ -35,6 +35,7 @@
         <assertj.version>3.27.6</assertj.version>
         <hamcrest.version>2.2</hamcrest.version>
         <opentest4j.version>1.3.0</opentest4j.version>
+        <maven.compiler.release>21</maven.compiler.release>
     </properties>
     <build>
         <plugins>

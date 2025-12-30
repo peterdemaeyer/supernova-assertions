@@ -39,7 +39,7 @@ public interface MatcherFactory {
 		return create(Boolean.valueOf(expectedValue));
 	}
 
-	default Matcher create(Matcher expectation) {
-		return expectation;
+	default Matcher create(Matcher matcher) {
+		return matcher;
 	}
 }

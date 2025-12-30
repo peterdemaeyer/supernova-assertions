@@ -2,11 +2,12 @@ package internal.su.pernova.assertions.matchers;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static su.pernova.assertions.AssertionTestUtils.assertThrowsAssertionErrorWithMessage;
 import static su.pernova.assertions.Assertions.assertThat;
-import static su.pernova.assertions.Matchers.allOf;
 import static su.pernova.assertions.Matchers.anyOf;
 import static su.pernova.assertions.Matchers.equalTo;
 import static su.pernova.assertions.Matchers.instanceOf;
@@ -17,6 +18,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+
+import su.pernova.assertions.Matcher;
 
 class AnyOfTest {
 
@@ -172,12 +175,60 @@ class AnyOfTest {
 	void sameAsAnyOfOneObject() {
 		final String object = "object";
 		final String equalObject = new String(object);
-		assertThat(object, is(sameAs(anyOf(object))));
+		final Matcher matcher = is(sameAs(anyOf(object)));
+		assertEquals("is{sameAs{anyOf{s̶a̶m̶e̶A̶s̶(object)}}}", matcher.toString());
+		assertThat(object, matcher);
 		assertThrowsAssertionErrorWithMessage(
 				() -> assertThat(object, is(sameAs(anyOf(equalObject)))),
 				"expected that subject is same as any of: [\"object\"]",
 				"but was: \"object\""
 		);
+	}
+
+	@Test
+	void isAnyOfPrimitiveDoubleValues() {
+		final Matcher matcher = is(anyOf(new double[] { 0d, 1d }));
+		assertTrue(matcher.match(0d));
+		// Expect that this matcher behaves as == on primitive doubles.
+		assertTrue(matcher.match(-0d));
+		assertTrue(matcher.match(1d));
+		assertTrue(matcher.match(1));
+		assertFalse(matcher.match(-1d));
+	}
+
+	@Test
+	void isAnyOfPrimitiveFloatValues() {
+		final Matcher matcher = is(anyOf(new float[] { 0f, 1f}));
+		assertTrue(matcher.match(0f));
+		assertTrue(matcher.match(-0f));
+		assertTrue(matcher.match(1f));
+		assertFalse(matcher.match(-1f));
+	}
+
+	@Test
+	void isAnyOfPrimitiveLongValues() {
+		final Matcher matcher = is(anyOf(new long[] { 0L, 1L }));
+		assertTrue(matcher.match(0));
+		assertTrue(matcher.match(1d));
+		assertFalse(matcher.match(-1L));
+		assertFalse(matcher.match(null));
+	}
+
+	@Test
+	void isAnyOfPrimitiveIntValues() {
+		final Matcher matcher = is(anyOf(new int[] { 0, 1 }));
+		assertEquals("is{anyOf{i̶s̶I̶n̶t̶(0), i̶s̶I̶n̶t̶(1)}}", matcher.toString());
+		assertTrue(matcher.match(-0d));
+		assertTrue(matcher.match(1));
+		assertFalse(matcher.match(-1));
+	}
+
+	@Test
+	void isAnyOfObjectDoubleValues() {
+		final Matcher matcher = is(anyOf(new Object[] { 0d, 1d }));
+		// Expectation behaves as == on objects
+		assertFalse(matcher.match(-0d));
+		assertFalse(matcher.match(0));
 	}
 
 	@Test

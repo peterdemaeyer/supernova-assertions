@@ -16,11 +16,11 @@ public class AnonymousDescribable<D extends Describable> implements Describable 
 
 	@Override
 	public Description describe(Description description) {
-		final boolean[] inhibited = { false };
 		return delegatee.describe(new DelegatingDescription(description) {
 
 			@Override
 			public Description appendText(CharSequence text) {
+				// Mute appendText once, then continue as usual with delegatee.
 				return description;
 			}
 		});

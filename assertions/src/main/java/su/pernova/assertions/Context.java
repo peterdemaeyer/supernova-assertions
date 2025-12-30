@@ -13,7 +13,6 @@ import java.util.WeakHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import internal.su.pernova.assertions.matchers.AnonymousMatcherFactory;
 import internal.su.pernova.assertions.matchers.ForwardingMatcher;
 
 /**
@@ -261,6 +260,15 @@ public final class Context implements AutoCloseable {
 
 	private static final Map<Matcher, AnonymousMatcherFactory> MATCHER_FACTORIES_BY_PROTOTYPE = new WeakHashMap<>();
 
+	private static final Map<Matcher, CompletionFunction> COMPLETION_FUNCTIONS_BY_MATCHER = new WeakHashMap<>();
+
+	public static Matcher newIncompleteMatcher(CompletionFunction completionFunction) {
+		final IncompleteMatcher matcher = new IncompleteMatcher();
+		COMPLETION_FUNCTIONS_BY_MATCHER.put(matcher, completionFunction);
+//		MATCHER_FACTORIES_BY_PROTOTYPE.put(matcher, new AnonymousMatcherFactory(IncompleteMatcher.MATCHER_FACTORY));
+		return matcher;
+	}
+
 	/**
 	 * Registers a matcher factory for a destination matcher, returning the destination matcher.
 	 * The matcher factory will be used to fork the given destination matcher anonylously
@@ -271,27 +279,44 @@ public final class Context implements AutoCloseable {
 	 * @param matcherFactory a matcher factory, which must not be {@code null}.
 	 * @return the prototype matcher.
 	 */
-	public static synchronized Matcher putMatcherFactory(Matcher prototype, MatcherFactory matcherFactory) {
-		MATCHER_FACTORIES_BY_PROTOTYPE.put(
-				requireNonNull(prototype, "prototype is null"),
-				new AnonymousMatcherFactory(requireNonNull(matcherFactory, "factory is null for prototype: " + prototype))
-		);
+	public static Matcher putMatcherFactory(Matcher prototype, MatcherFactory matcherFactory) {
+		requireNonNull(prototype, "prototype is null");
+		requireNonNull(matcherFactory, "matcher factory is null for prototype: " + prototype);
+		final AnonymousMatcherFactory anonymousMatcherFactory = new AnonymousMatcherFactory(matcherFactory);
+		synchronized (Context.class) {
+			MATCHER_FACTORIES_BY_PROTOTYPE.put(prototype, anonymousMatcherFactory);
+		}
 		return prototype;
 	}
 
-	public static Matcher forwardMatcherFactory(Matcher destination, MatcherFactory matcherFactory) {
-		return putMatcherFactory(matcherFactory.create(destination), matcherFactory);
+	public static Matcher putMatcherFactory(Function<Matcher, Matcher> prototypeFunction, Matcher destination, MatcherFactory matcherFactory) {
+		requireNonNull(prototypeFunction, "prototype function is null");
+		requireNonNull(destination, "destination is null");
+		requireNonNull(matcherFactory, "matcher factory is null");
+		final AnonymousMatcherFactory anonymousMatcherFactory = new AnonymousMatcherFactory(matcherFactory);
+		synchronized (Context.class) {
+			final CompletionFunction completionFunction = COMPLETION_FUNCTIONS_BY_MATCHER.get(destination);
+			Matcher prototype;
+			if (completionFunction != null) {
+				prototype = prototypeFunction.apply(completionFunction.complete(anonymousMatcherFactory));
+			} else {
+				prototype = prototypeFunction.apply(destination);
+			}
+			requireNonNull(prototype, "prototype function returns null");
+			MATCHER_FACTORIES_BY_PROTOTYPE.put(prototype, anonymousMatcherFactory);
+			return prototype;
+		}
 	}
 
 	public static synchronized Matcher forwardMatcherFactory(Function<Matcher, Matcher> forwardingFunction, CharSequence name, Matcher destination) {
 		requireNonNull(destination, "destination is null");
-		requireNonNull(forwardingFunction, "delegator function is null");
+		requireNonNull(forwardingFunction, "forwarding function is null");
 		final AnonymousMatcherFactory destinationFactory = MATCHER_FACTORIES_BY_PROTOTYPE.get(destination);
 		requireNonNull(destinationFactory, "factory is null for: " + destination);
 		final Matcher forwardMatcher = forwardingFunction.apply(destination);
 		requireNonNull(forwardMatcher, "forwarding function returned null for: " + destination);
-		final ForwardingMatcherFactory forwardingMatcherFactory = new ForwardingMatcherFactory(name, destinationFactory.delegatee(), forwardingFunction);
-		MATCHER_FACTORIES_BY_PROTOTYPE.put(forwardMatcher, new AnonymousMatcherFactory(forwardingMatcherFactory));
+//		final ForwardingMatcherFactory forwardingMatcherFactory = new ForwardingMatcherFactory(name, destinationFactory.delegatee(), forwardingFunction);
+//		MATCHER_FACTORIES_BY_PROTOTYPE.put(forwardMatcher, new AnonymousMatcherFactory(forwardingMatcherFactory));
 		return forwardMatcher;
 	}
 
@@ -303,19 +328,36 @@ public final class Context implements AutoCloseable {
 	 * Creates an anonymous clone of a given destination matcher for a given expected value.
 	 * This method is thread-safe.
 	 *
-	 * @param prototype a destination matcher, which must not be {@code null}.
-	 * @param factoryFunction a function that creates a matcher for a given factory, which must not be {@code null}.
-	 *
+	 * @param origin a destination matcher, which must not be {@code null}.
+	 * @param destination a function that creates a matcher for a given factory, which must not be {@code null}.
 	 * @return the bi-matcher, never {@code null}.
 	 * @see #forwardMatcherFactory
 	 */
-	public static synchronized Matcher cloneCreateAndCombine(Matcher prototype, Function<MatcherFactory, Matcher> factoryFunction, BiFunction<Matcher, Matcher, Matcher> biMatcherConstructor) {
-		final AnonymousMatcherFactory matcherFactory = getMatcherFactory(prototype);
-		final Matcher matcher = factoryFunction.apply(matcherFactory);
-		final Matcher biMatcher = biMatcherConstructor.apply(prototype, matcher);
-		requireNonNull(biMatcher, "bi-matcher is null for prototype: " + prototype + ", which means that biMatcherConstructor returned null");
-		MATCHER_FACTORIES_BY_PROTOTYPE.put(biMatcher, matcherFactory);
-		return biMatcher;
+	public static Matcher fork(ForkFunction forkFunction, Matcher origin, CompletionFunction destination) {
+		return fork(forkFunction, origin, newIncompleteMatcher(destination));
+	}
+
+	public static synchronized Matcher fork(ForkFunction forkFunction, Matcher origin, Matcher destination) {{
+		final AnonymousMatcherFactory matcherFactory = MATCHER_FACTORIES_BY_PROTOTYPE.get(origin);
+		if (matcherFactory != null) {
+			// If the origin is a complete matcher, we complete the destination straight away.
+			return forkFunction.fork(origin, Context.complete(destination, matcherFactory));
+		}}
+		return newIncompleteMatcher(matcherFactory -> {
+			synchronized (Context.class) {
+				final Matcher destination0 = complete(origin, matcherFactory);
+				final Matcher destination1 = complete(destination, matcherFactory);
+				return forkFunction.fork(destination0, destination1);
+			}
+		});
+	}
+
+	public static synchronized Matcher complete(Matcher matcher, MatcherFactory matcherFactory) {
+		final CompletionFunction completionFunction = COMPLETION_FUNCTIONS_BY_MATCHER.get(matcher);
+		if (completionFunction != null) {
+			return completionFunction.complete(matcherFactory);
+		}
+		return matcher;
 	}
 
 	public static synchronized Matcher cloneAndCombine(Matcher prototype, Matcher matcher, BiFunction<Matcher, Matcher, Matcher> biMatcherConstructor) {
@@ -334,7 +376,7 @@ public final class Context implements AutoCloseable {
 	}
 
 	private static AnonymousMatcherFactory getMatcherFactory(Matcher prototype) {
- 		return requireNonNull(MATCHER_FACTORIES_BY_PROTOTYPE.get(prototype),
+		return requireNonNull(MATCHER_FACTORIES_BY_PROTOTYPE.get(prototype),
 				"matcher factory is null for prototype: " + prototype + ", which means that putMatcherFactory was not correctly called prior");
 	}
 }

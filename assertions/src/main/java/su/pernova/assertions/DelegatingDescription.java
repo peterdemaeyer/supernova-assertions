@@ -7,7 +7,7 @@ public class DelegatingDescription implements Description {
 	private final Description delegatee;
 
 	public DelegatingDescription(Description delegatee) {
-		this.delegatee = requireNonNull(delegatee, "destination is null");
+		this.delegatee = requireNonNull(delegatee, "delegatee is null");
 	}
 
 	@Override

@@ -11,8 +11,8 @@ public class InstanceOf extends ExpectedValueMatcher {
 	public static final MatcherFactory MATCHER_FACTORY = new MatcherFactory() {
 
 		@Override
-		public Matcher create(Matcher expectation) {
-			return new ForwardingMatcher("instance of", expectation);
+		public Matcher create(Matcher matcher) {
+			return new ForwardingMatcher("instance of", matcher);
 		}
 
 		@Override

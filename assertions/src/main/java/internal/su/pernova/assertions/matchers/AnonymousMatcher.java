@@ -2,8 +2,6 @@ package internal.su.pernova.assertions.matchers;
 
 import static internal.su.pernova.assertions.DescribableUtils.toStrikethrough;
 
-import java.util.Arrays;
-
 import internal.su.pernova.assertions.AnonymousDescribable;
 import su.pernova.assertions.Matcher;
 

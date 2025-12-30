@@ -1,5 +1,9 @@
 package su.pernova.assertions;
 
+import static java.util.Objects.requireNonNull;
+
+import static internal.su.pernova.assertions.matchers.MultiMatcher.create;
+
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -7,13 +11,13 @@ import internal.su.pernova.assertions.matchers.AllOf;
 import internal.su.pernova.assertions.matchers.AnyOf;
 import internal.su.pernova.assertions.matchers.CloseTo;
 import internal.su.pernova.assertions.matchers.EqualTo;
+import internal.su.pernova.assertions.matchers.ForwardingMatcher;
 import internal.su.pernova.assertions.matchers.InstanceOf;
 import internal.su.pernova.assertions.matchers.Is;
 import internal.su.pernova.assertions.matchers.IsBoolean;
 import internal.su.pernova.assertions.matchers.IsByte;
 import internal.su.pernova.assertions.matchers.IsChar;
 import internal.su.pernova.assertions.matchers.IsDouble;
-import internal.su.pernova.assertions.matchers.IsFactory;
 import internal.su.pernova.assertions.matchers.IsFloat;
 import internal.su.pernova.assertions.matchers.IsInt;
 import internal.su.pernova.assertions.matchers.IsLong;
@@ -32,42 +36,9 @@ import internal.su.pernova.assertions.matchers.Regex;
  */
 public final class Matchers {
 
-	/**
-	 * A descriptor for {@link #equalTo} matchers.
-	 *
-	 * @see #equalTo
-	 * @since 2.0.0
-	 */
-	public static final Descriptor EQUAL_TO = new Descriptor(Matchers.class, "equal to");
+	private static final CharSequence SAME_AS = "same as";
 
-	/**
-	 * A descriptor for {@link #putIsFactory} matchers, including {@link #sameAs} and {@link #putIsFactory}.
-	 *
-	 * @see #sameAs
-	 * @see #putIsFactory
-	 * @see #putIsFactory
-	 * @since 2.0.0
-	 */
-	public static final Descriptor IDENTICAL_TO = new Descriptor(Matchers.class, "identical to");
-
-	/**
-	 * A descriptor for {@link #closeTo} matchers.
-	 *
-	 * @see #closeTo
-	 * @since 2.0.0
-	 */
-	public static final Descriptor CLOSE_TO = new Descriptor(Matchers.class, "close to");
-
-	/**
-	 * @see #matches
-	 * @since 2.0.0
-	 */
-	public static final Descriptor MATCHES = new Descriptor(Matchers.class, "matches");
-
-	/**
-	 * @since 2.0.0
-	 */
-	public static final Descriptor INSTANCE_OF = new Descriptor(Matchers.class, "instance of");
+	private static final CharSequence IDENTICAL_TO = "identical to";
 
 	/**
 	 * @since 2.0.0
@@ -118,13 +89,13 @@ public final class Matchers {
 	 * Returns an identity matcher decorating a given matcher}.
 	 * When the given matcher is {@code null}, then this method behaves as {@link #is(Object)}.
 	 *
-	 * @param delegatee a given matcher to match, which may be {@code null}.
+	 * @param matcher a given matcher to match, which may be {@code null}.
 	 * @return an identity matcher decorating a given matcher, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher is(Matcher delegatee) {
-		if (delegatee != null) {
-			return Context.forwardMatcherFactory(Is::new, "is", delegatee);
+	public static Matcher is(Matcher matcher) {
+		if (matcher != null) {
+			return Context.putMatcherFactory(Is::new, matcher, Is.getMatcherFactory(null));
 		}
 		return is((Object) null);
 	}
@@ -276,7 +247,7 @@ public final class Matchers {
 	}
 
 	private static Matcher putIsFactory(PromptedNamedMatcher prototype) {
-		return Context.putMatcherFactory(prototype, new IsFactory(prototype));
+		return Context.putMatcherFactory(prototype, Is.getMatcherFactory(null));
 	}
 
 	/**
@@ -295,12 +266,12 @@ public final class Matchers {
 	 * Returns a context-providing matcher that matches by equality.
 	 * It provides context for a context-sensitive matcher such as {@link #allOf(Object...)}.
 	 *
-	 * @param destination a context-sensitive matcher, not {@code null}.
+	 * @param matcher a context-sensitive matcher, not {@code null}.
 	 * @return a context-providing matcher, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher equalTo(Matcher destination) {
-		return Context.forwardMatcherFactory(destination, EqualTo.MATCHER_FACTORY);
+	public static Matcher equalTo(Matcher matcher) {
+		return Context.putMatcherFactory(m -> new ForwardingMatcher("equal to", m), matcher, EqualTo.MATCHER_FACTORY);
 	}
 
 	/**
@@ -319,13 +290,13 @@ public final class Matchers {
 	 * Returns a context-providing matcher that provides the "instance of" context to a context-sensitive matcher such
 	 * as {@link #anyOf(Object...)}.
 	 *
-	 * @param destination a context-sensitive matcher, not {@code null}.
+	 * @param matcher a context-sensitive matcher, not {@code null}.
 	 * @return a context-providing matcher, not {@code null}.
 	 * context-sensitive matcher.
 	 * @since 2.0.0
 	 */
-	public static Matcher instanceOf(Matcher destination) {
-		return Context.forwardMatcherFactory(destination, InstanceOf.MATCHER_FACTORY);
+	public static Matcher instanceOf(Matcher matcher) {
+		return Context.putMatcherFactory(m -> new ForwardingMatcher("instance of", m), matcher, InstanceOf.MATCHER_FACTORY);
 	}
 
 	/**
@@ -347,12 +318,12 @@ public final class Matchers {
 	 * This method exists for compatibility with other assertion frameworks.
 	 * It is recommended to use {@link #identicalTo(Matcher)} instead.
 	 *
-	 * @param delegate a context-sensitive matcher, not {@code null}.
+	 * @param matcher a context-sensitive matcher, not {@code null}.
 	 * @return a context-providing matcher, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher sameAs(Matcher delegate) {
-		return forward("same as", delegate);
+	public static Matcher sameAs(Matcher matcher) {
+		return Context.putMatcherFactory(m -> new ForwardingMatcher(SAME_AS, m), matcher, Is.getMatcherFactory(SAME_AS));
 	}
 
 	/**
@@ -586,22 +557,6 @@ public final class Matchers {
 	}
 
 	/**
-	 * Returns a matcher that combines multiple matchers with a logical OR operator.
-	 * If the matchers are empty, the matcher trivially does not match.
-	 *
-	 * @param matchers the matchers to combine with a logical OR operation, which must not be {@code null}.
-	 * @return a matcher that combines multiple matchers with a logical OR operator, not {@code null}.
-	 * @since 2.0.0
-	 */
-	public static Matcher anyOf(Matcher... matchers) {
-		return AnyOf.multiLine(matchers).contextualize();
-	}
-
-	private static Matcher anyOfSingleLine(Matcher... matchers) {
-		return AnyOf.singleLine(matchers).contextualize();
-	}
-
-	/**
 	 * Returns a context-sensitive matcher that combines multiple values with a logical OR operator.
 	 * This matcher must be used in combination with a context-providing matcher, which defines how all the individual
 	 * values match.
@@ -612,7 +567,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(Object... expectedValues) {
-		return anyOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
+		return Context.newIncompleteMatcher(matcherFactory -> create(AnyOf::new, matcherFactory, expectedValues));
 	}
 
 	/**
@@ -625,7 +580,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(double... expectedValues) {
-		return anyOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
+		return Context.newIncompleteMatcher(matcherFactory -> create(AnyOf::new, matcherFactory, expectedValues));
 	}
 
 	/**
@@ -638,7 +593,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(float... expectedValues) {
-		return anyOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
+		return Context.newIncompleteMatcher(matcherFactory -> create(AnyOf::new, matcherFactory, expectedValues));
 	}
 
 	/**
@@ -651,7 +606,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(long... expectedValues) {
-		return anyOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
+		return Context.newIncompleteMatcher(matcherFactory -> create(AnyOf::new, matcherFactory, expectedValues));
 	}
 
 	/**
@@ -664,7 +619,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(int... expectedValues) {
-		return anyOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
+		return Context.newIncompleteMatcher(matcherFactory -> create(AnyOf::new, matcherFactory, expectedValues));
 	}
 
 	/**
@@ -677,7 +632,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(short... expectedValues) {
-		return anyOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
+		return Context.newIncompleteMatcher(matcherFactory -> create(AnyOf::new, matcherFactory, expectedValues));
 	}
 
 	/**
@@ -690,7 +645,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(byte... expectedValues) {
-		return anyOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
+		return Context.newIncompleteMatcher(matcherFactory -> create(AnyOf::new, matcherFactory, expectedValues));
 	}
 
 	/**
@@ -703,7 +658,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(char... expectedValues) {
-		return anyOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
+		return Context.newIncompleteMatcher(matcherFactory -> create(AnyOf::new, matcherFactory, expectedValues));
 	}
 
 	/**
@@ -716,23 +671,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(boolean... expectedValues) {
-		return anyOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
-	}
-
-	/**
-	 * Returns a matcher that combines multiple matchers with a logical AND operator.
-	 * If the matchers are empty, the matcher trivially matches.
-	 *
-	 * @param delegates the matchers to combine with a logical AND operation, which must not be {@code null}.
-	 * @return a matcher that combines multiple matchers with a logical AND operator, not {@code null}.
-	 * @since 2.0.0
-	 */
-	public static Matcher allOf(Matcher... delegates) {
-		return AllOf.multiLine(delegates).contextualize();
-	}
-
-	private static Matcher allOfSingleLine(Matcher... delegates) {
-		return AllOf.singleLine(delegates).contextualize();
+		return Context.newIncompleteMatcher(matcherFactory -> create(AllOf::new, matcherFactory, expectedValues));
 	}
 
 	/**
@@ -746,7 +685,8 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(Object... expectedValues) {
-		return allOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
+		requireNonNull(expectedValues, "array of expected values is null");
+		return Context.newIncompleteMatcher(matcherFactory -> create(AllOf::new, matcherFactory, expectedValues));
 	}
 
 	/**
@@ -759,7 +699,8 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(double... expectedValues) {
-		return allOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
+		requireNonNull(expectedValues, "array of expected values is null");
+		return Context.newIncompleteMatcher(matcherFactory -> create(AllOf::new, matcherFactory, expectedValues));
 	}
 
 	/**
@@ -772,7 +713,8 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(float... expectedValues) {
-		return allOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
+		requireNonNull(expectedValues, "array of expected values is null");
+		return Context.newIncompleteMatcher(matcherFactory -> create(AllOf::new, matcherFactory, expectedValues));
 	}
 
 	/**
@@ -785,7 +727,8 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(long... expectedValues) {
-		return allOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
+		requireNonNull(expectedValues, "array of expected values is null");
+		return Context.newIncompleteMatcher(matcherFactory -> create(AllOf::new, matcherFactory, expectedValues));
 	}
 
 	/**
@@ -798,7 +741,8 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(int... expectedValues) {
-		return allOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
+		requireNonNull(expectedValues, "array of expected values is null");
+		return Context.newIncompleteMatcher(matcherFactory -> create(AllOf::new, matcherFactory, expectedValues));
 	}
 
 	/**
@@ -811,7 +755,8 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(short... expectedValues) {
-		return allOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
+		requireNonNull(expectedValues, "array of expected values is null");
+		return Context.newIncompleteMatcher(matcherFactory -> create(AllOf::new, matcherFactory, expectedValues));
 	}
 
 	/**
@@ -824,7 +769,8 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(byte... expectedValues) {
-		return allOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
+		requireNonNull(expectedValues, "array of expected values is null");
+		return Context.newIncompleteMatcher(matcherFactory -> create(AllOf::new, matcherFactory, expectedValues));
 	}
 
 	/**
@@ -837,7 +783,8 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(char... expectedValues) {
-		return allOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
+		requireNonNull(expectedValues, "array of expected values is null");
+		return Context.newIncompleteMatcher(matcherFactory -> create(AllOf::new, matcherFactory, expectedValues));
 	}
 
 	/**
@@ -850,6 +797,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(boolean... expectedValues) {
-		return allOfSingleLine(ContextualMatcher.arrayOf(expectedValues));
+		requireNonNull(expectedValues, "array of expected values is null");
+		return Context.newIncompleteMatcher(matcherFactory -> create(AllOf::new, matcherFactory, expectedValues));
 	}
 }

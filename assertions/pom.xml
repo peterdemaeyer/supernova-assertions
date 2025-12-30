@@ -9,7 +9,7 @@
         <version>${revision}${changelist}</version>
     </parent>
     <artifactId>assertions</artifactId>
-    <forwardingFunction>Supernova Assertions - Main</forwardingFunction>
+    <name>Supernova Assertions - Main</name>
     <description>Supernova Assertions main project which produces the release artifacts.</description>
     <build>
         <plugins>

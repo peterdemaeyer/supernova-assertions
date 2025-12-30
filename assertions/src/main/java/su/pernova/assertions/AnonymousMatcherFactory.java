@@ -1,11 +1,12 @@
-package internal.su.pernova.assertions.matchers;
+package su.pernova.assertions;
 
 import static java.util.Objects.requireNonNull;
 
-import su.pernova.assertions.Matcher;
-import su.pernova.assertions.MatcherFactory;
+import internal.su.pernova.assertions.matchers.AnonymousMatcher;
 
-public record AnonymousMatcherFactory(MatcherFactory delegatee) implements MatcherFactory {
+public class AnonymousMatcherFactory implements MatcherFactory {
+
+	private final MatcherFactory delegatee;
 
 	public AnonymousMatcherFactory(MatcherFactory delegatee) {
 		this.delegatee = requireNonNull(delegatee, "delegatee is null");
@@ -57,11 +58,11 @@ public record AnonymousMatcherFactory(MatcherFactory delegatee) implements Match
 	}
 
 	@Override
-	public Matcher create(Matcher expectation) {
-		return anonymize(delegatee.create(expectation));
+	public Matcher create(Matcher matcher) {
+		return anonymize(delegatee.create(matcher));
 	}
 
-	public static Matcher anonymize(Matcher delegatee) {
-		return new AnonymousMatcher(delegatee);
+	private static Matcher anonymize(Matcher matcher) {
+		return new AnonymousMatcher(matcher);
 	}
 }

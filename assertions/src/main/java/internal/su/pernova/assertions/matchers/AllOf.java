@@ -1,10 +1,8 @@
 package internal.su.pernova.assertions.matchers;
 
-import static java.lang.System.lineSeparator;
-
 import su.pernova.assertions.Matcher;
 
-public class AllOf extends CompositeMatcher<AllOf> {
+public class AllOf extends MultiMatcher {
 
 	public AllOf(CharSequence prefix, CharSequence separator, CharSequence suffix, Matcher... delegates) {
 		super(prefix, separator, suffix, delegates);
@@ -12,19 +10,11 @@ public class AllOf extends CompositeMatcher<AllOf> {
 
 	@Override
 	public boolean match(Object actualValue) {
-		for (Matcher delegate : delegates) {
+		for (Matcher delegate : destinations) {
 			if (!delegate.match(actualValue)) {
 				return false;
 			}
 		}
 		return true;
-	}
-
-	public static AllOf singleLine(Matcher... delegates) {
-		return new AllOf("[", ", ", "]", delegates);
-	}
-
-	public static AllOf multiLine(Matcher... delegates) {
-		return new AllOf(lineSeparator() + "\t", lineSeparator() + "\t", "", delegates);
 	}
 }

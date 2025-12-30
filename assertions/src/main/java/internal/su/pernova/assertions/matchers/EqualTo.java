@@ -15,8 +15,8 @@ public class EqualTo extends ObjectMatcher {
 		}
 
 		@Override
-		public Matcher create(Matcher expectation) {
-			return new ForwardingMatcher("equal to", expectation);
+		public Matcher create(Matcher matcher) {
+			return new ForwardingMatcher("equal to", matcher);
 		}
 	};
 

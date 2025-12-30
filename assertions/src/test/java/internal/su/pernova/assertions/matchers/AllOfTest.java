@@ -1,75 +1,113 @@
 package internal.su.pernova.assertions.matchers;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import static su.pernova.assertions.AssertionTestUtils.assertThrowsAssertionErrorWithMessage;
 import static su.pernova.assertions.Assertions.assertThat;
 import static su.pernova.assertions.Matchers.allOf;
 import static su.pernova.assertions.Matchers.equalTo;
 import static su.pernova.assertions.Matchers.instanceOf;
 import static su.pernova.assertions.Matchers.is;
-import static su.pernova.assertions.Matchers.sameAs;
 
 import java.util.Date;
 
 import org.junit.jupiter.api.Test;
 
-class AllOfTest {
+import su.pernova.assertions.Matcher;
 
-	@Test
-	void allOfMatchersWithoutContext() {
-		assertDoesNotThrow(() -> assertThat(null, allOf(is(null))));
+class AllOfTest implements MultiMatcherContractTest {
+
+	@Override
+	public Matcher getInstance() {
+		return is(allOf(new Object[0]));
+	}
+
+	@Override
+	public Matcher getIncompleteInstance(Object... expectedValues) {
+		return allOf(expectedValues);
+	}
+
+	@Override
+	public Matcher getIncompleteInstance(double... expectedValues) {
+		return allOf(expectedValues);
+	}
+
+	@Override
+	public Matcher getIncompleteInstance(float... expectedValues) {
+		return allOf(expectedValues);
+	}
+
+	@Override
+	public Matcher getIncompleteInstance(long... expectedValues) {
+		return allOf(expectedValues);
+	}
+
+	@Override
+	public Matcher getIncompleteInstance(int... expectedValues) {
+		return allOf(expectedValues);
+	}
+
+	@Override
+	public Matcher getIncompleteInstance(short... expectedValues) {
+		return allOf(expectedValues);
+	}
+
+	@Override
+	public Matcher getIncompleteInstance(byte... expectedValues) {
+		return allOf(expectedValues);
+	}
+
+	@Override
+	public Matcher getIncompleteInstance(char... expectedValues) {
+		return allOf(expectedValues);
+	}
+
+	@Override
+	public Matcher getIncompleteInstance(boolean... expectedValues) {
+		return allOf(expectedValues);
 	}
 
 	@Test
-	void allOfManyMatchers() {
-		final Object object = "object";
-		assertThat(object, is(allOf(
-				instanceOf(String.class),
-				equalTo("object"),
-				sameAs(object)
-		)));
-		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(object, is(allOf(
-						instanceOf(String.class),
-						equalTo("another object"),
-						sameAs(object)
-				))),
-				"expected that subject is all of:",
-				"\tinstance of: java.lang.String",
-				"\tequal to: \"another object\"",
-				"\tsame as: \"object\"",
-				"but was: \"object\""
-		);
+	void anythingMatchesEmptyObjectArray() {
+		assertThat(new Object(), is(getIncompleteInstance(new Object[0])));
 	}
 
 	@Test
-	void allOfObjectsWithoutContext() {
-		assertEquals("no context",
-				assertThrows(IllegalStateException.class, () -> assertThat(null, allOf(new Object[] { null })))
-						.getMessage());
+	void anythingMatchesEmptyDoubleArray() {
+		assertThat(new Object(), is(getIncompleteInstance(new double[0])));
 	}
 
 	@Test
-	void allOfNullObjects() {
-		assertThrows(NullPointerException.class, () -> assertThat((Object) null, is(allOf((Object[]) null))));
+	void anythingMatchesEmptyFloatArray() {
+		assertThat(new Object(), is(getIncompleteInstance(new float[0])));
 	}
 
 	@Test
-	void allOfNullDoubles() {
-		assertThrows(NullPointerException.class, () -> assertThat((Object) null, is(allOf((double[]) null))));
+	void anythingMatchesEmptyLongArray() {
+		assertThat(new Object(), is(getIncompleteInstance(new long[0])));
 	}
 
 	@Test
-	void allOfEmptyObjects() {
-		assertThat(this, is(allOf(new Object[0])));
+	void anythingMatchesEmptyIntegerArray() {
+		assertThat(new Object(), is(getIncompleteInstance(new int[0])));
 	}
 
 	@Test
-	void allOfEmptyDoubles() {
-		assertThat(0d, is(allOf(new double[0])));
+	void anythingMatchesEmptyShortArray() {
+		assertThat(new Object(), is(getIncompleteInstance(new short[0])));
+	}
+
+	@Test
+	void anythingMatchesEmptyByteArray() {
+		assertThat(new Object(), is(getIncompleteInstance(new byte[0])));
+	}
+
+	@Test
+	void anythingMatchesEmptyCharacterArray() {
+		assertThat(new Object(), is(getIncompleteInstance(new char[0])));
+	}
+
+	@Test
+	void anythingMatchesEmptyBooleanArray() {
+		assertThat(new Object(), is(getIncompleteInstance(new boolean[0])));
 	}
 
 	@Test
@@ -144,5 +182,11 @@ class AllOfTest {
 		assertThat((byte) 0, is(equalTo(allOf(new byte[] { 0 }))));
 		assertThat(false, is(equalTo(allOf(new boolean[] { false }))));
 		assertThat('h', is(equalTo(allOf(new char[] { 'h' }))));
+	}
+
+	@Test
+	void allOfOr() {
+		final Matcher matcher = is(allOf(new int[] { 0, 0, 0 }).or(allOf(new int[] { 0, 0 })));
+		matcher.match(0);
 	}
 }

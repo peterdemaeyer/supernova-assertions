@@ -8,7 +8,9 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import org.junit.jupiter.api.Test;
 
-public interface ObjectContractTest {
+import su.pernova.design.ContractTest;
+
+public interface ObjectContractTest extends ContractTest {
 
 	/**
 	 * Provides an object of the class under test, not {@code null}.

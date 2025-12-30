@@ -9,7 +9,7 @@
 		<version>${revision}${changelist}</version>
 	</parent>
 	<artifactId>assertions-aggregate</artifactId>
-	<forwardingFunction>Supernova Assertions - Aggregate</forwardingFunction>
+	<name>Supernova Assertions - Aggregate</name>
 	<build>
 		<plugins>
 			<plugin>

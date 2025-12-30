@@ -60,7 +60,7 @@ record ForwardingMatcherFactory(CharSequence name, MatcherFactory destination, F
 	}
 
 	@Override
-	public Matcher create(Matcher expectation) {
-		return new ForwardingMatcher(name, expectation);
+	public Matcher create(Matcher matcher) {
+		return new ForwardingMatcher(name, matcher);
 	}
 }
