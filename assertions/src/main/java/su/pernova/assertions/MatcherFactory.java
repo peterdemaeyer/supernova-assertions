@@ -38,8 +38,4 @@ public interface MatcherFactory {
 	default Matcher create(boolean expectedValue) {
 		return create(Boolean.valueOf(expectedValue));
 	}
-
-	default Matcher create(Matcher matcher) {
-		return matcher;
-	}
 }

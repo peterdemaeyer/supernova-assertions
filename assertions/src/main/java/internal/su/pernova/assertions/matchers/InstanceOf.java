@@ -8,18 +8,8 @@ import su.pernova.assertions.MatcherFactory;
 
 public class InstanceOf extends ExpectedValueMatcher {
 
-	public static final MatcherFactory MATCHER_FACTORY = new MatcherFactory() {
-
-		@Override
-		public Matcher create(Matcher matcher) {
-			return new ForwardingMatcher("instance of", matcher);
-		}
-
-		@Override
-		public Matcher create(Object expectedValue) {
-			return new InstanceOf((Class) expectedValue);
-		}
-	};
+	@SuppressWarnings("rawtypes")
+	public static final MatcherFactory MATCHER_FACTORY = expectedValue -> new InstanceOf((Class) expectedValue);
 
 	private final Class<?> expectedClass;
 

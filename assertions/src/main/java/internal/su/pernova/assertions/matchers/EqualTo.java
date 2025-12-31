@@ -7,18 +7,7 @@ import su.pernova.assertions.MatcherFactory;
 
 public class EqualTo extends ObjectMatcher {
 
-	public static final MatcherFactory MATCHER_FACTORY = new MatcherFactory() {
-
-		@Override
-		public Matcher create(Object expectedValue) {
-			return new EqualTo(expectedValue);
-		}
-
-		@Override
-		public Matcher create(Matcher matcher) {
-			return new ForwardingMatcher("equal to", matcher);
-		}
-	};
+	public static final MatcherFactory MATCHER_FACTORY = EqualTo::new;
 
 	public EqualTo(CharSequence name, boolean prompt, Object expectedValue) {
 		super(name, prompt, expectedValue);

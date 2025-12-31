@@ -57,11 +57,6 @@ public class ImplicitMatcherFactory implements MatcherFactory {
 		return imply(destination.create(expectedValue));
 	}
 
-	@Override
-	public Matcher create(Matcher matcher) {
-		return imply(destination.create(matcher));
-	}
-
 	private static Matcher imply(Matcher matcher) {
 		return new ImplicitMatcher(matcher);
 	}
