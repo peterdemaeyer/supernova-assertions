@@ -28,7 +28,7 @@ class AllOfTest implements MultiMatcherContractTest {
 
 	@Override
 	public Matcher getInstance() {
-		return is(allOf(new Object[0]));
+		return is(allOf(new Object(), new Object(), new Object()));
 	}
 
 	@Override

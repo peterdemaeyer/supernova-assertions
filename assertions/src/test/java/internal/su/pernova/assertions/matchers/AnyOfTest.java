@@ -32,7 +32,7 @@ class AnyOfTest implements MultiMatcherContractTest {
 
 	@Override
 	public Matcher getInstance() {
-		return is(anyOf(new Object[0]));
+		return is(anyOf(new Object(), new Object(), new Object()));
 	}
 
 	@Override

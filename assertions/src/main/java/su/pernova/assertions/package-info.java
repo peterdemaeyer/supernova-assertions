@@ -92,7 +92,16 @@
  * assertThat("this", does(not(match(regex("[0-9]*")))));
  * }</pre>
  *
- * <h1>Context-sensitive matching</h1>
+ * <h1>Context-sensitive matchers</h1>
+ *
+ * Context-sensitive matchers have no meaning on their own, but need to be completed with context from a
+ * context-providing matcher in order to be valid. Examples of context-providing matchers are
+ * {@link su.pernova.assertions.Matchers#anyOf}, {@link su.pernova.assertions.Matchers#allOf}, {@link su.pernova.assertions.Matchers#noneOf}.
+ *
+ * Examples:
+ * <pre>{@code
+ * assertThat(3, is(anyOf(1, 2, 3));
+ * }</pre>
  *
  * @since 1.0.0
  */

@@ -18,15 +18,15 @@ The main classes are:
 
 # Usage
 
-| Example                                    | Description                                                                                               |
-|--------------------------------------------|-----------------------------------------------------------------------------------------------------------|
-| `assertThat(actual).is(expected)`          | Asserts object identity, corresponding to the `==` operator.                                              |
-| `assertThat(actual).is(null)`              | Asserts whether an object is null. This is nothing more than a particular case of the identity operator.  |
-| `assertThat(actual).is(true)`              | Asserts whether a condition is true This is nothing more than a particular case of the identity operator. |
-| `assertThat(actual).is(is(expected))`  | Equivalent to `assertThat(actual).is(expected)`, but more explicit, also in the message upon mismatch.    |
-| `assertThat(actual).is(equalTo(expected))` | Asserts object equality, corresponding to the `Object.equals` operator.                                   |
-| `assertThat(actual).is(instanceOf(class))` | Asserts object class, corresponding to the `instanceof` operator.                                         |
-| `assertThat(subject(actual)).is(expected)` | Equivalent to `assertThat(actual).is(expected)`, but more explicit.                                       |
+| Example                                                 | Description                                                                                               |
+|---------------------------------------------------------|-----------------------------------------------------------------------------------------------------------|
+| `assertThat(actualValue, is(expectedValue))`            | Asserts object identity, corresponding to the `==` operator.                                              |
+| `assertThat(actualValue, is(null))`                     | Asserts whether an object is null. This is nothing more than a particular case of the identity operator.  |
+| `assertThat(condition)`                                 | Asserts whether a condition is true This is nothing more than a particular case of the identity operator. |
+| `assertThat(actualValue, is(expectedValue))`            | Equivalent to `assertThat(actual).is(expected)`, but more explicit, also in the message upon mismatch.    |
+| `assertThat(actualValue).is(equalTo(expectedValue))`    | Asserts object equality, corresponding to the `Object.equals` operator.                                   |
+| `assertThat(actualValue).is(instanceOf(expectedClass))` | Asserts object class, corresponding to the `instanceof` operator.                                         |
+| `assertThat(subject(actualValue)).is(expectedValue)`    | Equivalent to `assertThat(actual).is(expected)`, but more explicit.                                       |
 
 # History
 

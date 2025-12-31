@@ -24,6 +24,7 @@ import internal.su.pernova.assertions.matchers.IsLong;
 import internal.su.pernova.assertions.matchers.IsObject;
 import internal.su.pernova.assertions.matchers.IsShort;
 import internal.su.pernova.assertions.matchers.Nan;
+import internal.su.pernova.assertions.matchers.NoneOf;
 import internal.su.pernova.assertions.matchers.Not;
 import internal.su.pernova.assertions.matchers.PromptedNamedMatcher;
 import internal.su.pernova.assertions.matchers.Regex;
@@ -808,5 +809,113 @@ public final class Matchers {
 	public static Matcher allOf(boolean... expectedValues) {
 		requireNonNull(expectedValues, "array of expected values is null");
 		return Context.newIncompleteMatcher(matcherFactory -> create(AllOf::new, matcherFactory, expectedValues));
+	}
+
+	/**
+	 * Returns a context-sensitive matcher that matches if none of the expected values match.
+	 *
+	 * @param expectedValues an array of expected values, which must not be {@code null}.
+	 * @return a context-sensitive matcher that matches if none of the given values match, not {@code null}
+	 * @since 2.0.0
+	 */
+	public static Matcher noneOf(Object... expectedValues) {
+		requireNonNull(expectedValues, "array of expected values is null");
+		return Context.newIncompleteMatcher(matcherFactory -> create(NoneOf::new, matcherFactory, expectedValues));
+	}
+
+	/**
+	 * Returns a context-sensitive matcher that matches if none of the expected values match.
+	 *
+	 * @param expectedValues an array of expected values, which must not be {@code null}.
+	 * @return a context-sensitive matcher that matches if none of the given values match, not {@code null}
+	 * @since 2.0.0
+	 */
+	public static Matcher noneOf(double... expectedValues) {
+		requireNonNull(expectedValues, "array of expected values is null");
+		return Context.newIncompleteMatcher(matcherFactory -> create(NoneOf::new, matcherFactory, expectedValues));
+	}
+
+	/**
+	 * Returns a context-sensitive matcher that matches if none of the expected values match.
+	 *
+	 * @param expectedValues an array of expected values, which must not be {@code null}.
+	 * @return a context-sensitive matcher that matches if none of the given values match, not {@code null}
+	 * @since 2.0.0
+	 */
+	public static Matcher noneOf(float... expectedValues) {
+		requireNonNull(expectedValues, "array of expected values is null");
+		return Context.newIncompleteMatcher(matcherFactory -> create(NoneOf::new, matcherFactory, expectedValues));
+	}
+
+	/**
+	 * Returns a context-sensitive matcher that matches if none of the expected values match.
+	 *
+	 * @param expectedValues an array of expected values, which must not be {@code null}.
+	 * @return a context-sensitive matcher that matches if none of the given values match, not {@code null}
+	 * @since 2.0.0
+	 */
+	public static Matcher noneOf(long... expectedValues) {
+		requireNonNull(expectedValues, "array of expected values is null");
+		return Context.newIncompleteMatcher(matcherFactory -> create(NoneOf::new, matcherFactory, expectedValues));
+	}
+
+	/**
+	 * Returns a context-sensitive matcher that matches if none of the expected values match.
+	 *
+	 * @param expectedValues an array of expected values, which must not be {@code null}.
+	 * @return a context-sensitive matcher that matches if none of the given values match, not {@code null}
+	 * @since 2.0.0
+	 */
+	public static Matcher noneOf(int... expectedValues) {
+		requireNonNull(expectedValues, "array of expected values is null");
+		return Context.newIncompleteMatcher(matcherFactory -> create(NoneOf::new, matcherFactory, expectedValues));
+	}
+
+	/**
+	 * Returns a context-sensitive matcher that matches if none of the expected values match.
+	 *
+	 * @param expectedValues an array of expected values, which must not be {@code null}.
+	 * @return a context-sensitive matcher that matches if none of the given values match, not {@code null}
+	 * @since 2.0.0
+	 */
+	public static Matcher noneOf(short... expectedValues) {
+		requireNonNull(expectedValues, "array of expected values is null");
+		return Context.newIncompleteMatcher(matcherFactory -> create(NoneOf::new, matcherFactory, expectedValues));
+	}
+
+	/**
+	 * Returns a context-sensitive matcher that matches if none of the expected values match.
+	 *
+	 * @param expectedValues an array of expected values, which must not be {@code null}.
+	 * @return a context-sensitive matcher that matches if none of the given values match, not {@code null}
+	 * @since 2.0.0
+	 */
+	public static Matcher noneOf(byte... expectedValues) {
+		requireNonNull(expectedValues, "array of expected values is null");
+		return Context.newIncompleteMatcher(matcherFactory -> create(NoneOf::new, matcherFactory, expectedValues));
+	}
+
+	/**
+	 * Returns a context-sensitive matcher that matches if none of the expected values match.
+	 *
+	 * @param expectedValues an array of expected values, which must not be {@code null}.
+	 * @return a context-sensitive matcher that matches if none of the given values match, not {@code null}
+	 * @since 2.0.0
+	 */
+	public static Matcher noneOf(char... expectedValues) {
+		requireNonNull(expectedValues, "array of expected values is null");
+		return Context.newIncompleteMatcher(matcherFactory -> create(NoneOf::new, matcherFactory, expectedValues));
+	}
+
+	/**
+	 * Returns a context-sensitive matcher that matches if none of the expected values match.
+	 *
+	 * @param expectedValues an array of expected values, which must not be {@code null}.
+	 * @return a context-sensitive matcher that matches if none of the given values match, not {@code null}
+	 * @since 2.0.0
+	 */
+	public static Matcher noneOf(boolean... expectedValues) {
+		requireNonNull(expectedValues, "array of expected values is null");
+		return Context.newIncompleteMatcher(matcherFactory -> create(NoneOf::new, matcherFactory, expectedValues));
 	}
 }
