@@ -6,17 +6,17 @@ import su.pernova.assertions.DelegatingDescription;
 import su.pernova.assertions.Describable;
 import su.pernova.assertions.Description;
 
-public class AnonymousDescribable<D extends Describable> implements Describable {
+public class ImplicitDescribable<D extends Describable> implements Describable {
 
-	protected final D delegatee;
+	protected final D destination;
 
-	public AnonymousDescribable(D delegatee) {
-		this.delegatee = requireNonNull(delegatee, "delegatee is null");
+	public ImplicitDescribable(D destination) {
+		this.destination = requireNonNull(destination, "destination is null");
 	}
 
 	@Override
 	public Description describe(Description description) {
-		return delegatee.describe(new DelegatingDescription(description) {
+		return destination.describe(new DelegatingDescription(description) {
 
 			@Override
 			public Description appendText(CharSequence text) {
@@ -28,6 +28,6 @@ public class AnonymousDescribable<D extends Describable> implements Describable 
 
 	@Override
 	public Description describeMismatch(Description mismatchDescription) {
-		return delegatee.describeMismatch(mismatchDescription);
+		return destination.describeMismatch(mismatchDescription);
 	}
 }
