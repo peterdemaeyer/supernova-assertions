@@ -680,7 +680,7 @@ public final class Matchers {
 	 */
 	public static Matcher anyOf(boolean... expectedValues) {
 		requireNonNull(expectedValues, "array of expected values is null");
-		return Context.newIncompleteMatcher(matcherFactory -> create(AllOf::new, matcherFactory, expectedValues));
+		return Context.newIncompleteMatcher(matcherFactory -> create(AnyOf::new, matcherFactory, expectedValues));
 	}
 
 	/**

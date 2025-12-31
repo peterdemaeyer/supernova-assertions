@@ -15,12 +15,22 @@ import static su.pernova.assertions.Matchers.sameAs;
 
 import java.util.Date;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
+import org.jspecify.annotations.NonNull;
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.ArgumentsProvider;
+import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.junit.jupiter.params.support.ParameterDeclarations;
 
 import su.pernova.assertions.Matcher;
 
-class AnyOfTest implements MultiMatcherContractTest{
+class AnyOfTest implements MultiMatcherContractTest {
 
 	@Override
 	public Matcher getInstance() {
@@ -72,14 +82,38 @@ class AnyOfTest implements MultiMatcherContractTest{
 		return anyOf(expectedValues);
 	}
 
-	@Test
-	void anyOfNullObjects() {
-		assertThrows(NullPointerException.class, () -> assertThat(this, is(anyOf((Object[]) null))));
+	@ParameterizedTest
+	@ArgumentsSource(EmptyArrayArgumentsProvider.class)
+	void nothingMatchesEmptyArray(Matcher incompleteMatcher) {
+		final Matcher matcher = is(incompleteMatcher);
+		assertFalse(matcher.match(null));
+		assertFalse(matcher.match(new Object()));
+		assertFalse(matcher.match(0d));
+		assertFalse(matcher.match(0f));
+		assertFalse(matcher.match(0L));
+		assertFalse(matcher.match(0));
+		assertFalse(matcher.match((short) 0));
+		assertFalse(matcher.match((byte) 0));
+		assertFalse(matcher.match('0'));
+		assertFalse(matcher.match(false));
 	}
 
-	@Test
-	void anyOfNullDoubles() {
-		assertThrows(NullPointerException.class, () -> assertThat(this, is(anyOf((double[]) null))));
+	private static class EmptyArrayArgumentsProvider implements ArgumentsProvider {
+
+		@Override
+		public @NonNull Stream<? extends Arguments> provideArguments(@NonNull ParameterDeclarations parameters, @NonNull ExtensionContext context) throws Exception {
+			return Stream.of(
+					Arguments.of(Named.of("Object[]", anyOf(new Object[0]))),
+					Arguments.of(Named.of("double[]", anyOf(new double[0]))),
+					Arguments.of(Named.of("float[]", anyOf(new float[0]))),
+					Arguments.of(Named.of("long[]", anyOf(new long[0]))),
+					Arguments.of(Named.of("int[]", anyOf(new int[0]))),
+					Arguments.of(Named.of("short[]", anyOf(new short[0]))),
+					Arguments.of(Named.of("byte[]", anyOf(new byte[0]))),
+					Arguments.of(Named.of("char[]", anyOf(new char[0]))),
+					Arguments.of(Named.of("boolean[]", anyOf(new boolean[0])))
+			);
+		}
 	}
 
 	@Test

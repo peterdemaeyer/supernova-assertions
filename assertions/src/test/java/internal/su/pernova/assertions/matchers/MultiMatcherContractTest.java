@@ -5,11 +5,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import static su.pernova.assertions.Matchers.anyOf;
 import static su.pernova.assertions.Matchers.is;
 
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
+import org.jspecify.annotations.NonNull;
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.ArgumentsProvider;
+import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.junit.jupiter.params.support.ParameterDeclarations;
 
 import su.pernova.assertions.Matcher;
 import su.pernova.assertions.MatcherContractTest;
@@ -203,42 +213,42 @@ interface MultiMatcherContractTest extends MatcherContractTest {
 	}
 
 	@Test
-	default void matchingEmptyDoublesDoesNotThrow() {
+	default void matchingEmptyDoubleArrayDoesNotThrow() {
 		assertDoesNotThrow(() -> is(getIncompleteInstance(new double[0])).match(null));
 	}
 
 	@Test
-	default void matchingEmptyFloatsDoesNotThrow() {
+	default void matchingEmptyFloatArrayDoesNotThrow() {
 		assertDoesNotThrow(() -> is(getIncompleteInstance(new float[0])).match(null));
 	}
 
 	@Test
-	default void matchingEmptyLongsDoesNotThrow() {
+	default void matchingEmptyLongArrayDoesNotThrow() {
 		assertDoesNotThrow(() -> is(getIncompleteInstance(new long[0])).match(null));
 	}
 
 	@Test
-	default void matchingEmptyIntegersDoesNotThrow() {
+	default void matchingEmptyIntArrayDoesNotThrow() {
 		assertDoesNotThrow(() -> is(getIncompleteInstance(new int[0])).match(null));
 	}
 
 	@Test
-	default void matchingEmptyShortsDoesNotThrow() {
+	default void matchingEmptyShortArrayDoesNotThrow() {
 		assertDoesNotThrow(() -> is(getIncompleteInstance(new short[0])).match(null));
 	}
 
 	@Test
-	default void matchingEmptyBytesDoesNotThrow() {
+	default void matchingEmptyByteArrayDoesNotThrow() {
 		assertDoesNotThrow(() -> is(getIncompleteInstance(new byte[0])).match(null));
 	}
 
 	@Test
-	default void matchingEmptyCharactersDoesNotThrow() {
+	default void matchingEmptyCharArrayDoesNotThrow() {
 		assertDoesNotThrow(() -> is(getIncompleteInstance(new char[0])).match(null));
 	}
 
 	@Test
-	default void matchingEmptyBooleansDoesNotThrow() {
+	default void matchingEmptyBooleanArrayDoesNotThrow() {
 		assertDoesNotThrow(() -> is(getIncompleteInstance(new boolean[0])).match(null));
 	}
 

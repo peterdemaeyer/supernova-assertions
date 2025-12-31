@@ -1,5 +1,7 @@
 package internal.su.pernova.assertions.matchers;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import static su.pernova.assertions.AssertionTestUtils.assertThrowsAssertionErrorWithMessage;
 import static su.pernova.assertions.Assertions.assertThat;
 import static su.pernova.assertions.Matchers.allOf;
@@ -8,8 +10,17 @@ import static su.pernova.assertions.Matchers.instanceOf;
 import static su.pernova.assertions.Matchers.is;
 
 import java.util.Date;
+import java.util.stream.Stream;
 
+import org.jspecify.annotations.NonNull;
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.ArgumentsProvider;
+import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.junit.jupiter.params.support.ParameterDeclarations;
 
 import su.pernova.assertions.Matcher;
 
@@ -65,49 +76,38 @@ class AllOfTest implements MultiMatcherContractTest {
 		return allOf(expectedValues);
 	}
 
-	@Test
-	void anythingMatchesEmptyObjectArray() {
-		assertThat(new Object(), is(getIncompleteInstance(new Object[0])));
+	@ParameterizedTest
+	@ArgumentsSource(EmptyArrayArgumentsProvider.class)
+	void anythingMatchesEmptyArray(Matcher incompleteMatcher) {
+		final Matcher matcher = is(incompleteMatcher);
+		assertTrue(matcher.match(null));
+		assertTrue(matcher.match(new Object()));
+		assertTrue(matcher.match(0d));
+		assertTrue(matcher.match(0f));
+		assertTrue(matcher.match(0L));
+		assertTrue(matcher.match(0));
+		assertTrue(matcher.match((short) 0));
+		assertTrue(matcher.match((byte) 0));
+		assertTrue(matcher.match('0'));
+		assertTrue(matcher.match(false));
 	}
 
-	@Test
-	void anythingMatchesEmptyDoubleArray() {
-		assertThat(new Object(), is(getIncompleteInstance(new double[0])));
-	}
+	private static class EmptyArrayArgumentsProvider implements ArgumentsProvider {
 
-	@Test
-	void anythingMatchesEmptyFloatArray() {
-		assertThat(new Object(), is(getIncompleteInstance(new float[0])));
-	}
-
-	@Test
-	void anythingMatchesEmptyLongArray() {
-		assertThat(new Object(), is(getIncompleteInstance(new long[0])));
-	}
-
-	@Test
-	void anythingMatchesEmptyIntegerArray() {
-		assertThat(new Object(), is(getIncompleteInstance(new int[0])));
-	}
-
-	@Test
-	void anythingMatchesEmptyShortArray() {
-		assertThat(new Object(), is(getIncompleteInstance(new short[0])));
-	}
-
-	@Test
-	void anythingMatchesEmptyByteArray() {
-		assertThat(new Object(), is(getIncompleteInstance(new byte[0])));
-	}
-
-	@Test
-	void anythingMatchesEmptyCharacterArray() {
-		assertThat(new Object(), is(getIncompleteInstance(new char[0])));
-	}
-
-	@Test
-	void anythingMatchesEmptyBooleanArray() {
-		assertThat(new Object(), is(getIncompleteInstance(new boolean[0])));
+		@Override
+		public @NonNull Stream<? extends Arguments> provideArguments(@NonNull ParameterDeclarations parameters, @NonNull ExtensionContext context) throws Exception {
+			return Stream.of(
+					Arguments.of(Named.of("Object[]", allOf(new Object[0]))),
+					Arguments.of(Named.of("double[]", allOf(new double[0]))),
+					Arguments.of(Named.of("float[]", allOf(new float[0]))),
+					Arguments.of(Named.of("long[]", allOf(new long[0]))),
+					Arguments.of(Named.of("int[]", allOf(new int[0]))),
+					Arguments.of(Named.of("short[]", allOf(new short[0]))),
+					Arguments.of(Named.of("byte[]", allOf(new byte[0]))),
+					Arguments.of(Named.of("char[]", allOf(new char[0]))),
+					Arguments.of(Named.of("boolean[]", allOf(new boolean[0])))
+			);
+		}
 	}
 
 	@Test
