@@ -1,11 +1,11 @@
 package internal.su.pernova.nio.channels;
 
+import static java.nio.ByteBuffer.allocate;
+import static java.nio.ByteBuffer.wrap;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.spy;
-
-import static java.nio.ByteBuffer.allocate;
-import static java.nio.ByteBuffer.wrap;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;

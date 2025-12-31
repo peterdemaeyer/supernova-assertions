@@ -1,7 +1,8 @@
 package internal.su.pernova.nio.channels;
 
-import static internal.su.pernova.nio.NioUtils.putAsMuchAsPossible;
 import static java.util.Objects.requireNonNull;
+
+import static internal.su.pernova.nio.NioUtils.putAsMuchAsPossible;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

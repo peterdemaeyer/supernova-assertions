@@ -2,7 +2,6 @@ package internal.su.pernova.assertions;
 
 import static java.lang.Character.isLetterOrDigit;
 import static java.lang.Character.isLowerCase;
-import static java.lang.Character.isSpaceChar;
 import static java.lang.Character.toUpperCase;
 
 import su.pernova.assertions.Describable;

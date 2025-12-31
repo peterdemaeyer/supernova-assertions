@@ -2,7 +2,6 @@ package internal.su.pernova.assertions.matchers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static su.pernova.assertions.AssertionTestUtils.assertThrowsAssertionErrorWithMessage;
@@ -15,7 +14,6 @@ import static su.pernova.assertions.Matchers.sameAs;
 
 import java.util.Date;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.jspecify.annotations.NonNull;

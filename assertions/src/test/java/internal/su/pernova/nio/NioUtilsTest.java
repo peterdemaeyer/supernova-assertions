@@ -1,5 +1,8 @@
 package internal.su.pernova.nio;
 
+import static java.nio.ByteBuffer.allocate;
+import static java.nio.ByteBuffer.wrap;
+
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -8,8 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static internal.su.pernova.nio.NioUtils.duplicate;
 import static internal.su.pernova.nio.NioUtils.putAsMuchAsPossible;
-import static java.nio.ByteBuffer.allocate;
-import static java.nio.ByteBuffer.wrap;
 
 import java.nio.ByteBuffer;
 

@@ -1,11 +1,11 @@
 package internal.su.pernova.nio.channels;
 
+import static java.nio.ByteBuffer.allocate;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import static java.nio.ByteBuffer.allocate;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
