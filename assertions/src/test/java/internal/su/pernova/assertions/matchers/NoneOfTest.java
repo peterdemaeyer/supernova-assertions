@@ -68,11 +68,14 @@ class NoneOfTest implements MultiMatcherContractTest {
 
 	@Test
 	void matchingNoneOf() {
-		final String one = "one";
-		final Matcher isNoneOfTheExpectedValues = is(noneOf(one, "two", "three"));
-		assertTrue(isNoneOfTheExpectedValues.match("four"));
+		final Object one = new Object();
+		final Object two = new Object();
+		final Object three = new Object();
+		final Object four = new Object();
+		final Matcher isNoneOfTheExpectedValues = is(noneOf(one, two, three));
+		assertTrue(isNoneOfTheExpectedValues.match(four));
 		assertFalse(isNoneOfTheExpectedValues.match(one));
 		assertThrowsAssertionErrorWithMessage(() -> assertThat(one, isNoneOfTheExpectedValues),
-				"expected that subject is none of: [\"one\", \"two\", \"three\"]\nbut was: \"one\"");
+				String.format("expected that subject is none of: [\"%s\", \"%s\", \"%s\"]%nbut was: \"%s\"", one, two, three, one));
 	}
 }
