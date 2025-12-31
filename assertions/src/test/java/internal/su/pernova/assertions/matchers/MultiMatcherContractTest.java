@@ -10,126 +10,102 @@ import static su.pernova.assertions.Matchers.is;
 import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import su.pernova.assertions.Matcher;
 import su.pernova.assertions.MatcherContractTest;
+import su.pernova.assertions.NoContextException;
 
 /// @since 2.0.0
 interface MultiMatcherContractTest extends MatcherContractTest {
 
-	/// @return an incomplete matcher, not `null`.
 	/// @param expectedValues expected values, not `null`.
-	Matcher getIncompleteInstance(Object... expectedValues);
+	/// @return a context-sensitive matcher, not `null`.
+	Matcher getInstance(Object... expectedValues);
 
-	/// @return an incomplete matcher, not `null`.
 	/// @param expectedValues expected values, not `null`.
-	Matcher getIncompleteInstance(double... expectedValues);
+	/// @return a context-sensitive matcher, not `null`.
+	Matcher getInstance(double... expectedValues);
 
-	/// @return an incomplete matcher, not `null`.
 	/// @param expectedValues expected values, not `null`.
-	Matcher getIncompleteInstance(float... expectedValues);
+	/// @return a context-sensitive matcher, not `null`.
+	Matcher getInstance(float... expectedValues);
 
-	/// @return an incomplete matcher, not `null`.
 	/// @param expectedValues expected values, not `null`.
-	Matcher getIncompleteInstance(long... expectedValues);
+	/// @return a context-sensitive matcher, not `null`.
+	Matcher getInstance(long... expectedValues);
 
-	/// @return an incomplete matcher, not `null`.
 	/// @param expectedValues expected values, not `null`.
-	Matcher getIncompleteInstance(int... expectedValues);
+	/// @return a context-sensitive matcher, not `null`.
+	Matcher getInstance(int... expectedValues);
 
-	/// @return an incomplete matcher, not `null`.
 	/// @param expectedValues expected values, not `null`.
-	Matcher getIncompleteInstance(short... expectedValues);
+	/// @return a context-sensitive matcher, not `null`.
+	Matcher getInstance(short... expectedValues);
 
-	/// @return an incomplete matcher, not `null`.
 	/// @param expectedValues expected values, not `null`.
-	Matcher getIncompleteInstance(byte... expectedValues);
+	/// @return a context-sensitive matcher, not `null`.
+	Matcher getInstance(byte... expectedValues);
 
-	/// @return an incomplete matcher, not `null`.
 	/// @param expectedValues expected values, not `null`.
-	Matcher getIncompleteInstance(char... expectedValues);
+	/// @return a context-sensitive matcher, not `null`.
+	Matcher getInstance(char... expectedValues);
 
-	/// @return an incomplete matcher, not `null`.
 	/// @param expectedValues expected values, not `null`.
-	Matcher getIncompleteInstance(boolean... expectedValues);
+	/// @return a context-sensitive matcher, not `null`.
+	Matcher getInstance(boolean... expectedValues);
 
 	@Test
-	default void matchingObjectsThrowsWhenMatcherIncomplete() {
-		assertEquals("incomplete matcher",
-				assertThrows(IllegalStateException.class,
-						() -> getIncompleteInstance(this, this).match(this))
-						.getMessage());
+	default void matchingObjectsThrowsWhenMatcherHasNoContext() {
+		assertThrows(NoContextException.class, () -> getInstance(this, this).match(this));
 	}
 
 	@Test
-	default void matchingDoublesThrowsWhenMatcherIncomplete() {
-		assertEquals("incomplete matcher",
-				assertThrows(IllegalStateException.class,
-						() -> getIncompleteInstance(new double[] { 0d, 0d }).match(0d))
-						.getMessage());
+	default void matchingDoublesThrowsWhenMatcherHasNoContext() {
+		assertThrows(NoContextException.class, () -> getInstance(new double[] { 0d, 0d }).match(0d));
 	}
 
 	@Test
-	default void matchingFloatsThrowsWhenMatcherIncomplete() {
-		assertEquals("incomplete matcher",
-				assertThrows(IllegalStateException.class,
-						() -> getIncompleteInstance(new float[] { 0f, 0f }).match(0f))
-						.getMessage());
+	default void matchingFloatsThrowsWhenMatcherHasNoContext() {
+		assertThrows(NoContextException.class, () -> getInstance(new float[] { 0f, 0f }).match(0f));
 	}
 
 	@Test
-	default void matchingLongsThrowsWhenMatcherIncomplete() {
-		assertEquals("incomplete matcher",
-			assertThrows(IllegalStateException.class,
-					() -> getIncompleteInstance(new long[] { 0L, 0L }).match(0L))
-					.getMessage());
+	default void matchingLongsThrowsWhenMatcherHasNoContext() {
+		assertThrows(NoContextException.class, () -> getInstance(new long[] { 0L, 0L }).match(0L));
 	}
 
 	@Test
-	default void matchingIntegersThrowsWhenMatcherIncomplete() {
-		assertEquals("incomplete matcher",
-				assertThrows(IllegalStateException.class,
-						() -> getIncompleteInstance(new int[] { 0, 0 }).match(0))
-						.getMessage());
+	default void matchingIntegersThrowsWhenMatcherHasNoContext() {
+		assertThrows(NoContextException.class, () -> getInstance(new int[] { 0, 0 }).match(0));
 	}
 
 	@Test
-	default void matchingShortsThrowsWhenMatcherIncomplete() {
-		assertEquals("incomplete matcher",
-				assertThrows(IllegalStateException.class,
-						() -> getIncompleteInstance(new short[] { 0, 0 }).match((short) 0))
-						.getMessage());
+	default void matchingShortsThrowsWhenMatcherHasNoContext() {
+		assertThrows(NoContextException.class, () -> getInstance(new short[] { 0, 0 }).match((short) 0));
 	}
 
 	@Test
-	default void matchingBytesThrowsWhenMatcherIncomplete() {
-		assertEquals("incomplete matcher",
-				assertThrows(IllegalStateException.class,
-						() -> getIncompleteInstance(new byte[] { 0, 0 }).match((byte) 0))
-						.getMessage());
+	default void matchingBytesThrowsWhenMatcherHasNoContext() {
+		assertThrows(NoContextException.class, () -> getInstance(new byte[] { 0, 0 }).match((byte) 0));
 	}
 
 	@Test
-	default void matchingCharactersThrowsWhenMatcherIncomplete() {
-		assertEquals("incomplete matcher",
-				assertThrows(IllegalStateException.class,
-						() -> getIncompleteInstance(new char[] { '0', '0' }).match('0'))
-						.getMessage());
+	default void matchingCharactersThrowsWhenMatcherHasNoContext() {
+		assertThrows(NoContextException.class, () -> getInstance(new char[] { '0', '0' }).match('0'));
 	}
 
 	@Test
-	default void matchingBooleansThrowsWhenMatcherIncomplete() {
-		assertEquals("incomplete matcher",
-				assertThrows(IllegalStateException.class,
-						() -> getIncompleteInstance(new boolean[] { false, false }).match(false))
-						.getMessage());
+	default void matchingBooleansThrowsWhenMatcherHasNoContext() {
+		assertThrows(NoContextException.class, () -> getInstance(new boolean[] { false, false }).match(false));
 	}
 
 	@Test
 	default void constructionThrowsWhenObjectArrayIsNull() {
 		assertEquals("array of expected values is null",
 				assertThrows(NullPointerException.class,
-						() -> getIncompleteInstance((Object[]) null))
+						() -> getInstance((Object[]) null))
 						.getMessage());
 	}
 
@@ -137,7 +113,7 @@ interface MultiMatcherContractTest extends MatcherContractTest {
 	default void constructionThrowsWhenDoubleArrayIsNull() {
 		assertEquals("array of expected values is null",
 				assertThrows(NullPointerException.class,
-						() -> getIncompleteInstance((double[]) null))
+						() -> getInstance((double[]) null))
 						.getMessage());
 	}
 
@@ -145,7 +121,7 @@ interface MultiMatcherContractTest extends MatcherContractTest {
 	default void constructionThrowsWhenFloatArrayIsNull() {
 		assertEquals("array of expected values is null",
 				assertThrows(NullPointerException.class,
-						() -> getIncompleteInstance((float[]) null))
+						() -> getInstance((float[]) null))
 						.getMessage());
 	}
 
@@ -153,7 +129,7 @@ interface MultiMatcherContractTest extends MatcherContractTest {
 	default void constructionThrowsWhenLongArrayIsNull() {
 		assertEquals("array of expected values is null",
 				assertThrows(NullPointerException.class,
-						() -> getIncompleteInstance((long[]) null))
+						() -> getInstance((long[]) null))
 						.getMessage());
 	}
 
@@ -161,7 +137,7 @@ interface MultiMatcherContractTest extends MatcherContractTest {
 	default void constructionThrowsWhenIntegerArrayIsNull() {
 		assertEquals("array of expected values is null",
 				assertThrows(NullPointerException.class,
-						() -> getIncompleteInstance((int[]) null))
+						() -> getInstance((int[]) null))
 						.getMessage());
 	}
 
@@ -169,7 +145,7 @@ interface MultiMatcherContractTest extends MatcherContractTest {
 	default void constructionThrowsWhenShortArrayIsNull() {
 		assertEquals("array of expected values is null",
 				assertThrows(NullPointerException.class,
-						() -> getIncompleteInstance((short[]) null))
+						() -> getInstance((short[]) null))
 						.getMessage());
 	}
 
@@ -177,7 +153,7 @@ interface MultiMatcherContractTest extends MatcherContractTest {
 	default void constructionThrowsWhenByteArrayIsNull() {
 		assertEquals("array of expected values is null",
 				assertThrows(NullPointerException.class,
-						() -> getIncompleteInstance((byte[]) null))
+						() -> getInstance((byte[]) null))
 						.getMessage());
 	}
 
@@ -185,7 +161,7 @@ interface MultiMatcherContractTest extends MatcherContractTest {
 	default void constructionThrowsWhenCharacterArrayIsNull() {
 		assertEquals("array of expected values is null",
 				assertThrows(NullPointerException.class,
-						() -> getIncompleteInstance((char[]) null))
+						() -> getInstance((char[]) null))
 						.getMessage());
 	}
 
@@ -193,58 +169,67 @@ interface MultiMatcherContractTest extends MatcherContractTest {
 	default void constructionThrowsWhenBooleanArrayIsNull() {
 		assertEquals("array of expected values is null",
 				assertThrows(NullPointerException.class,
-						() -> getIncompleteInstance((boolean[]) null))
+						() -> getInstance((boolean[]) null))
 						.getMessage());
 	}
 
-	@Test
-	default void matchingEmptyObjectArrayDoesNotThrow() {
-		assertDoesNotThrow(() -> is(getIncompleteInstance(new Object[0])).match(null));
+	@ParameterizedTest
+	@ValueSource(ints = { 0, 1, 2, 3 })
+	default void matchingObjectsWithNullDoesNotThrow(int size) {
+		assertDoesNotThrow(() -> is(getInstance(new Object[size])).match(null));
+	}
+
+	@ParameterizedTest
+	@ValueSource(ints = { 0, 1, 2, 3 })
+	default void matchingDoublesWithNullDoesNotThrow(int size) {
+		assertDoesNotThrow(() -> is(getInstance(new double[size])).match(null));
+	}
+
+	@ParameterizedTest
+	@ValueSource(ints = { 0, 1, 2, 3 })
+	default void matchingFloatsWithNullDoesNotThrow(int size) {
+		assertDoesNotThrow(() -> is(getInstance(new float[size])).match(null));
+	}
+
+	@ParameterizedTest
+	@ValueSource(ints = { 0, 1, 2, 3 })
+	default void matchingLongsWithNullDoesNotThrow(int size) {
+		assertDoesNotThrow(() -> is(getInstance(new long[size])).match(null));
+	}
+
+	@ParameterizedTest
+	@ValueSource(ints = { 0, 1, 2, 3 })
+	default void matchingIntsWithNullDoesNotThrow(int size) {
+		assertDoesNotThrow(() -> is(getInstance(new int[size])).match(null));
+	}
+
+	@ParameterizedTest
+	@ValueSource(ints = { 0, 1, 2, 3 })
+	default void matchingShortsWithNullDoesNotThrow(int size) {
+		assertDoesNotThrow(() -> is(getInstance(new short[size])).match(null));
+	}
+
+	@ParameterizedTest
+	@ValueSource(ints = { 0, 1, 2, 3 })
+	default void matchingBytesWithNullDoesNotThrow(int size) {
+		assertDoesNotThrow(() -> is(getInstance(new byte[size])).match(null));
+	}
+
+	@ParameterizedTest
+	@ValueSource(ints = { 0, 1, 2, 3 })
+	default void matchingCharsWithNullDoesNotThrow(int size) {
+		assertDoesNotThrow(() -> is(getInstance(new char[size])).match(null));
+	}
+
+	@ParameterizedTest
+	@ValueSource(ints = { 0, 1, 2, 3 })
+	default void matchingBooleansWithNullDoesNotThrow(int size) {
+		assertDoesNotThrow(() -> is(getInstance(new boolean[size])).match(null));
 	}
 
 	@Test
-	default void matchingEmptyDoubleArrayDoesNotThrow() {
-		assertDoesNotThrow(() -> is(getIncompleteInstance(new double[0])).match(null));
-	}
-
-	@Test
-	default void matchingEmptyFloatArrayDoesNotThrow() {
-		assertDoesNotThrow(() -> is(getIncompleteInstance(new float[0])).match(null));
-	}
-
-	@Test
-	default void matchingEmptyLongArrayDoesNotThrow() {
-		assertDoesNotThrow(() -> is(getIncompleteInstance(new long[0])).match(null));
-	}
-
-	@Test
-	default void matchingEmptyIntArrayDoesNotThrow() {
-		assertDoesNotThrow(() -> is(getIncompleteInstance(new int[0])).match(null));
-	}
-
-	@Test
-	default void matchingEmptyShortArrayDoesNotThrow() {
-		assertDoesNotThrow(() -> is(getIncompleteInstance(new short[0])).match(null));
-	}
-
-	@Test
-	default void matchingEmptyByteArrayDoesNotThrow() {
-		assertDoesNotThrow(() -> is(getIncompleteInstance(new byte[0])).match(null));
-	}
-
-	@Test
-	default void matchingEmptyCharArrayDoesNotThrow() {
-		assertDoesNotThrow(() -> is(getIncompleteInstance(new char[0])).match(null));
-	}
-
-	@Test
-	default void matchingEmptyBooleanArrayDoesNotThrow() {
-		assertDoesNotThrow(() -> is(getIncompleteInstance(new boolean[0])).match(null));
-	}
-
-	@Test
-	default void orPropagatesIncompletenessOfMatcher() {
-		final Matcher incompleteMatcher = getIncompleteInstance("a", "b").or(getIncompleteInstance("c", "d"));
+	default void orPropagatesLackOfMatcherContext() {
+		final Matcher incompleteMatcher = getInstance("a", "b").or(getInstance("c", "d"));
 		assertThrows(IllegalStateException.class, () -> incompleteMatcher.match("e"));
 		assertEquals("...", incompleteMatcher.toString());
 		final Matcher matcher = is(incompleteMatcher); // Completes the incomplete matcher
@@ -255,10 +240,10 @@ interface MultiMatcherContractTest extends MatcherContractTest {
 	}
 
 	@Test
-	default void orPropagatesCompletenessOfMatcher() {
+	default void orPropagatesMatcherContext() {
 		// The difference is in the placement of the parenthesis.
 		// This time, the "or" is called on the COMPLETED matcher.
-		final Matcher matcher = is(getIncompleteInstance("a", "b")).or(getIncompleteInstance("c", "d"));
+		final Matcher matcher = is(getInstance("a", "b")).or(getInstance("c", "d"));
 		assertDoesNotThrow(() -> matcher.match("e"));
 		final Pattern pattern = Pattern.compile("or\\{is\\{\\w+\\{i̶s̶O̶b̶j̶e̶c̶t̶\\(a\\)}\\{i̶s̶O̶b̶j̶e̶c̶t̶\\(b\\)}}}\\{\\w+\\{i̶s̶O̶b̶j̶e̶c̶t̶\\(c\\)}\\{i̶s̶O̶b̶j̶e̶c̶t̶\\(d\\)}}");
 		final String stringValue = matcher.toString();
@@ -266,8 +251,8 @@ interface MultiMatcherContractTest extends MatcherContractTest {
 	}
 
 	@Test
-	default void andPropagatesIncompletenessOfMatcher() {
-		final Matcher incompleteMatcher = getIncompleteInstance("a", "b").and(getIncompleteInstance("c", "d"));
+	default void andPropagatesLackOfMatcherContext() {
+		final Matcher incompleteMatcher = getInstance("a", "b").and(getInstance("c", "d"));
 		assertThrows(IllegalStateException.class, () -> incompleteMatcher.match("e"));
 		assertEquals("...", incompleteMatcher.toString());
 		final Matcher matcher = is(incompleteMatcher); // Complete the incomplete matcher
@@ -278,10 +263,10 @@ interface MultiMatcherContractTest extends MatcherContractTest {
 	}
 
 	@Test
-	default void andPropagatesCompletenessOfMatcher() {
+	default void andPropagatesMatcherContext() {
 		// The difference is in the placement of the parenthesis.
 		// This time, the "or" is called on the COMPLETED matcher.
-		final Matcher matcher = is(getIncompleteInstance("a", "b")).and(getIncompleteInstance("c", "d"));
+		final Matcher matcher = is(getInstance("a", "b")).and(getInstance("c", "d"));
 		assertDoesNotThrow(() -> matcher.match("e"));
 		final Pattern pattern = Pattern.compile("and\\{is\\{\\w+\\{i̶s̶O̶b̶j̶e̶c̶t̶\\(a\\)}\\{i̶s̶O̶b̶j̶e̶c̶t̶\\(b\\)}}}\\{\\w+\\{i̶s̶O̶b̶j̶e̶c̶t̶\\(c\\)}\\{i̶s̶O̶b̶j̶e̶c̶t̶\\(d\\)}}");
 		final String stringValue = matcher.toString();

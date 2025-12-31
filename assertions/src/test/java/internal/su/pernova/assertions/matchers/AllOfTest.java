@@ -32,47 +32,47 @@ class AllOfTest implements MultiMatcherContractTest {
 	}
 
 	@Override
-	public Matcher getIncompleteInstance(Object... expectedValues) {
+	public Matcher getInstance(Object... expectedValues) {
 		return allOf(expectedValues);
 	}
 
 	@Override
-	public Matcher getIncompleteInstance(double... expectedValues) {
+	public Matcher getInstance(double... expectedValues) {
 		return allOf(expectedValues);
 	}
 
 	@Override
-	public Matcher getIncompleteInstance(float... expectedValues) {
+	public Matcher getInstance(float... expectedValues) {
 		return allOf(expectedValues);
 	}
 
 	@Override
-	public Matcher getIncompleteInstance(long... expectedValues) {
+	public Matcher getInstance(long... expectedValues) {
 		return allOf(expectedValues);
 	}
 
 	@Override
-	public Matcher getIncompleteInstance(int... expectedValues) {
+	public Matcher getInstance(int... expectedValues) {
 		return allOf(expectedValues);
 	}
 
 	@Override
-	public Matcher getIncompleteInstance(short... expectedValues) {
+	public Matcher getInstance(short... expectedValues) {
 		return allOf(expectedValues);
 	}
 
 	@Override
-	public Matcher getIncompleteInstance(byte... expectedValues) {
+	public Matcher getInstance(byte... expectedValues) {
 		return allOf(expectedValues);
 	}
 
 	@Override
-	public Matcher getIncompleteInstance(char... expectedValues) {
+	public Matcher getInstance(char... expectedValues) {
 		return allOf(expectedValues);
 	}
 
 	@Override
-	public Matcher getIncompleteInstance(boolean... expectedValues) {
+	public Matcher getInstance(boolean... expectedValues) {
 		return allOf(expectedValues);
 	}
 

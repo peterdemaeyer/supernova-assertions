@@ -263,7 +263,7 @@ public final class Context implements AutoCloseable {
 	private static final Map<Matcher, CompletionFunction> COMPLETION_FUNCTIONS_BY_MATCHER = new WeakHashMap<>();
 
 	public static Matcher newIncompleteMatcher(CompletionFunction completionFunction) {
-		final IncompleteMatcher matcher = new IncompleteMatcher();
+		final ContextSensitiveMatcher matcher = new ContextSensitiveMatcher();
 		COMPLETION_FUNCTIONS_BY_MATCHER.put(matcher, completionFunction);
 //		MATCHER_FACTORIES_BY_PROTOTYPE.put(matcher, new AnonymousMatcherFactory(IncompleteMatcher.MATCHER_FACTORY));
 		return matcher;
