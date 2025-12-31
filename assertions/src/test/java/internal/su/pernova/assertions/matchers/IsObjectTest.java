@@ -14,9 +14,16 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import su.pernova.assertions.Matcher;
+import su.pernova.assertions.MatcherContractTest;
 import su.pernova.assertions.Subject;
 
-class IsObjectTest {
+class IsObjectTest implements MatcherContractTest {
+
+	@Override
+	public IsObject getInstance() {
+		return (IsObject) is(new Object());
+	}
 
 	@Test
 	void isMatchesNull() {
@@ -62,8 +69,8 @@ class IsObjectTest {
 
 	@Test
 	void stringValue() {
-		assertEquals("is: \"Supernova\"", is("Supernova").toString());
-		assertEquals("is: MILLISECONDS", is(MILLISECONDS).toString());
-		assertEquals("is: ['x', 22, \"abc\"]", is(List.of('x', BigInteger.valueOf(22L), "abc")).toString());
+		assertEquals("is(Supernova)", is("Supernova").toString());
+		assertEquals("is(MILLISECONDS)", is(MILLISECONDS).toString());
+		assertEquals("is([x, 22, abc])", is(List.of('x', BigInteger.valueOf(22L), "abc")).toString());
 	}
 }

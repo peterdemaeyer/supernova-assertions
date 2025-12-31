@@ -11,7 +11,7 @@ import internal.su.pernova.assertions.matchers.AllOf;
 import internal.su.pernova.assertions.matchers.AnyOf;
 import internal.su.pernova.assertions.matchers.CloseTo;
 import internal.su.pernova.assertions.matchers.EqualTo;
-import internal.su.pernova.assertions.matchers.ForwardingMatcher;
+import internal.su.pernova.assertions.matchers.ContextProvidingMatcher;
 import internal.su.pernova.assertions.matchers.InstanceOf;
 import internal.su.pernova.assertions.matchers.Is;
 import internal.su.pernova.assertions.matchers.IsBoolean;
@@ -272,7 +272,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher equalTo(Matcher matcher) {
-		return Context.putMatcherFactory(m -> new ForwardingMatcher("equal to", m), matcher, EqualTo.MATCHER_FACTORY);
+		return Context.putMatcherFactory(m -> new ContextProvidingMatcher("equal to", m), matcher, EqualTo.MATCHER_FACTORY);
 	}
 
 	/**
@@ -297,7 +297,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher instanceOf(Matcher matcher) {
-		return Context.putMatcherFactory(m -> new ForwardingMatcher("instance of", m), matcher, InstanceOf.MATCHER_FACTORY);
+		return Context.putMatcherFactory(m -> new ContextProvidingMatcher("instance of", m), matcher, InstanceOf.MATCHER_FACTORY);
 	}
 
 	/**
@@ -324,7 +324,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher sameAs(Matcher matcher) {
-		return Context.putMatcherFactory(m -> new ForwardingMatcher(SAME_AS, m), matcher, Is.getMatcherFactory(SAME_AS));
+		return Context.putMatcherFactory(m -> new ContextProvidingMatcher(SAME_AS, m), matcher, Is.getMatcherFactory(SAME_AS));
 	}
 
 	/**

@@ -12,7 +12,14 @@ import java.math.BigInteger;
 
 import org.junit.jupiter.api.Test;
 
-class IsDoubleTest {
+import su.pernova.assertions.MatcherContractTest;
+
+class IsDoubleTest implements MatcherContractTest {
+
+	@Override
+	public IsDouble getInstance() {
+		return (IsDouble) is(8.5);
+	}
 
 	@Test
 	void isDoubleMatchesDecimalNumber() {
@@ -101,6 +108,6 @@ class IsDoubleTest {
 
 	@Test
 	void stringValue() {
-		assertEquals("is: 5.7", is(5.7).toString());
+		assertEquals("is(5.7)", is(5.7).toString());
 	}
 }

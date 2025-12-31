@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.WeakHashMap;
 import java.util.function.Function;
 
-import internal.su.pernova.assertions.matchers.ForwardingMatcher;
+import internal.su.pernova.assertions.matchers.ContextProvidingMatcher;
 
 /**
  * This class implements a framework that allows providing context to matchers.
@@ -320,7 +320,7 @@ public final class Context implements AutoCloseable {
 	}
 
 	public static Matcher forwardMatcherFactory(CharSequence name, Matcher destination) {
-		return forwardMatcherFactory(d -> new ForwardingMatcher(name, d), name, destination);
+		return forwardMatcherFactory(d -> new ContextProvidingMatcher(name, d), name, destination);
 	}
 
 	/**

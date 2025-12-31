@@ -5,11 +5,11 @@ import static java.util.Objects.requireNonNull;
 import su.pernova.assertions.Describable;
 import su.pernova.assertions.Description;
 
-public class ForwardingDescribable<D extends Describable> extends NamedDescribable implements Describable {
+public class ContextProvidingDescribable<D extends Describable> extends NamedDescribable implements Describable {
 
 	protected final D destination;
 
-	public ForwardingDescribable(CharSequence name, D destination) {
+	public ContextProvidingDescribable(CharSequence name, D destination) {
 		super(name);
 		this.destination = requireNonNull(destination, "destination is null");
 	}

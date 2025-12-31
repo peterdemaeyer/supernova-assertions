@@ -8,14 +8,14 @@ import java.util.Map;
 import su.pernova.assertions.Matcher;
 import su.pernova.assertions.MatcherFactory;
 
-public class Is extends ForwardingMatcher {
+public class Is extends ContextProvidingMatcher {
 
 	private static final ReferenceQueue<MatcherFactory> REFERENCE_QUEUE = new ReferenceQueue<>();
 
 	private static final Map<CharSequence, NamedWeakReference> MATCHER_FACTORIES_BY_NAME = new HashMap<>();
 
-	public Is(CharSequence name, Matcher delegatee) {
-		super(name, delegatee);
+	public Is(CharSequence name, Matcher destination) {
+		super(name, destination);
 	}
 
 	public Is(Matcher delegatee) {
