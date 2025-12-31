@@ -53,7 +53,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(Object expectedValue) {
-		return Context.fork(And::new, this, (CompletionFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return Context.fork(And::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
 	}
 
 	/**
@@ -64,7 +64,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(double expectedValue) {
-		return Context.fork(And::new, this, (CompletionFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return Context.fork(And::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
 	}
 
 	/**
@@ -75,7 +75,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(float expectedValue) {
-		return Context.fork(And::new, this, (CompletionFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return Context.fork(And::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
 	}
 
 	/**
@@ -86,7 +86,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(long expectedValue) {
-		return Context.fork(And::new, this, (CompletionFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return Context.fork(And::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
 	}
 
 	/**
@@ -97,7 +97,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(int expectedValue) {
-		return Context.fork(And::new, this, (CompletionFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return Context.fork(And::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
 	}
 
 	/**
@@ -108,7 +108,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(short expectedValue) {
-		return Context.fork(And::new, this, (CompletionFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return Context.fork(And::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
 	}
 
 	/**
@@ -119,7 +119,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(byte expectedValue) {
-		return Context.fork(And::new, this, (CompletionFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return Context.fork(And::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
 	}
 
 	/**
@@ -130,7 +130,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(char expectedValue) {
-		return Context.fork(And::new, this, (CompletionFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return Context.fork(And::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
 	}
 
 	/**
@@ -141,7 +141,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(boolean expectedValue) {
-		return Context.fork(And::new, this, (CompletionFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return Context.fork(And::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
 	}
 
 	/**
@@ -165,7 +165,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher or(Object expectedValue) {
-		return Context.fork(Or::new, this, (CompletionFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return Context.fork(Or::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
 	}
 
 	/**
@@ -176,7 +176,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher or(double expectedValue) {
-		return Context.fork(Or::new, this, (CompletionFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return Context.fork(Or::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
 	}
 
 	/**
@@ -187,7 +187,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher or(float expectedValue) {
-		return Context.fork(Or::new, this, (CompletionFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return Context.fork(Or::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
 	}
 
 	/**
@@ -198,7 +198,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher or(long expectedValue) {
-		return Context.fork(Or::new, this, (CompletionFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return Context.fork(Or::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
 	}
 
 	/**
@@ -209,7 +209,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher or(int expectedValue) {
-		return Context.fork(Or::new, this, (CompletionFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return Context.fork(Or::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
 	}
 
 	/**
@@ -220,7 +220,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher or(short expectedValue) {
-		return Context.fork(Or::new, this, (CompletionFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return Context.fork(Or::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
 	}
 
 	/**
@@ -231,7 +231,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher or(byte expectedValue) {
-		return Context.fork(Or::new, this, (CompletionFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return Context.fork(Or::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
 	}
 
 	/**
@@ -242,7 +242,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher or(char expectedValue) {
-		return Context.fork(Or::new, this, (CompletionFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return Context.fork(Or::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
 	}
 
 	/**
@@ -253,6 +253,6 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher or(boolean expectedValue) {
-		return Context.fork(Or::new, this, (CompletionFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return Context.fork(Or::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
 	}
 }

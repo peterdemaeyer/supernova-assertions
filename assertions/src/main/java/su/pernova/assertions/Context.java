@@ -259,11 +259,11 @@ public final class Context implements AutoCloseable {
 
 	private static final Map<Matcher, ImplicitMatcherFactory> MATCHER_FACTORIES_BY_PROTOTYPE = new WeakHashMap<>();
 
-	private static final Map<Matcher, CompletionFunction> COMPLETION_FUNCTIONS_BY_MATCHER = new WeakHashMap<>();
+	private static final Map<Matcher, ContextProvidingFunction> COMPLETION_FUNCTIONS_BY_MATCHER = new WeakHashMap<>();
 
-	public static Matcher newIncompleteMatcher(CompletionFunction completionFunction) {
+	public static Matcher newIncompleteMatcher(ContextProvidingFunction contextProvidingFunction) {
 		final ContextSensitiveMatcher matcher = new ContextSensitiveMatcher();
-		COMPLETION_FUNCTIONS_BY_MATCHER.put(matcher, completionFunction);
+		COMPLETION_FUNCTIONS_BY_MATCHER.put(matcher, contextProvidingFunction);
 //		MATCHER_FACTORIES_BY_PROTOTYPE.put(matcher, new AnonymousMatcherFactory(IncompleteMatcher.MATCHER_FACTORY));
 		return matcher;
 	}
@@ -294,10 +294,10 @@ public final class Context implements AutoCloseable {
 		requireNonNull(matcherFactory, "matcher factory is null");
 		final ImplicitMatcherFactory implicitMatcherFactory = new ImplicitMatcherFactory(matcherFactory);
 		synchronized (Context.class) {
-			final CompletionFunction completionFunction = COMPLETION_FUNCTIONS_BY_MATCHER.get(destination);
+			final ContextProvidingFunction contextProvidingFunction = COMPLETION_FUNCTIONS_BY_MATCHER.get(destination);
 			Matcher prototype;
-			if (completionFunction != null) {
-				prototype = prototypeFunction.apply(completionFunction.complete(implicitMatcherFactory));
+			if (contextProvidingFunction != null) {
+				prototype = prototypeFunction.apply(contextProvidingFunction.provide(implicitMatcherFactory));
 			} else {
 				prototype = prototypeFunction.apply(destination);
 			}
@@ -332,7 +332,7 @@ public final class Context implements AutoCloseable {
 	 * @return the bi-matcher, never {@code null}.
 	 * @see #forwardMatcherFactory
 	 */
-	public static Matcher fork(ForkFunction forkFunction, Matcher origin, CompletionFunction destination) {
+	public static Matcher fork(ForkFunction forkFunction, Matcher origin, ContextProvidingFunction destination) {
 		return fork(forkFunction, origin, newIncompleteMatcher(destination));
 	}
 
@@ -352,9 +352,9 @@ public final class Context implements AutoCloseable {
 	}
 
 	public static synchronized Matcher provide(Matcher matcher, MatcherFactory matcherFactory) {
-		final CompletionFunction completionFunction = COMPLETION_FUNCTIONS_BY_MATCHER.get(matcher);
-		if (completionFunction != null) {
-			return completionFunction.complete(matcherFactory);
+		final ContextProvidingFunction contextProvidingFunction = COMPLETION_FUNCTIONS_BY_MATCHER.get(matcher);
+		if (contextProvidingFunction != null) {
+			return contextProvidingFunction.provide(matcherFactory);
 		}
 		return matcher;
 	}
