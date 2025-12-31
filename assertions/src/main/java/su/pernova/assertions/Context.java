@@ -2,13 +2,9 @@ package su.pernova.assertions;
 
 import static java.util.Objects.requireNonNull;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.WeakHashMap;
 import java.util.function.Function;
 
@@ -27,40 +23,9 @@ import internal.su.pernova.assertions.matchers.ContextProvidingMatcher;
  *
  * @since 2.0.0
  */
-public final class Context implements AutoCloseable {
+public final class Context {
 
 	private static final Map<Object, Entry<?>> ENTRIES_BY_ORIGIN = new WeakHashMap<>();
-
-	private final Entry<Subject> root;
-
-	/**
-	 * Opens a context for a given subject for internal use only.
-	 *
-	 * @param subject a subject to open a context for.
-	 */
-	Context(Subject subject) {
-		synchronized (ENTRIES_BY_ORIGIN) {
-			root = getEntry(subject);
-			walkAndSetAll(root.destinations, null, null);
-		}
-		this.matcherFactory = null;
-	}
-
-	private final ImplicitMatcherFactory matcherFactory;
-
-	private Context(ImplicitMatcherFactory matcherFactory) {
-		this.matcherFactory = matcherFactory;
-		this.root = null;
-	}
-
-	public MatcherFactory getFactory() {
-		return matcherFactory;
-	}
-
-	public Matcher putMatcherFactory(Matcher prototype) {
-		MATCHER_FACTORIES_BY_PROTOTYPE.put(prototype, matcherFactory);
-		return prototype;
-	}
 
 	/**
 	 * For internal use. Always call this from within a {@code synchronized (ENTRIES_BY_ORIGIN)} block.
@@ -73,48 +38,6 @@ public final class Context implements AutoCloseable {
 	@SuppressWarnings("unchecked")
 	private static <O> Entry<O> computeEntryIfAbsent(O origin) {
 		return (Entry<O>) ENTRIES_BY_ORIGIN.computeIfAbsent(origin, o -> new Entry<>(origin));
-	}
-
-	private void walkAndSetAll(Collection<Entry<?>> entries, Matcher matcher, Descriptor matcherDescriptor) {
-		for (Entry<?> entry : entries) {
-			if ((entry.origin instanceof Matcher) && (entry.descriptor != null)) {
-				matcher = (Matcher) entry.origin;
-				matcherDescriptor = entry.descriptor;
-			}
-			for (Iterator<WeakReference<Listener>> it = entry.listeners.iterator(); it.hasNext(); ) {
-				Listener listener = it.next().get();
-				if (listener != null) {
-					listener.allSet(root.origin, root.descriptor, matcher, matcherDescriptor);
-				} else {
-					it.remove();
-				}
-			}
-			walkAndSetAll(entry.destinations, matcher, matcherDescriptor);
-		}
-	}
-
-	/**
-	 * Closes this context so that held resources can be garbage collected.
-	 */
-	@Override
-	public void close() {
-		synchronized (ENTRIES_BY_ORIGIN) {
-			walkAndUnsetAll(root.destinations);
-		}
-	}
-
-	private void walkAndUnsetAll(Collection<Entry<?>> entries) {
-		for (Entry<?> entry : entries) {
-			for (Iterator<WeakReference<Listener>> it = entry.listeners.iterator(); it.hasNext(); ) {
-				Listener listener = it.next().get();
-				if (listener != null) {
-					listener.allUnset();
-				} else {
-					it.remove();
-				}
-			}
-			walkAndUnsetAll(entry.destinations);
-		}
 	}
 
 	/**
@@ -197,11 +120,6 @@ public final class Context implements AutoCloseable {
 			return this;
 		}
 
-		public Setter<P> addListener(Listener listener) {
-			entry.listeners.add(new WeakElement<>(requireNonNull(listener, "listener is null")));
-			return this;
-		}
-
 		/**
 		 * Gets this setter's origin.
 		 *
@@ -212,36 +130,6 @@ public final class Context implements AutoCloseable {
 		}
 	}
 
-	private static class WeakElement<T> extends WeakReference<T> {
-
-		WeakElement(T referent) {
-			super(referent);
-		}
-
-		@Override
-		public int hashCode() {
-			return Objects.hashCode(get());
-		}
-
-		@Override
-		public boolean equals(Object other) {
-			if (!(other instanceof WeakElement)) {
-				return false;
-			}
-			return Objects.equals(get(), ((WeakElement<?>) other).get());
-		}
-	}
-
-	/**
-	 * @since 2.0.0
-	 */
-	public interface Listener {
-
-		void allSet(Subject subject, Descriptor subjectDescriptor, Matcher matcher, Descriptor matcherDescriptor);
-
-		void allUnset();
-	}
-
 	private static class Entry<O> {
 
 		final O origin;
@@ -249,8 +137,6 @@ public final class Context implements AutoCloseable {
 		Descriptor descriptor;
 
 		final List<Entry<?>> destinations = new ArrayList<>(1);
-
-		final Collection<WeakReference<Listener>> listeners = new ArrayList<>(1);
 
 		Entry(O origin) {
 			this.origin = origin;
@@ -264,7 +150,6 @@ public final class Context implements AutoCloseable {
 	public static Matcher newIncompleteMatcher(ContextProvidingFunction contextProvidingFunction) {
 		final ContextSensitiveMatcher matcher = new ContextSensitiveMatcher();
 		COMPLETION_FUNCTIONS_BY_MATCHER.put(matcher, contextProvidingFunction);
-//		MATCHER_FACTORIES_BY_PROTOTYPE.put(matcher, new AnonymousMatcherFactory(IncompleteMatcher.MATCHER_FACTORY));
 		return matcher;
 	}
 
@@ -314,8 +199,6 @@ public final class Context implements AutoCloseable {
 		requireNonNull(destinationFactory, "factory is null for: " + destination);
 		final Matcher forwardMatcher = forwardingFunction.apply(destination);
 		requireNonNull(forwardMatcher, "forwarding function returned null for: " + destination);
-//		final ForwardingMatcherFactory forwardingMatcherFactory = new ForwardingMatcherFactory(name, destinationFactory.delegatee(), forwardingFunction);
-//		MATCHER_FACTORIES_BY_PROTOTYPE.put(forwardMatcher, new AnonymousMatcherFactory(forwardingMatcherFactory));
 		return forwardMatcher;
 	}
 
