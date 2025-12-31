@@ -1,6 +1,7 @@
 package internal.su.pernova.assertions.matchers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 import static su.pernova.assertions.AssertionTestUtils.assertThrowsAssertionErrorWithMessage;
 import static su.pernova.assertions.Assertions.assertThat;
@@ -12,7 +13,14 @@ import java.math.BigInteger;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
 
-class IsByteTest {
+import su.pernova.assertions.MatcherContractTest;
+
+class IsByteTest implements MatcherContractTest {
+
+	@Override
+	public IsByte getInstance() {
+		return assertInstanceOf(IsByte.class, is((byte) -45));
+	}
 
 	@Test
 	void isByteMatchesDecimalNumber() {
@@ -83,6 +91,6 @@ class IsByteTest {
 
 	@Test
 	void stringValue() {
-		assertEquals("is: 77", is((byte) 77).toString());
+		assertEquals("is(77)", is((byte) 77).toString());
 	}
 }

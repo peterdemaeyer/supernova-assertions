@@ -2,6 +2,7 @@ package internal.su.pernova.assertions.matchers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static su.pernova.assertions.AssertionTestUtils.assertThrowsAssertionErrorWithMessage;
@@ -26,58 +27,59 @@ import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.support.ParameterDeclarations;
 
+import su.pernova.assertions.ContextSensitiveMatcher;
 import su.pernova.assertions.Matcher;
 
 class AnyOfTest implements MultiMatcherContractTest {
 
 	@Override
-	public Matcher getInstance() {
-		return is(anyOf(new Object(), new Object(), new Object()));
+	public Is getInstance() {
+		return assertInstanceOf(Is.class, is(anyOf(new Object(), new Object(), new Object())));
 	}
 
 	@Override
-	public Matcher getInstance(Object... expectedValues) {
-		return anyOf(expectedValues);
+	public ContextSensitiveMatcher getInstance(Object... expectedValues) {
+		return assertInstanceOf(ContextSensitiveMatcher.class, anyOf(expectedValues));
 	}
 
 	@Override
-	public Matcher getInstance(double... expectedValues) {
-		return anyOf(expectedValues);
+	public ContextSensitiveMatcher getInstance(double... expectedValues) {
+		return assertInstanceOf(ContextSensitiveMatcher.class, anyOf(expectedValues));
 	}
 
 	@Override
-	public Matcher getInstance(float... expectedValues) {
-		return anyOf(expectedValues);
+	public ContextSensitiveMatcher getInstance(float... expectedValues) {
+		return assertInstanceOf(ContextSensitiveMatcher.class, anyOf(expectedValues));
 	}
 
 	@Override
-	public Matcher getInstance(long... expectedValues) {
-		return anyOf(expectedValues);
+	public ContextSensitiveMatcher getInstance(long... expectedValues) {
+		return assertInstanceOf(ContextSensitiveMatcher.class, anyOf(expectedValues));
 	}
 
 	@Override
-	public Matcher getInstance(int... expectedValues) {
-		return anyOf(expectedValues);
+	public ContextSensitiveMatcher getInstance(int... expectedValues) {
+		return assertInstanceOf(ContextSensitiveMatcher.class, anyOf(expectedValues));
 	}
 
 	@Override
-	public Matcher getInstance(short... expectedValues) {
-		return anyOf(expectedValues);
+	public ContextSensitiveMatcher getInstance(short... expectedValues) {
+		return assertInstanceOf(ContextSensitiveMatcher.class, anyOf(expectedValues));
 	}
 
 	@Override
-	public Matcher getInstance(byte... expectedValues) {
-		return anyOf(expectedValues);
+	public ContextSensitiveMatcher getInstance(byte... expectedValues) {
+		return assertInstanceOf(ContextSensitiveMatcher.class, anyOf(expectedValues));
 	}
 
 	@Override
-	public Matcher getInstance(char... expectedValues) {
-		return anyOf(expectedValues);
+	public ContextSensitiveMatcher getInstance(char... expectedValues) {
+		return assertInstanceOf(ContextSensitiveMatcher.class, anyOf(expectedValues));
 	}
 
 	@Override
-	public Matcher getInstance(boolean... expectedValues) {
-		return anyOf(expectedValues);
+	public ContextSensitiveMatcher getInstance(boolean... expectedValues) {
+		return assertInstanceOf(ContextSensitiveMatcher.class, anyOf(expectedValues));
 	}
 
 	@ParameterizedTest

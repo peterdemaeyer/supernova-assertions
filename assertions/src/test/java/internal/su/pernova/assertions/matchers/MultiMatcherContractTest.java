@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import su.pernova.assertions.ContextSensitiveMatcher;
 import su.pernova.assertions.Matcher;
 import su.pernova.assertions.MatcherContractTest;
 import su.pernova.assertions.NoContextException;
@@ -22,39 +23,39 @@ interface MultiMatcherContractTest extends MatcherContractTest {
 
 	/// @param expectedValues expected values, not `null`.
 	/// @return a context-sensitive matcher, not `null`.
-	Matcher getInstance(Object... expectedValues);
+	ContextSensitiveMatcher getInstance(Object... expectedValues);
 
 	/// @param expectedValues expected values, not `null`.
 	/// @return a context-sensitive matcher, not `null`.
-	Matcher getInstance(double... expectedValues);
+	ContextSensitiveMatcher getInstance(double... expectedValues);
 
 	/// @param expectedValues expected values, not `null`.
 	/// @return a context-sensitive matcher, not `null`.
-	Matcher getInstance(float... expectedValues);
+	ContextSensitiveMatcher getInstance(float... expectedValues);
 
 	/// @param expectedValues expected values, not `null`.
 	/// @return a context-sensitive matcher, not `null`.
-	Matcher getInstance(long... expectedValues);
+	ContextSensitiveMatcher getInstance(long... expectedValues);
 
 	/// @param expectedValues expected values, not `null`.
 	/// @return a context-sensitive matcher, not `null`.
-	Matcher getInstance(int... expectedValues);
+	ContextSensitiveMatcher getInstance(int... expectedValues);
 
 	/// @param expectedValues expected values, not `null`.
 	/// @return a context-sensitive matcher, not `null`.
-	Matcher getInstance(short... expectedValues);
+	ContextSensitiveMatcher getInstance(short... expectedValues);
 
 	/// @param expectedValues expected values, not `null`.
 	/// @return a context-sensitive matcher, not `null`.
-	Matcher getInstance(byte... expectedValues);
+	ContextSensitiveMatcher getInstance(byte... expectedValues);
 
 	/// @param expectedValues expected values, not `null`.
 	/// @return a context-sensitive matcher, not `null`.
-	Matcher getInstance(char... expectedValues);
+	ContextSensitiveMatcher getInstance(char... expectedValues);
 
 	/// @param expectedValues expected values, not `null`.
 	/// @return a context-sensitive matcher, not `null`.
-	Matcher getInstance(boolean... expectedValues);
+	ContextSensitiveMatcher getInstance(boolean... expectedValues);
 
 	@Test
 	default void matchingObjectsThrowsWhenMatcherHasNoContext() {

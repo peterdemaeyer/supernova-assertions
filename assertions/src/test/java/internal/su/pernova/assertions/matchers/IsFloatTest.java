@@ -2,6 +2,7 @@ package internal.su.pernova.assertions.matchers;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 import static su.pernova.assertions.AssertionTestUtils.assertThrowsAssertionErrorWithMessage;
 import static su.pernova.assertions.Assertions.assertThat;
@@ -12,7 +13,14 @@ import java.math.BigInteger;
 
 import org.junit.jupiter.api.Test;
 
-class IsFloatTest {
+import su.pernova.assertions.MatcherContractTest;
+
+class IsFloatTest implements MatcherContractTest {
+
+	@Override
+	public IsFloat getInstance() {
+		return assertInstanceOf(IsFloat.class, is(065f));
+	}
 
 	@Test
 	void isFloatMatchesDecimalNumber() {
@@ -101,6 +109,6 @@ class IsFloatTest {
 
 	@Test
 	void stringValue() {
-		assertEquals("is: -5.75", is(-5.75f).toString());
+		assertEquals("is(-5.75)", is(-5.75f).toString());
 	}
 }

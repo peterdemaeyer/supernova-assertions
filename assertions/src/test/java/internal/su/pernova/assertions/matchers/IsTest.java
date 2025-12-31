@@ -1,5 +1,7 @@
 package internal.su.pernova.assertions.matchers;
 
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+
 import static su.pernova.assertions.Matchers.equalTo;
 import static su.pernova.assertions.Matchers.is;
 
@@ -11,7 +13,7 @@ class IsTest implements MatcherContractTest {
 
 	@Override
 	public Is getInstance() {
-		return (Is) is(equalTo(new Object()));
+		return assertInstanceOf(Is.class, is(equalTo(new Object())));
 	}
 
 	static class MatcherFactoryTest implements MatcherFactoryContractTest {

@@ -1,6 +1,7 @@
 package internal.su.pernova.assertions.matchers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 import static su.pernova.assertions.AssertionTestUtils.assertThrowsAssertionErrorWithMessage;
 import static su.pernova.assertions.Assertions.assertThat;
@@ -11,7 +12,14 @@ import java.math.BigInteger;
 
 import org.junit.jupiter.api.Test;
 
-class IsLongTest {
+import su.pernova.assertions.MatcherContractTest;
+
+class IsLongTest implements MatcherContractTest {
+
+	@Override
+	public IsLong getInstance() {
+		return assertInstanceOf(IsLong.class, is(456L));
+	}
 
 	@Test
 	void isLongMatchesDecimalNumber() {
@@ -80,6 +88,6 @@ class IsLongTest {
 
 	@Test
 	void stringValue() {
-		assertEquals("is: 8856688888851863511", is(8856688888851863511L).toString());
+		assertEquals("is(8856688888851863511)", is(8856688888851863511L).toString());
 	}
 }

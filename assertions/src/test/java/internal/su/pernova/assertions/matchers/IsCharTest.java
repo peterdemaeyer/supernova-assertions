@@ -1,6 +1,7 @@
 package internal.su.pernova.assertions.matchers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 import static su.pernova.assertions.AssertionTestUtils.assertThrowsAssertionErrorWithMessage;
 import static su.pernova.assertions.Assertions.assertThat;
@@ -11,7 +12,15 @@ import java.math.BigInteger;
 
 import org.junit.jupiter.api.Test;
 
-class IsCharTest {
+import su.pernova.assertions.Matcher;
+import su.pernova.assertions.MatcherContractTest;
+
+class IsCharTest implements MatcherContractTest {
+
+	@Override
+	public IsChar getInstance() {
+		return assertInstanceOf(IsChar.class, is('j'));
+	}
 
 	@Test
 	void isCharMatchesDecimalNumber() {
@@ -78,6 +87,6 @@ class IsCharTest {
 
 	@Test
 	void stringValue() {
-		assertEquals("is: 'y'", is('y').toString());
+		assertEquals("is(y)", is('y').toString());
 	}
 }

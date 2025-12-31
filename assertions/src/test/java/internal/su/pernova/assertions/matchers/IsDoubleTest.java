@@ -2,6 +2,7 @@ package internal.su.pernova.assertions.matchers;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 import static su.pernova.assertions.AssertionTestUtils.assertThrowsAssertionErrorWithMessage;
 import static su.pernova.assertions.Assertions.assertThat;
@@ -18,7 +19,7 @@ class IsDoubleTest implements MatcherContractTest {
 
 	@Override
 	public IsDouble getInstance() {
-		return (IsDouble) is(8.5);
+		return assertInstanceOf(IsDouble.class, is(8.5));
 	}
 
 	@Test
