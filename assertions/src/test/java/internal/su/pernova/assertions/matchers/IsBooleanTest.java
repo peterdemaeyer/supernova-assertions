@@ -5,6 +5,7 @@ import static java.lang.Boolean.TRUE;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 import static su.pernova.assertions.AssertionTestUtils.assertThrowsAssertionErrorWithMessage;
 import static su.pernova.assertions.Assertions.assertThat;
@@ -13,7 +14,14 @@ import static su.pernova.assertions.Matchers.is;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
 
-class IsBooleanTest {
+import su.pernova.assertions.MatcherContractTest;
+
+class IsBooleanTest implements MatcherContractTest {
+
+	@Override
+	public IsBoolean getInstance() {
+		return assertInstanceOf(IsBoolean.class, is(true));
+	}
 
 	@Test
 	void isBooleanMatches() {
@@ -58,6 +66,6 @@ class IsBooleanTest {
 
 	@Test
 	void stringValue() {
-		assertEquals("is: true", is(true).toString());
+		assertEquals("is(true)", is(true).toString());
 	}
 }
