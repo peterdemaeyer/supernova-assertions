@@ -64,19 +64,17 @@ public final class Assertions {
 		}
 		Context.set(subject).forward(matchers);
 		for (Matcher matcher : matchers) {
-//			try (Context context = new Context(subject)) {
-				if (!subject.match(matcher)) {
-					Description description = new AppendableDescription(new StringBuilder())
-							.appendText("expected that");
-					subject.describe(description);
-					matcher.describe(description);
-					description.appendText(lineSeparator())
-							.appendText("but");
-					matcher.describeMismatch(description);
-					subject.describeMismatch(description);
-					thrower.throwFailure(description.toString(), description.getExpectedValue(), description.getActualValue());
-				}
-//			}
+			if (!subject.match(matcher)) {
+				Description description = new AppendableDescription(new StringBuilder())
+						.appendText("expected that");
+				subject.describe(description);
+				matcher.describe(description);
+				description.appendText(lineSeparator())
+						.appendText("but");
+				matcher.describeMismatch(description);
+				subject.describeMismatch(description);
+				thrower.throwFailure(description.toString(), description.getExpectedValue(), description.getActualValue());
+			}
 		}
 	}
 
