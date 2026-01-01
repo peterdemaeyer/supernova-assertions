@@ -18,8 +18,8 @@ public class Is extends ContextProvidingMatcher {
 		super(name, destination);
 	}
 
-	public Is(Matcher delegatee) {
-		this(null, delegatee);
+	public Is(Matcher destination) {
+		this(null, destination);
 	}
 
 	public synchronized static MatcherFactory getMatcherFactory(CharSequence name) {
