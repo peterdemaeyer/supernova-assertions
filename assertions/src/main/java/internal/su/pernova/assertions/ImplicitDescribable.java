@@ -20,7 +20,7 @@ public class ImplicitDescribable<D extends Describable> implements Describable {
 
 			@Override
 			public Description appendText(CharSequence text) {
-				// Mute appendText once, then continue as usual with delegatee.
+				// Inhibit appendText once, then continue as usual with description.
 				return description;
 			}
 		});
