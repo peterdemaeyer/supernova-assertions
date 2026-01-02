@@ -62,7 +62,6 @@ public final class Assertions {
 		if (matchers.length == 0) {
 			matchers = new Matcher[] { is(true) };
 		}
-		Context.set(subject).forward(matchers);
 		for (Matcher matcher : matchers) {
 			if (!subject.match(matcher)) {
 				Description description = new AppendableDescription(new StringBuilder())

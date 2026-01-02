@@ -20,12 +20,6 @@ import internal.su.pernova.assertions.subjects.ObjectSubject;
  */
 public final class Subjects {
 
-	public static final Descriptor SUBJECT = new Descriptor(Subjects.class, "subject");
-
-	public static final Descriptor CONDITION = new Descriptor(Subjects.class, "condition");
-
-	public static final Descriptor CONTENT_OF = new Descriptor(Subjects.class, "contentOf");
-
 	private Subjects() {
 	}
 
@@ -41,7 +35,7 @@ public final class Subjects {
 	}
 
 	private static Subject subject(CharSequence name, Object actualValue) {
-		return new ObjectSubject(actualValue).contextualize(SUBJECT);
+		return new ObjectSubject(actualValue);
 	}
 
 	/**
@@ -56,7 +50,7 @@ public final class Subjects {
 	}
 
 	private static Subject condition(CharSequence name, Object actualValue) {
-		return new Condition(name, actualValue).contextualize(CONDITION);
+		return new Condition(name, actualValue);
 	}
 
 	/**
@@ -79,7 +73,7 @@ public final class Subjects {
 	 * @since 2.0.0
 	 */
 	public static Subject contentOf(Object actualValue, Charset charset) {
-		return new ContentOf(actualValue, charset).contextualize(CONTENT_OF);
+		return new ContentOf(actualValue, charset);
 	}
 
 	static Subject implicitSubject(Object actualValue, Matcher... matchers) {

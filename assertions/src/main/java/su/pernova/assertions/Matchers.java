@@ -10,8 +10,8 @@ import java.util.regex.Pattern;
 import internal.su.pernova.assertions.matchers.AllOf;
 import internal.su.pernova.assertions.matchers.AnyOf;
 import internal.su.pernova.assertions.matchers.CloseTo;
-import internal.su.pernova.assertions.matchers.EqualTo;
 import internal.su.pernova.assertions.matchers.ContextProvidingMatcher;
+import internal.su.pernova.assertions.matchers.EqualTo;
 import internal.su.pernova.assertions.matchers.InstanceOf;
 import internal.su.pernova.assertions.matchers.Is;
 import internal.su.pernova.assertions.matchers.IsBoolean;
@@ -38,13 +38,6 @@ import internal.su.pernova.assertions.matchers.Regex;
 public final class Matchers {
 
 	private static final CharSequence SAME_AS = "same as";
-
-	private static final CharSequence IDENTICAL_TO = "identical to";
-
-	/**
-	 * @since 2.0.0
-	 */
-	public static final Descriptor REGEX = new Descriptor(Matchers.class, "regex");
 
 	private Matchers() {
 	}
@@ -375,7 +368,7 @@ public final class Matchers {
 	 * @since 1.1.0
 	 */
 	public static Matcher regex(String regex) {
-		return new Regex(regex).contextualize(REGEX);
+		return new Regex(regex);
 	}
 
 	/**

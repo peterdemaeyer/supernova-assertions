@@ -4,9 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.regex.Pattern;
 
-import su.pernova.assertions.Context;
 import su.pernova.assertions.Description;
-import su.pernova.assertions.Descriptor;
 import su.pernova.assertions.Matcher;
 
 public class Regex implements Matcher {
@@ -29,9 +27,5 @@ public class Regex implements Matcher {
 	@Override
 	public Description describe(Description description) {
 		return Matcher.super.describe(description).appendPrompt().appendArgument(regex);
-	}
-
-	public Regex contextualize(Descriptor descriptor) {
-		return Context.set(this).setDescriptor(descriptor).get();
 	}
 }
