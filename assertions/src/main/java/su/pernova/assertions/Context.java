@@ -109,9 +109,9 @@ public final class Context {
 		}}
 		return newIncompleteMatcher(matcherFactory -> {
 			synchronized (Context.class) {
-				final Matcher destination0 = provide(origin, matcherFactory);
-				final Matcher destination1 = provide(destination, matcherFactory);
-				return forkFunction.fork(destination0, destination1);
+				final Matcher destination1 = provide(origin, matcherFactory);
+				final Matcher destination2 = provide(destination, matcherFactory);
+				return forkFunction.fork(destination1, destination2);
 			}
 		});
 	}
