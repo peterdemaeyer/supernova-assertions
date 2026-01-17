@@ -332,12 +332,12 @@ public final class Matchers {
 	/**
 	 * Returns a context-providing matcher that matches by identity.
 	 *
-	 * @param delegate a context-sensitive matcher, not {@code null}.
+	 * @param destination a context-sensitive matcher, not {@code null}.
 	 * @return a context-providing matcher, not {@code null}.
 	 * @since 2.0.0
 	 */
-	public static Matcher identicalTo(Matcher delegate) {
-		return forward("identical to", delegate);
+	public static Matcher identicalTo(Matcher destination) {
+		return forward("identical to", destination);
 	}
 
 	/**
@@ -386,15 +386,15 @@ public final class Matchers {
 	}
 
 	/**
-	 * Returns a matcher matching an expected number with a given tolerance.
+	 * Returns a matcher matching an expected value with a given tolerance.
 	 *
-	 * @param expected a number to match, not {@code null}.
+	 * @param expectedValue a value to match, not {@code null}.
 	 * @param tolerance a tolerance, not {@code null}.
 	 * @return a matcher matching a number with a given tolerance.
 	 * @since 2.0.0
 	 */
-	public static Matcher closeTo(Number expected, Number tolerance) {
-		return new CloseTo(expected, tolerance);
+	public static Matcher closeTo(Number expectedValue, Number tolerance) {
+		return new CloseTo(expectedValue, tolerance);
 	}
 
 	/**
@@ -410,12 +410,12 @@ public final class Matchers {
 	 * US-ASCII).
 	 * It's a matter of taste whether you prefer this method or the equivalent.
 	 *
-	 * @param delegate a destination, not {@code null}.
+	 * @param destination a destination, not {@code null}.
 	 * @return a matcher that prefixes the description with "do", not {@code null}.
 	 * @see #do_(Matcher)
 	 */
-	public static Matcher dо(Matcher delegate) {
-		return do_(delegate);
+	public static Matcher dо(Matcher destination) {
+		return do_(destination);
 	}
 
 	/**
@@ -424,12 +424,12 @@ public final class Matchers {
 	 * The method has a trailing underscore to deconflict with the reserved keyword "do".
 	 * If you find the trailing underscore visually disturbing, use {@link #dо} instead.
 	 *
-	 * @param delegatee a destination, not {@code null}.
+	 * @param destination a destination, not {@code null}.
 	 * @return a matcher that prefixes the description with "do", not {@code null}.
 	 * @see #dо(Matcher)
 	 */
-	public static Matcher do_(Matcher delegatee) {
-		return Context.forwardMatcherFactory("do", delegatee);
+	public static Matcher do_(Matcher destination) {
+		return Context.forwardMatcherFactory("do", destination);
 	}
 
 	/**
@@ -439,12 +439,12 @@ public final class Matchers {
 	 * assertThat("apple", does(not(match(regex("[0-9]*")))));
 	 * </code></pre>
 	 *
-	 * @param delegate a given destination, which must not be {@code null}.
+	 * @param destination a given destination, which must not be {@code null}.
 	 * @return a matcher that prefixes the description with "does".
 	 * @since 2.0.0
 	 */
-	public static Matcher does(Matcher delegate) {
-		return Context.forwardMatcherFactory("does", delegate);
+	public static Matcher does(Matcher destination) {
+		return Context.forwardMatcherFactory("does", destination);
 	}
 
 	/**
@@ -463,11 +463,11 @@ public final class Matchers {
 	/**
 	 * Returns a matcher that matches when a given object does not.
 	 *
-	 * @param expected an object to not match, which may be {@code null}.
+	 * @param expectedValue an object to not match, which may be {@code null}.
 	 * @return a matcher that does not match a given object.
 	 */
-	public static Matcher not(Object expected) {
-		return not(new IsObject("", true, expected));
+	public static Matcher not(Object expectedValue) {
+		return not(new IsObject("", true, expectedValue));
 	}
 
 	/**
