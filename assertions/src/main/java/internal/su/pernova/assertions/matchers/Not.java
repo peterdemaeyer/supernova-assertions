@@ -2,7 +2,7 @@ package internal.su.pernova.assertions.matchers;
 
 import su.pernova.assertions.Matcher;
 
-public class Not extends ContextProvidingMatcher {
+public class Not extends ImplicitForwardingMatcher {
 
 	public Not(Matcher delegate) {
 		super(null, delegate);

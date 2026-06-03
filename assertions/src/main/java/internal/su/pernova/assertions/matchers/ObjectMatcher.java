@@ -1,14 +1,20 @@
 package internal.su.pernova.assertions.matchers;
 
+import su.pernova.assertions.Context;
 import su.pernova.assertions.Description;
+import su.pernova.assertions.Matcher;
 
-public abstract class ObjectMatcher extends ExpectedValueMatcher {
+public class ObjectMatcher extends ExpectedValueMatcher {
 
 	protected final Object expectedValue;
 
 	public ObjectMatcher(CharSequence name, boolean prompt, Object expectedValue) {
 		super(name, prompt);
 		this.expectedValue = expectedValue;
+	}
+
+	public ObjectMatcher(Object expectedValue) {
+		this("?Object", true, expectedValue);
 	}
 
 	@Override
@@ -19,5 +25,10 @@ public abstract class ObjectMatcher extends ExpectedValueMatcher {
 	@Override
 	public String toString() {
 		return super.toString() + "(" + expectedValue + ")";
+	}
+
+	@Override
+	public Matcher contextualize(Context context) {
+		return context.imply(this, expectedValue);
 	}
 }

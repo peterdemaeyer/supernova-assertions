@@ -1,9 +1,16 @@
 package internal.su.pernova.assertions.matchers;
 
+import su.pernova.assertions.Context;
+import su.pernova.assertions.Matcher;
+import su.pernova.assertions.MatcherFactory;
+
 public class IsDouble extends DoubleMatcher {
+
+	private final MatcherFactory matcherFactory;
 
 	public IsDouble(CharSequence name, boolean prompt, double expectedValue) {
 		super(name, prompt, expectedValue);
+		this.matcherFactory = Is.getMatcherFactory(name);
 	}
 
 	public IsDouble(double expectedValue) {
@@ -18,5 +25,10 @@ public class IsDouble extends DoubleMatcher {
 			return expectedValue == (Character) actualValue;
 		}
 		return false;
+	}
+
+	@Override
+	public Matcher contextualize(Context context) {
+		return context.contextualize(this, matcherFactory, expectedValue);
 	}
 }

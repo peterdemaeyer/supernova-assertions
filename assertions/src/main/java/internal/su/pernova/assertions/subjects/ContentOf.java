@@ -1,26 +1,23 @@
 package internal.su.pernova.assertions.subjects;
 
-import static java.nio.charset.Charset.defaultCharset;
-
-import java.nio.charset.Charset;
-
-import su.pernova.assertions.Matcher;
+import su.pernova.assertions.Context;
+import su.pernova.assertions.Description;
+import su.pernova.assertions.Subject;
 
 public class ContentOf extends ObjectSubject {
 
-	private final Charset charset;
-
-	public ContentOf(Object actualValue, Charset charset) {
-		super(null, actualValue);
-		this.charset = getCharsetOrDefault(charset);
+	public ContentOf(Object actualValue) {
+		super("content", actualValue);
 	}
 
 	@Override
-	public boolean match(Matcher matcher) {
-		return super.match(matcher);
+	public Description describe(Description description) {
+		return super.describe(description).appendPrompt().appendArgument(actualValue);
 	}
 
-	private static Charset getCharsetOrDefault(Charset charset) {
-		return charset != null ? charset : defaultCharset();
+	@Override
+	public Subject contextualize(Context context) {
+		return context.forwardValueContextualizer(Content::of)
+				.contextualize(this, actualValue, ContentOf::new);
 	}
 }

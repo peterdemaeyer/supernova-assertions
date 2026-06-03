@@ -3,6 +3,7 @@ package internal.su.pernova.assertions.matchers;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static su.pernova.assertions.AssertionTestUtils.assertThrowsAssertionErrorWithMessage;
@@ -16,43 +17,82 @@ import java.util.Date;
 import org.junit.jupiter.api.Test;
 
 import su.pernova.assertions.AppendableDescription;
+import su.pernova.assertions.Context;
 import su.pernova.assertions.Description;
 import su.pernova.assertions.Matcher;
+import su.pernova.assertions.MatcherContractTest;
 
-class OrTest {
+class OrTest implements MatcherContractTest {
+
+	@Override
+	public Or getInstance() {
+		return assertInstanceOf(Or.class, is(1).or(2));
+	}
 
 	private static Description newDescription() {
 		return new AppendableDescription(new StringBuilder());
 	}
 
 	@Test
-	void descriptionOfIsIntOrInt() {
+	void isIntOrIntDescription() {
 		assertEquals("is: 1 or: 2",
 				is(1).or(2).describe(newDescription()).toString());
 	}
 
 	@Test
-	void abstractSyntaxTreeAsStringValue() {
-		assertEquals("or{is(1)}{i̶s̶(2)}",
+	void contextualizedIsIntOrIntDescription() {
+		assertEquals("is: 1 or: 2",
+				is(1).or(2).describe(newDescription()).toString());
+	}
+
+	@Test
+	void isIntOrIntStringValue() {
+		assertEquals("or{is(1)}{(2)}",
 				is(1).or(2).toString());
-		assertEquals("is{or{equalTo(1)}{e̶q̶u̶a̶l̶T̶o̶(2)}}",
+	}
+
+	@Test
+	void contextualizedIsIntOrIntStringValue() {
+		assertEquals("or{is(1)}{i̶s̶(2)}",
+				is(1).or(2).contextualize(new Context()).toString());
+	}
+
+	@Test
+	void isEqualToIntOrIntStringValue() {
+		assertEquals("is{or{equalTo(1)}{(2)}}",
 				is(equalTo(1).or(2)).toString());
-		assertEquals("or{is{equalTo(a)}}{i̶s̶{instanceOf(java.util.Date)}}",
+	}
+
+	@Test
+	void contextualizedIsEqualToIntOrIntStringValue() {
+		assertEquals("is{or{equalTo(1)}{e̶q̶u̶a̶l̶T̶o̶(2)}}",
+				is(equalTo(1).or(2)).contextualize(new Context()).toString());
+	}
+
+	@Test
+	void isEqualToCharOrInstanceOfDateStringValue() {
+		assertEquals("or{is{equalTo(a)}}{instanceOf(java.util.Date)}",
 				is(equalTo('a')).or(instanceOf(Date.class)).toString());
 	}
 
 	@Test
-	void descriptionOfIsFloatOrFloat() {
+	void contextualizedIsEqualToCharOrInstanceOfDateStringValue() {
+		assertEquals("or{is{equalTo(a)}}{i̶s̶{instanceOf(java.util.Date)}}",
+				is(equalTo('a')).or(instanceOf(Date.class)).contextualize(new Context()).toString());
+	}
+
+	@Test
+	void isFloatOrFloatDescription() {
 		assertEquals("is: 1.0 or: 2.0",
-				is(1f).or(2f)
+				is(1f).or(2f).contextualize(new Context())
 						.describe(newDescription()).toString());
 	}
 
 	@Test
 	void descriptionOfIsInstanceOfClassOrIsEqualToObject() {
-		final Matcher matcher = is(instanceOf(Date.class)).or(is(equalTo("abc")));
+		Matcher matcher = is(instanceOf(Date.class)).or(is(equalTo("abc")));
 		assertEquals("is instance of: java.util.Date or is equal to: \"abc\"", matcher.describe(newDescription()).toString());
-		assertEquals("or{is{instanceOf(java.util.Date)}}{i̶s̶{is{equalTo(abc)}}}", matcher.toString());
+		assertEquals("or{is{instanceOf(java.util.Date)}}{is{equalTo(abc)}}", matcher.toString());
 		assertTrue(matcher.match(new Date()));
 		assertTrue(matcher.match("abc"));
 		assertFalse(matcher.match(null));

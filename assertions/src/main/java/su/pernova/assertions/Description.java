@@ -33,10 +33,10 @@ public interface Description {
 	}
 
 	/**
-	 * Appends a given argument to this description.
+	 * Appends an argument to this description.
 	 *
-	 * @param argument an argument to append to this description, maybe {@code null}.
-	 * @return this description, not {@code null}.
+	 * @param argument an argument to append to this description, which may be {@code null}.
+	 * @return this description.
 	 * @since 1.0.0
 	 */
 	Description appendArgument(Object argument);
@@ -62,6 +62,17 @@ public interface Description {
 	default Description appendActualValue(Object actualValue) {
 		return appendArgument(actualValue);
 	}
+
+	/**
+	 * Uses an argument's identity instead of its string value in subsequent calls if enabled.
+	 * This is a stateful call, the setting remains enabled until disabled.
+	 * The default is disabled.
+	 *
+	 * @param appendIdentity whether to use an argument's identity.
+	 * @return this description.
+	 * @since 2.0.0
+	 */
+	Description setAppendIdentity(boolean appendIdentity);
 
 	/**
 	 * Gets the expected value(s) appended to this description so far.

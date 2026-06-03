@@ -5,21 +5,33 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
+import su.pernova.assertions.Context;
 import su.pernova.assertions.Matcher;
 import su.pernova.assertions.MatcherFactory;
 
-public class Is extends ContextProvidingMatcher {
+public class Is extends ForwardingMatcher {
+
+	public static final CharSequence NAME = "is";
+
+	public static final CharSequence ALIAS_IDENTICAL_TO = "identical to";
+
+	public static final CharSequence ALIAS_SAME_AS = "same as";
 
 	private static final ReferenceQueue<MatcherFactory> REFERENCE_QUEUE = new ReferenceQueue<>();
 
 	private static final Map<CharSequence, NamedWeakReference> MATCHER_FACTORIES_BY_NAME = new HashMap<>();
 
 	public Is(CharSequence name, Matcher destination) {
-		super(name, destination);
+		super(name, destination, Is.getMatcherFactory(name));
 	}
 
 	public Is(Matcher destination) {
-		this(null, destination);
+		this("is", destination);
+	}
+
+	@Override
+	public Matcher contextualize(Context context) {
+		return super.contextualize(context.forwardMatcherFactory(this, matcherFactory));
 	}
 
 	public synchronized static MatcherFactory getMatcherFactory(CharSequence name) {

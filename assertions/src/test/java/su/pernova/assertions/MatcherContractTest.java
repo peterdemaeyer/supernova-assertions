@@ -36,34 +36,45 @@ public interface MatcherContractTest extends ContractTest {
 
 	@Test
 	default void matchingNullDoesNotThrow() {
-		assertDoesNotThrow(() -> getInstance().match(null));
+		final Matcher matcher = getInstance().contextualize(new Context());
+		assertDoesNotThrow(() -> matcher.match(null));
 	}
 
 	@Test
 	default void matchingAnyObjectDoesNotThrow() {
-		assertDoesNotThrow(() -> getInstance().match(new Object()));
+		final Matcher matcher = getInstance().contextualize(new Context());
+		assertDoesNotThrow(() -> matcher.match(new Object()));
 	}
 
 	@Test
 	default void matchingObjectOfAnyTypeDoesNotThrow() {
-		assertDoesNotThrow(() -> getInstance().match(this));
+		final Matcher matcher = getInstance().contextualize(new Context());
+		assertDoesNotThrow(() -> matcher.match(this));
 	}
 
 	@Test
 	default void descriptionChainsDescription() {
+		final Matcher matcher = getInstance().contextualize(new Context());
 		final AppendableDescription description = new AppendableDescription(new StringBuilder());
-		assertSame(description, getInstance().describe(description));
+		assertSame(description, matcher.describe(description));
 	}
 
 	@Test
 	default void mismatchDescriptionChainsDescription() {
+		final Matcher matcher = getInstance().contextualize(new Context());
 		final AppendableDescription mismatchDescription = new AppendableDescription(new StringBuilder());
-		assertSame(mismatchDescription, getInstance().describeMismatch(mismatchDescription));
+		assertSame(mismatchDescription, matcher.describeMismatch(mismatchDescription));
+	}
+
+	@Test
+	default void stringValueIsNotNullWhenNotContextualized() {
+		assertNotNull(getInstance().toString());
 	}
 
 	@Test
 	default void stringValueIsNotNull() {
-		assertNotNull(getInstance().toString());
+		final Matcher matcher = getInstance().contextualize(new Context());
+		assertNotNull(matcher.toString());
 	}
 
 	@Test
@@ -153,7 +164,7 @@ public interface MatcherContractTest extends ContractTest {
 
 	@Test
 	default void matchingIsConsistent() {
-		final Matcher matcher = getInstance();
+		final Matcher matcher = getInstance().contextualize(new Context());
 		assertEquals(matcher.match(null), matcher.match(null));
 		assertEquals(matcher.match(this), matcher.match(this));
 		final Object value = new Object();
@@ -184,7 +195,7 @@ public interface MatcherContractTest extends ContractTest {
 		final int iterations = 100;
 		final CyclicBarrier barrier = new CyclicBarrier(concurrency + 1);
 		final List<Future<?>> futures = new ArrayList<>(concurrency);
-		final Matcher matcher = getInstance();
+		final Matcher matcher = getInstance().contextualize(new Context());
 		final Object value = new Object();
 		final AtomicBoolean result = new AtomicBoolean(matcher.match(value));
 		try (ExecutorService executor = newFixedThreadPool(concurrency)) {

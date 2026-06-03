@@ -13,18 +13,19 @@ public interface Describable {
 	/**
 	 * Describes this object onto a given description.
 	 * Typical implementations are {@link Subject}s and {@link Matcher}s.
-	 * The default implementation derives a lower case description from the class forwardingFunction,
-	 * ignoring some well-known class forwardingFunction prefixes such as {@code Default}, {@code Base}
+	 * The default implementation derives a lower case description from the class name,
+	 * ignoring some well-known class name prefixes such as {@code Default}, {@code Base}
 	 * and some well-known suffixes such as {@code Impl}.
-	 * For example a class forwardingFunction {@code EqualTo} will result in a description "equal to".
-	 * A class forwardingFunction {@code SubjectImpl} will result in a description "subject".
+	 * For example a class name {@code EqualTo} will result in a description "equal to".
+	 * A class name {@code SubjectImpl} will result in a description "subject".
 	 *
 	 * @param description a description, not {@code null}.
 	 * @return the description which was given as parameter, not {@code null}.
 	 * @since 1.0.0
 	 */
 	default Description describe(Description description) {
-		return description.appendText(getDefaultName(this));
+		final CharSequence name = name();
+		return !name.isEmpty() ? description.appendText(name) : description;
 	}
 
 	/**
@@ -37,5 +38,25 @@ public interface Describable {
 	 */
 	default Description describeMismatch(Description mismatchDescription) {
 		return mismatchDescription;
+	}
+
+	/**
+	 * <p>
+	 * This object's name.
+	 * </p>
+	 * <p>
+	 * The default implementation derives a lower case name from this object's class,
+	 * ignoring some well-known class prefixes such as {@code Default}, {@code Base}
+	 * and some well-known suffixes such as {@code Impl}.
+	 * </p>
+	 * <h4>Examples</h4>
+	 * a class name {@code EqualTo} will result in a description "equal to".
+	 * A class name {@code SubjectImpl} will result in a description "subject".
+	 *
+	 * @return a name, not {@code null}.
+	 * @since 2.0.0
+	 */
+	default CharSequence name() {
+		return getDefaultName(this);
 	}
 }

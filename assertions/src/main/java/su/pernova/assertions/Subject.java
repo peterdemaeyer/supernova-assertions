@@ -19,4 +19,22 @@ public interface Subject extends Describable {
 	 * @since 1.0.0
 	 */
 	boolean match(Matcher matcher);
+
+	/**
+	 * Returns this subject by default, ignoring any context.
+	 * Contextualizable implementations must override this method.
+	 * Recommendations:
+	 * <ul>
+	 *     <li>Be prepared for this method to be called multiple times, potentially concurrently.</li>
+	 *     <li>Return an immutable object.</li>
+	 *     <li>Be stateless.</li>
+	 * </ul>
+	 *
+	 * @param context a context, not {@code null}.
+	 * @return this subject.
+	 * @since 2.0.0
+	 */
+	default Subject contextualize(Context context) {
+		return this;
+	}
 }

@@ -44,4 +44,9 @@ public class DelegatingDescription implements Description {
 	public Object getActualValue() {
 		return delegatee.getActualValue();
 	}
+
+	@Override
+	public Description setAppendIdentity(boolean appendIdentity) {
+		return delegatee.setAppendIdentity(appendIdentity);
+	}
 }

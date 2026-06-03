@@ -63,7 +63,8 @@ public final class Assertions {
 			matchers = new Matcher[] { is(true) };
 		}
 		for (Matcher matcher : matchers) {
-			if (!subject.match(matcher)) {
+			Context context = new Context();
+			if (!subject.contextualize(context).match(matcher.contextualize(context))) {
 				Description description = new AppendableDescription(new StringBuilder())
 						.appendText("expected that");
 				subject.describe(description);

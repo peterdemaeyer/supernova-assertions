@@ -1,14 +1,20 @@
 package internal.su.pernova.assertions.matchers;
 
+import su.pernova.assertions.Context;
 import su.pernova.assertions.Description;
+import su.pernova.assertions.Matcher;
 
-public abstract class DoubleMatcher extends ExpectedValueMatcher {
+public class DoubleMatcher extends ExpectedValueMatcher {
 
 	protected final double expectedValue;
 
 	public DoubleMatcher(CharSequence description, boolean prompt, double expectedValue) {
 		super(description, prompt);
 		this.expectedValue = expectedValue;
+	}
+
+	public DoubleMatcher(double expectedValue) {
+		this("?", true, expectedValue);
 	}
 
 	@Override
@@ -19,5 +25,10 @@ public abstract class DoubleMatcher extends ExpectedValueMatcher {
 	@Override
 	public String toString() {
 		return super.toString() + "(" + expectedValue + ")";
+	}
+
+	@Override
+	public Matcher contextualize(Context context) {
+		return context.imply(this, expectedValue);
 	}
 }

@@ -1,7 +1,16 @@
 package su.pernova.assertions;
 
 import internal.su.pernova.assertions.matchers.And;
+import internal.su.pernova.assertions.matchers.BooleanMatcher;
+import internal.su.pernova.assertions.matchers.ByteMatcher;
+import internal.su.pernova.assertions.matchers.CharMatcher;
+import internal.su.pernova.assertions.matchers.DoubleMatcher;
+import internal.su.pernova.assertions.matchers.FloatMatcher;
+import internal.su.pernova.assertions.matchers.IntMatcher;
+import internal.su.pernova.assertions.matchers.LongMatcher;
+import internal.su.pernova.assertions.matchers.ObjectMatcher;
 import internal.su.pernova.assertions.matchers.Or;
+import internal.su.pernova.assertions.matchers.ShortMatcher;
 
 /**
  * This interface defines a matcher for matching an actual object.
@@ -24,6 +33,25 @@ public interface Matcher extends Describable {
 	boolean match(Object actualValue);
 
 	/**
+	 * Returns this matcher by default, ignoring any context.
+	 * Contextualizable implementations must override this method.
+	 * Recommendations:
+	 * <ul>
+	 *     <li>Use a covariant return type.</li>
+	 *     <li>Be prepared for this method to be called multiple times, potentially concurrently.</li>
+	 *     <li>Return an immutable object.</li>
+	 *     <li>Be stateless.</li>
+	 * </ul>
+	 *
+	 * @param context a context, not {@code null}.
+	 * @return this matcher.
+	 * @since 2.0.0
+	 */
+	default Matcher contextualize(Context context) {
+		return this;
+	}
+
+	/**
 	 * Appends "was" to a given mismatch description and returns the same mismatch description.
 	 *
 	 * @param mismatchDescription a mismatch description, not {@code null}.
@@ -42,7 +70,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(Matcher matcher) {
-		return Context.fork(And::new, this, matcher);
+		return new And(this, matcher);
 	}
 
 	/**
@@ -53,7 +81,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(Object expectedValue) {
-		return Context.fork(And::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return new And(this, new ObjectMatcher("?", true, expectedValue));
 	}
 
 	/**
@@ -64,7 +92,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(double expectedValue) {
-		return Context.fork(And::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return new And(this, new DoubleMatcher("?", true, expectedValue));
 	}
 
 	/**
@@ -75,7 +103,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(float expectedValue) {
-		return Context.fork(And::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return new And(this, new FloatMatcher("?", true, expectedValue));
 	}
 
 	/**
@@ -86,7 +114,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(long expectedValue) {
-		return Context.fork(And::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return new And(this, new LongMatcher("?", true, expectedValue));
 	}
 
 	/**
@@ -97,7 +125,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(int expectedValue) {
-		return Context.fork(And::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return new And(this, new IntMatcher("?", true, expectedValue));
 	}
 
 	/**
@@ -108,7 +136,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(short expectedValue) {
-		return Context.fork(And::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return new And(this, new ShortMatcher("?", true, expectedValue));
 	}
 
 	/**
@@ -119,7 +147,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(byte expectedValue) {
-		return Context.fork(And::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return new And(this, new ByteMatcher("?", true, expectedValue));
 	}
 
 	/**
@@ -130,7 +158,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(char expectedValue) {
-		return Context.fork(And::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return new And(this, new CharMatcher("?", true, expectedValue));
 	}
 
 	/**
@@ -141,7 +169,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(boolean expectedValue) {
-		return Context.fork(And::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return new And(this, new BooleanMatcher("?", true, expectedValue));
 	}
 
 	/**
@@ -152,7 +180,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher or(Matcher matcher) {
-		return Context.fork(Or::new, this, matcher);
+		return new Or(this, matcher);
 	}
 
 	/**
@@ -165,7 +193,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher or(Object expectedValue) {
-		return Context.fork(Or::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return new Or(this, new ObjectMatcher("?", true, expectedValue));
 	}
 
 	/**
@@ -176,7 +204,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher or(double expectedValue) {
-		return Context.fork(Or::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return new Or(this, new DoubleMatcher("?", true, expectedValue));
 	}
 
 	/**
@@ -187,7 +215,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher or(float expectedValue) {
-		return Context.fork(Or::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return new Or(this, new FloatMatcher("?", true, expectedValue));
 	}
 
 	/**
@@ -198,7 +226,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher or(long expectedValue) {
-		return Context.fork(Or::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return new Or(this, new LongMatcher("?", true, expectedValue));
 	}
 
 	/**
@@ -209,7 +237,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher or(int expectedValue) {
-		return Context.fork(Or::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return new Or(this, new IntMatcher(expectedValue));
 	}
 
 	/**
@@ -220,7 +248,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher or(short expectedValue) {
-		return Context.fork(Or::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return new Or(this, new ShortMatcher(expectedValue));
 	}
 
 	/**
@@ -231,7 +259,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher or(byte expectedValue) {
-		return Context.fork(Or::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return new Or(this, new ByteMatcher("?", true, expectedValue));
 	}
 
 	/**
@@ -242,7 +270,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher or(char expectedValue) {
-		return Context.fork(Or::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return new Or(this, new CharMatcher("?", true, expectedValue));
 	}
 
 	/**
@@ -253,6 +281,6 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher or(boolean expectedValue) {
-		return Context.fork(Or::new, this, (ContextProvidingFunction) matcherFactory -> matcherFactory.create(expectedValue));
+		return new Or(this, new BooleanMatcher("?", true, expectedValue));
 	}
 }

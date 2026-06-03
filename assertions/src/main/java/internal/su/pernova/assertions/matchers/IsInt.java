@@ -1,9 +1,16 @@
 package internal.su.pernova.assertions.matchers;
 
+import su.pernova.assertions.Context;
+import su.pernova.assertions.Matcher;
+import su.pernova.assertions.MatcherFactory;
+
 public class IsInt extends IntMatcher {
+
+	private final MatcherFactory matcherFactory;
 
 	public IsInt(CharSequence name, boolean prompt, int expectedValue) {
 		super(name, prompt, expectedValue);
+		this.matcherFactory = Is.getMatcherFactory(name);
 	}
 
 	public IsInt(int expectedValue) {
@@ -19,5 +26,10 @@ public class IsInt extends IntMatcher {
 			return expectedValue == (Character) actualValue;
 		}
 		return false;
+	}
+
+	@Override
+	public Matcher contextualize(Context context) {
+		return context.contextualize(this, matcherFactory, expectedValue);
 	}
 }

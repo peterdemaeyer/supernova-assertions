@@ -1,8 +1,10 @@
 package internal.su.pernova.assertions.matchers;
 
+import su.pernova.assertions.Context;
 import su.pernova.assertions.Description;
+import su.pernova.assertions.Matcher;
 
-public abstract class CharMatcher extends ExpectedValueMatcher {
+public class CharMatcher extends ExpectedValueMatcher {
 
 	protected final char expectedValue;
 
@@ -19,5 +21,10 @@ public abstract class CharMatcher extends ExpectedValueMatcher {
 	@Override
 	public String toString() {
 		return super.toString() + "(" + expectedValue + ")";
+	}
+
+	@Override
+	public Matcher contextualize(Context context) {
+		return context.imply(this, expectedValue);
 	}
 }

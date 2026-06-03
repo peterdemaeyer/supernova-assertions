@@ -8,7 +8,7 @@ import su.pernova.assertions.Description;
  */
 public abstract class PromptedNamedDescribable extends NamedDescribable {
 
-	private final boolean prompt;
+	protected final boolean prompt;
 
 	protected PromptedNamedDescribable(CharSequence name, boolean prompt) {
 		super(name);

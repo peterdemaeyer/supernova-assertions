@@ -4,6 +4,7 @@ import static java.lang.reflect.Array.get;
 import static java.lang.reflect.Array.getLength;
 import static java.util.Arrays.binarySearch;
 import static java.util.Objects.requireNonNull;
+import static java.util.Objects.toIdentityString;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -38,6 +39,8 @@ public class AppendableDescription implements Description {
 
 	private boolean space;
 
+	private boolean appendIdentity;
+
 	/**
 	 * Constructs an instance of this class delegating to a given appendable.
 	 *
@@ -57,6 +60,12 @@ public class AppendableDescription implements Description {
 	public Description appendExpectedValue(Object expectedValue) {
 		this.expectedValue = expectedValue;
 		return Description.super.appendExpectedValue(expectedValue);
+	}
+
+	@Override
+	public Description setAppendIdentity(boolean appendIdentity) {
+		this.appendIdentity = appendIdentity;
+		return this;
 	}
 
 	@Override
@@ -142,27 +151,31 @@ public class AppendableDescription implements Description {
 
 	private <A extends Appendable> A appendQuoted(A appendable, Object argument) throws IOException {
 		appendSpace();
-		recursivelyAppendQuoted(appendable, argument);
+		if (appendIdentity) {
+			appendable.append(toIdentityString(argument));
+		} else {
+			recursivelyAppendQuoted(appendable, argument);
+		}
 		space = true;
 		return appendable;
 	}
 
 	private void recursivelyAppendQuoted(Appendable appendable, Object argument) throws IOException {
-		if (argument instanceof Collection) {
+		if (argument instanceof Collection<?> collection) {
 			// Don't do instanceof Iterable, because it will also capture UnixPath and possibly other recursive iterables that causes StackOverflowError.
 			appendable.append('[');
 			int i = 0;
-			for (Object element : (Collection<?>) argument) {
+			for (Object element :collection) {
 				if (i++ > 0) {
 					appendable.append(", ");
 				}
 				recursivelyAppendQuoted(appendable, element);
 			}
 			appendable.append(']');
-		} else if (argument instanceof Map) {
+		} else if (argument instanceof Map<?, ?> map) {
 			appendable.append('{');
 			int i = 0;
-			for (Entry<?, ?> entry : ((Map<?, ?>) argument).entrySet()) {
+			for (Entry<?, ?> entry : map.entrySet()) {
 				if (i++ > 0) {
 					appendable.append(", ");
 				}
@@ -184,8 +197,8 @@ public class AppendableDescription implements Description {
 			}
 			appendable.append((char) argument)
 					.append('\'');
-		} else if (argument instanceof Class) {
-			appendable.append(((Class<?>) argument).getName());
+		} else if (argument instanceof Class<?> clаss) {
+			appendable.append(nameOf(clаss));
 		} else if (argument.getClass().isArray()) {
 			appendable.append('[');
 			for (int i = 0, n = getLength(argument); i != n; i++) {
@@ -199,6 +212,14 @@ public class AppendableDescription implements Description {
 			appendable.append('"')
 					.append(argument.toString().replace("\\", "\\\\").replace("\"", "\\\""))
 					.append('"');
+		}
+	}
+
+	private static String nameOf(Class<?> clаss) {
+		if (clаss.isArray()) {
+			return nameOf(clаss.getComponentType()) + "[]";
+		} else {
+			return clаss.getName();
 		}
 	}
 

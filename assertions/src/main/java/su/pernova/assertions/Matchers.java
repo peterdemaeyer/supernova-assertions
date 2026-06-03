@@ -10,8 +10,9 @@ import java.util.regex.Pattern;
 import internal.su.pernova.assertions.matchers.AllOf;
 import internal.su.pernova.assertions.matchers.AnyOf;
 import internal.su.pernova.assertions.matchers.CloseTo;
-import internal.su.pernova.assertions.matchers.ContextProvidingMatcher;
+import internal.su.pernova.assertions.matchers.ObjectMatcher;
 import internal.su.pernova.assertions.matchers.EqualTo;
+import internal.su.pernova.assertions.matchers.ForwardingMatcher;
 import internal.su.pernova.assertions.matchers.InstanceOf;
 import internal.su.pernova.assertions.matchers.Is;
 import internal.su.pernova.assertions.matchers.IsBoolean;
@@ -36,8 +37,6 @@ import internal.su.pernova.assertions.matchers.Regex;
  * @since 1.0.0
  */
 public final class Matchers {
-
-	private static final CharSequence SAME_AS = "same as";
 
 	private Matchers() {
 	}
@@ -89,7 +88,7 @@ public final class Matchers {
 	 */
 	public static Matcher is(Matcher matcher) {
 		if (matcher != null) {
-			return Context.putMatcherFactory(Is::new, matcher, Is.getMatcherFactory(null));
+			return new Is(matcher);
 		}
 		return is((Object) null);
 	}
@@ -103,7 +102,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(Object expectedValue) {
-		return putIsFactory(new IsObject(expectedValue));
+		return new IsObject(expectedValue);
 	}
 
 	/**
@@ -155,7 +154,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(float expectedValue) {
-		return putIsFactory(new IsFloat(expectedValue));
+		return new IsFloat(expectedValue);
 	}
 
 	/**
@@ -181,7 +180,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher is(int expectedValue) {
-		return putIsFactory(new IsInt(expectedValue));
+		return new IsInt(expectedValue);
 	}
 
 	/**
@@ -241,7 +240,7 @@ public final class Matchers {
 	}
 
 	private static Matcher putIsFactory(PromptedNamedMatcher prototype) {
-		return Context.putMatcherFactory(prototype, Is.getMatcherFactory(null));
+		return Context.putMatcherFactory2(prototype, Is.getMatcherFactory(null));
 	}
 
 	/**
@@ -253,7 +252,7 @@ public final class Matchers {
 	 * @since 1.0.0
 	 */
 	public static Matcher equalTo(Object expectedValue) {
-		return Context.putMatcherFactory(EqualTo.MATCHER_FACTORY.create(expectedValue), EqualTo.MATCHER_FACTORY);
+		return new EqualTo(expectedValue);
 	}
 
 	/**
@@ -265,7 +264,10 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher equalTo(Matcher matcher) {
-		return Context.putMatcherFactory(m -> new ContextProvidingMatcher("equal to", m), matcher, EqualTo.MATCHER_FACTORY);
+		if (matcher == null) {
+			return equalTo((Object) null);
+		}
+		return new ForwardingMatcher(EqualTo.NAME, matcher, EqualTo.MATCHER_FACTORY);
 	}
 
 	/**
@@ -277,7 +279,7 @@ public final class Matchers {
 	 * @since 1.0.0
 	 */
 	public static Matcher instanceOf(Class<?> expectedClass) {
-		return Context.putMatcherFactory(new InstanceOf(expectedClass), InstanceOf.MATCHER_FACTORY);
+		return Context.putMatcherFactory2(new InstanceOf(expectedClass), InstanceOf.MATCHER_FACTORY);
 	}
 
 	/**
@@ -290,7 +292,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher instanceOf(Matcher matcher) {
-		return Context.putMatcherFactory(m -> new ContextProvidingMatcher("instance of", m), matcher, InstanceOf.MATCHER_FACTORY);
+		return new ForwardingMatcher(InstanceOf.class, matcher, InstanceOf.MATCHER_FACTORY);
 	}
 
 	/**
@@ -303,7 +305,7 @@ public final class Matchers {
 	 * @since 1.0.0
 	 */
 	public static Matcher sameAs(Object expectedValue) {
-		return putIsFactory(new IsObject("same as", expectedValue));
+		return new IsObject("same as", expectedValue);
 	}
 
 	/**
@@ -317,7 +319,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher sameAs(Matcher matcher) {
-		return Context.putMatcherFactory(m -> new ContextProvidingMatcher(SAME_AS, m), matcher, Is.getMatcherFactory(SAME_AS));
+		return new ForwardingMatcher("same as", matcher, Is.getMatcherFactory("same as"));
 	}
 
 	/**
@@ -326,7 +328,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher identicalTo(Object expectedValue) {
-		return putIsFactory(new IsObject("identical to", expectedValue));
+		return new IsObject("identical to", expectedValue);
 	}
 
 	/**
@@ -337,7 +339,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher identicalTo(Matcher destination) {
-		return forward("identical to", destination);
+		return new ForwardingMatcher("identical to", destination, Is.getMatcherFactory("identical to"));
 	}
 
 	/**
@@ -348,7 +350,7 @@ public final class Matchers {
 	 * @since 1.1.0
 	 */
 	public static Matcher regex(Pattern regex) {
-		return Context.putMatcherFactory(new Regex(regex), new MatcherFactory() {
+		return Context.putMatcherFactory2(new Regex(regex), new MatcherFactory() {
 
 			@Override
 			public Matcher create(Object expectedValue) {
@@ -400,7 +402,7 @@ public final class Matchers {
 	/**
 	 * Returns a matcher that matches like a given matcher and prefixes its description with "do".
 	 * It is the plural of {@link #does}.
-	 * The method forwardingFunction has a non-US-ASCII character to deconflict with the reserved keyword "do".
+	 * The method name has a non-US-ASCII character to deconflict with the reserved keyword "do".
 	 * If you find the non-US-ASCII character disturbing, use {@link #do_} instead.
 	 * <p/>
 	 * This method is equivalent to {@link #do_}, but it uses a Unicode
@@ -910,5 +912,9 @@ public final class Matchers {
 	public static Matcher noneOf(boolean... expectedValues) {
 		requireNonNull(expectedValues, "array of expected values is null");
 		return Context.newIncompleteMatcher(matcherFactory -> create(NoneOf::new, matcherFactory, expectedValues));
+	}
+
+	public static Matcher thatOf(Object expectedValue) {
+		return new ObjectMatcher("that of", true, expectedValue);
 	}
 }

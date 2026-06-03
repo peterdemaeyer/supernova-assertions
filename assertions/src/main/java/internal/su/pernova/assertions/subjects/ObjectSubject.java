@@ -1,6 +1,7 @@
 package internal.su.pernova.assertions.subjects;
 
 import internal.su.pernova.assertions.NamedDescribable;
+import su.pernova.assertions.Context;
 import su.pernova.assertions.Description;
 import su.pernova.assertions.Matcher;
 import su.pernova.assertions.Subject;
@@ -35,5 +36,10 @@ public class ObjectSubject extends NamedDescribable implements Subject {
 	@Override
 	public String toString() {
 		return super.toString() + "(" + actualValue + ")";
+	}
+
+	@Override
+	public Subject contextualize(Context context) {
+		return context.contextualize(this, actualValue, v -> new ObjectSubject(name, v));
 	}
 }

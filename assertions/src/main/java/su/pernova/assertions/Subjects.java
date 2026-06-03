@@ -1,7 +1,5 @@
 package su.pernova.assertions;
 
-import java.nio.charset.Charset;
-
 import internal.su.pernova.assertions.subjects.Condition;
 import internal.su.pernova.assertions.subjects.ContentOf;
 import internal.su.pernova.assertions.subjects.ObjectSubject;
@@ -31,10 +29,6 @@ public final class Subjects {
 	 * @since 1.0.0
 	 */
 	public static Subject subject(Object actualValue) {
-		return subject(null, actualValue);
-	}
-
-	private static Subject subject(CharSequence name, Object actualValue) {
 		return new ObjectSubject(actualValue);
 	}
 
@@ -46,11 +40,7 @@ public final class Subjects {
 	 * @since 1.0.0
 	 */
 	public static Subject condition(Object actualValue) {
-		return condition(null, actualValue);
-	}
-
-	private static Subject condition(CharSequence name, Object actualValue) {
-		return new Condition(name, actualValue);
+		return new Condition(actualValue);
 	}
 
 	/**
@@ -61,22 +51,10 @@ public final class Subjects {
 	 * @since 2.0.0
 	 */
 	public static Subject contentOf(Object actualValue) {
-		return contentOf(actualValue, null);
-	}
-
-	/**
-	 * Creates character-encoded content for a given object.
-	 *
-	 * @param actualValue an object to create content for, possibly {@code null}.
-	 * @param charset a charset, not {@code null}.
-	 * @return character-encoded content, not {@code null}.
-	 * @since 2.0.0
-	 */
-	public static Subject contentOf(Object actualValue, Charset charset) {
-		return new ContentOf(actualValue, charset);
+		return new ContentOf(actualValue);
 	}
 
 	static Subject implicitSubject(Object actualValue, Matcher... matchers) {
-		return (matchers.length == 0) ? condition(null, actualValue) : subject(null, actualValue);
+		return matchers.length == 0 ? condition(actualValue) : subject(actualValue);
 	}
 }

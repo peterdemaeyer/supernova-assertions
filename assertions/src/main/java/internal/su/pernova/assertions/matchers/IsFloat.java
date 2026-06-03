@@ -1,9 +1,16 @@
 package internal.su.pernova.assertions.matchers;
 
+import su.pernova.assertions.Context;
+import su.pernova.assertions.Matcher;
+import su.pernova.assertions.MatcherFactory;
+
 public class IsFloat extends FloatMatcher {
+
+	private final MatcherFactory matcherFactory;
 
 	public IsFloat(CharSequence name, boolean prompt, float expectedValue) {
 		super(name, prompt, expectedValue);
+		matcherFactory = Is.getMatcherFactory(name);
 	}
 
 	public IsFloat(float expectedValue) {
@@ -18,5 +25,10 @@ public class IsFloat extends FloatMatcher {
 			return expectedValue == (Character) actualValue;
 		}
 		return false;
+	}
+
+	@Override
+	public Matcher contextualize(Context context) {
+		return context.contextualize(this, matcherFactory, expectedValue);
 	}
 }

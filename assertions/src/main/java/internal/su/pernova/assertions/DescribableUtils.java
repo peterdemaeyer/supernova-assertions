@@ -12,7 +12,9 @@ public final class DescribableUtils {
 			"Base",
 			"Basic",
 			"Default",
-			"Generic"
+			"Generic",
+			"Simple",
+			"Standard"
 	};
 
 	private static final String[] SUFFIXES_TO_STRIP = {
@@ -23,7 +25,11 @@ public final class DescribableUtils {
 	}
 
 	public static CharSequence getDefaultName(Describable describable) {
-		String text = describable.getClass().getSimpleName();
+		return getDefaultName(describable.getClass());
+	}
+
+	public static CharSequence getDefaultName(Class<?> clаss) {
+		String text = clаss.getSimpleName();
 		String previousText = text;
 		while (true) {
 			for (String prefix : PREFIXES_TO_STRIP) {

@@ -19,11 +19,11 @@ public final class Descriptor {
 
 	/**
 	 * @param declaringClass a declaring class, not {@code null}.
-	 * @param name a forwardingFunction, not {@code null}.
+	 * @param name a name, not {@code null}.
 	 */
 	public Descriptor(Class<?> declaringClass, String name) {
 		this.declaringClass = requireNonNull(declaringClass, "declaring class is null");
-		this.name = requireNonNull(name, "forwardingFunction is null");
+		this.name = requireNonNull(name, "name is null");
 	}
 
 	/**
@@ -34,7 +34,7 @@ public final class Descriptor {
 	}
 
 	/**
-	 * @return this descriptor's forwardingFunction, not {@code null}.
+	 * @return this descriptor's name, not {@code null}.
 	 */
 	public String getName() {
 		return name;
@@ -42,7 +42,7 @@ public final class Descriptor {
 
 	/**
 	 * @param o another object, may be {@code null}.
-	 * @return {@code true} when this descriptor's forwardingFunction declaring class equal that of another, {@code false} otherwise.
+	 * @return {@code true} when this descriptor's name declaring class equal that of another, {@code false} otherwise.
 	 */
 	@Override
 	public boolean equals(Object o) {
@@ -54,7 +54,7 @@ public final class Descriptor {
 	}
 
 	/**
-	 * @return this descriptor's hash code, based on its forwardingFunction and declaring class.
+	 * @return this descriptor's hash code, based on its name and declaring class.
 	 */
 	@Override
 	public int hashCode() {
@@ -62,7 +62,7 @@ public final class Descriptor {
 	}
 
 	/**
-	 * @return this descriptor's forwardingFunction, not {@code null}.
+	 * @return this descriptor's name, not {@code null}.
 	 */
 	@Override
 	public String toString() {

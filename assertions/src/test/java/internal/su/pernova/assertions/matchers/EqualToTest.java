@@ -4,6 +4,7 @@ import static java.lang.Double.NaN;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 import static su.pernova.assertions.AssertionTestUtils.assertThrowsAssertionErrorWithMessage;
 import static su.pernova.assertions.Assertions.assertThat;
@@ -14,10 +15,25 @@ import java.util.Date;
 
 import org.junit.jupiter.api.Test;
 
-class EqualToTest {
+import su.pernova.assertions.Matcher;
+import su.pernova.assertions.MatcherContractTest;
+
+class EqualToTest implements MatcherContractTest {
+
+	@Override
+	public EqualTo getInstance() {
+		return assertInstanceOf(EqualTo.class, equalTo(new Object()));
+	}
 
 	@Test
 	void equalToMatchesNull() {
+		assertDoesNotThrow(
+				() -> assertThat(null, is(equalTo((Object) null)))
+		);
+	}
+
+	@Test
+	void equalToWithMatcherMatchesNull() {
 		assertDoesNotThrow(
 				() -> assertThat(null, is(equalTo(null)))
 		);
@@ -82,6 +98,6 @@ class EqualToTest {
 
 	@Test
 	void stringValue() {
-		assertEquals("equal to: \"xyz\"", equalTo("xyz").toString());
+		assertEquals("equalTo(xyz)", equalTo("xyz").toString());
 	}
 }

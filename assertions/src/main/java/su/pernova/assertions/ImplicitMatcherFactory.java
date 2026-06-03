@@ -4,11 +4,11 @@ import static java.util.Objects.requireNonNull;
 
 import internal.su.pernova.assertions.matchers.ImplicitMatcher;
 
-public class ImplicitMatcherFactory implements MatcherFactory {
+class ImplicitMatcherFactory implements MatcherFactory {
 
-	private final MatcherFactory destination;
+	final MatcherFactory destination;
 
-	public ImplicitMatcherFactory(MatcherFactory destination) {
+	ImplicitMatcherFactory(MatcherFactory destination) {
 		this.destination = requireNonNull(destination, "destination is null");
 	}
 
