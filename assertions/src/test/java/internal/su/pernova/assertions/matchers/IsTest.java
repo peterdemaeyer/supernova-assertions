@@ -12,6 +12,7 @@ import java.util.Date;
 
 import org.junit.jupiter.api.Test;
 
+import su.pernova.assertions.Context;
 import su.pernova.assertions.Matcher;
 import su.pernova.assertions.MatcherContractTest;
 import su.pernova.assertions.MatcherFactory;
@@ -31,15 +32,15 @@ class IsTest implements MatcherContractTest {
 
 	@Test
 	void significanceOfParentheses() {
-		final Date date1 = new Date(1L);
-		final Date date2 = new Date(2L);
-		final Matcher matcher1 = is(equalTo(date1).or(date2));
-		assertTrue(matcher1.match(new Date(1L)));
-		assertTrue(matcher1.match(new Date(2L)));
+		final Date date1 = new Date(1_000_000_000_000L);
+		final Date date2 = new Date(2_000_000_000_000L);
+		final Matcher matcher1 = is(equalTo(date1).or(date2)).contextualize(new Context());
+		assertTrue(matcher1.match(new Date(1_000_000_000_000L)));
+		assertTrue(matcher1.match(new Date(2_000_000_000_000L)));
 
-		final Matcher matcher2 = is(equalTo(date1)).or(date2);
-		assertTrue(matcher2.match(new Date(1L)));
-		assertFalse(matcher2.match(new Date(2L)));
+		final Matcher matcher2 = is(equalTo(date1)).or(date2).contextualize(new Context());
+		assertTrue(matcher2.match(new Date(1_000_000_000_000L)));
+		assertFalse(matcher2.match(new Date(2_000_000_000_000L)));
 		assertTrue(matcher2.match(date2));
 	}
 

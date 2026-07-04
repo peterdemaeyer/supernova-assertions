@@ -95,12 +95,12 @@ public final class Context {
 
 	/**
 	 * To be called by {@link internal.su.pernova.assertions.matchers.BiMatcher#contextualize(Context)}.
-	 * The first destination is the {@code this} object where for example {@link Matcher#and} has been called on.
-	 * Its origin needs to be rewired to point to the origin now rather than to the destination.
-	 * The second destination is another object, that does not need to be rewired.
+	 * The old origin is the {@code this} object where for example {@link Matcher#and} has been called on.
+	 * Its origin needs to be rewired to point to the new origin, which is the matcher returned by {@link Matcher#and}.
+	 * The destination is context-requiring matcher, that does not need to be rewired.
 	 *
-	 * @param newOrigin an uncontextualized origin, not {@code null}.
-	 * @param oldOrigin an uncontextualized destination, not {@code null}.
+	 * @param newOrigin an uncontextualized new origin, not {@code null}.
+	 * @param oldOrigin an uncontextualized old origin, not {@code null}.
 	 * @param destination an uncontextualized destination, not {@code null}.
 	 * @param contextualizer a contextualizer (contextualization function) which is a factory for contextualized origin instances.
 	 * @return the contextualized origin, which is potentially the same origin if both destinations contextualized into themselves.
