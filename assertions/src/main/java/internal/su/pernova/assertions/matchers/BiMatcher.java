@@ -10,7 +10,11 @@ import su.pernova.assertions.Description;
 import su.pernova.assertions.Matcher;
 
 /**
- * A which combines two other "left" and "right" matchers from left to right.
+ * A forked matcher combines a left and right destination.
+ * Upon contextualization, this matches forks the left matcher's context into the right.
+ * Consider for example {@code equalTo(1).or(2)}.
+ * Such a statement returns a forked "or" matcher that matches the "equal to" context of the left "equal to 1" into the right contextless "2" matcher.
+ * "2" alone is not enough to match anything, but the "equal to" context the "2" was forked from provides the context so that it effectively means "equal to 1 or (equal to) 2".
  */
 public abstract class BiMatcher implements Matcher {
 

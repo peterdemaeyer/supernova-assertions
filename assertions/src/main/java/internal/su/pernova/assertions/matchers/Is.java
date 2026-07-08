@@ -29,11 +29,6 @@ public class Is extends ForwardingMatcher {
 		this("is", destination);
 	}
 
-	@Override
-	public Matcher contextualize(Context context) {
-		return super.contextualize(context.forwardMatcherFactory(this, matcherFactory));
-	}
-
 	public synchronized static MatcherFactory getMatcherFactory(CharSequence name) {
 		for (NamedWeakReference reference = (NamedWeakReference) REFERENCE_QUEUE.poll(); reference != null; reference = (NamedWeakReference) REFERENCE_QUEUE.poll()) {
 			MATCHER_FACTORIES_BY_NAME.remove(reference.name);
@@ -84,16 +79,10 @@ public class Is extends ForwardingMatcher {
 			public Matcher create(boolean expectedValue) {
 				return new IsBoolean(name, false, expectedValue);
 			}
+
+			public Matcher create(Matcher matcher) {
+				return new Is(name, matcher);
+			}
 		}, REFERENCE_QUEUE)).get();
-	}
-
-	private static class NamedWeakReference extends WeakReference<MatcherFactory> {
-
-		private final CharSequence name;
-
-		public NamedWeakReference(CharSequence name, MatcherFactory referent, ReferenceQueue<MatcherFactory> q) {
-			super(referent, q);
-			this.name = name;
-		}
 	}
 }

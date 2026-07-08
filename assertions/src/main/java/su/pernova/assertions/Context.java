@@ -2,14 +2,16 @@ package su.pernova.assertions;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.ArrayList;
 import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import internal.su.pernova.assertions.matchers.BiMatcher;
 import internal.su.pernova.assertions.matchers.ForwardingMatcher;
-import internal.su.pernova.assertions.matchers.ImplicitForwardingMatcher;
 import internal.su.pernova.assertions.matchers.ImplicitMatcher;
 
 /**
@@ -39,16 +41,18 @@ public final class Context {
 
 	private final Map<Matcher, Matcher> originsByDestination = new IdentityHashMap<>();
 
-	public Context forward(Matcher origin, Matcher... destinations) {
+	public Matcher forward(Matcher origin, MatcherFactory matcherFactory, Matcher destination) {
 		requireNonNull(origin, "origin is null");
-		requireNonNull(destinations, "array of destinations is null");
-		for (Matcher destination : destinations) {
-			final Matcher oldOrigin = originsByDestination.put(destination, origin);
-			if (oldOrigin != null) {
-				originsByDestination.put(oldOrigin, origin);
-			}
+		requireNonNull(matcherFactory, "matcher factory is null");
+		requireNonNull(destination, "destination is null");
+		matcherFactoriesByOrigin.put(origin, matcherFactory);
+		originsByDestination.put(destination, origin);
+		final Matcher contextualizedDestination = destination.contextualize(this);
+		if (contextualizedDestination == destination) {
+			// Preserve object identity.
+			return origin;
 		}
-		return this;
+		return matcherFactory.create(contextualizedDestination);
 	}
 
 	public Matcher contextualize(Matcher matcher) {
@@ -72,11 +76,32 @@ public final class Context {
 
 	public Matcher contextualize(Matcher matcher, MatcherFactory matcherFactory, Object expectedValue) {
 		putMatcherFactory(matcher, matcherFactory);
+		List<MatcherFactory> wrapper = buildWrapper(matcher);
 		if (expectedValueTransformation != null) {
 			final Object transformedExpectedValue = expectedValueTransformation.apply(expectedValue);
 			if (transformedExpectedValue != expectedValue) {
-				return matcherFactory.create(transformedExpectedValue);
+				return wrap(wrapper, matcherFactory.create(transformedExpectedValue));
 			}
+		}
+		return wrap(wrapper, matcher);
+	}
+
+	private List<MatcherFactory> buildWrapper(Matcher matcher) {
+		final ArrayList<MatcherFactory> wrapper = new ArrayList<>(1);
+		for (Matcher origin = originsByDestination.get(matcher); origin != null; origin = originsByDestination.get(origin)) {
+			final MatcherFactory matcherFactory = matcherFactoriesByOrigin.get(origin);
+			if (matcherFactory == null) {
+				break;
+			}
+			wrapper.add(matcherFactory);
+		}
+		wrapper.trimToSize();
+		return wrapper;
+	}
+
+	private static Matcher wrap(List<MatcherFactory> wrapper, Matcher matcher) {
+		for (MatcherFactory matcherFactory : wrapper) {
+			matcher = matcherFactory.create(matcher);
 		}
 		return matcher;
 	}
@@ -94,7 +119,7 @@ public final class Context {
 	}
 
 	/**
-	 * To be called by {@link internal.su.pernova.assertions.matchers.BiMatcher#contextualize(Context)}.
+	 * To be called by {@link BiMatcher#contextualize(Context)}.
 	 * The old origin is the {@code this} object where for example {@link Matcher#and} has been called on.
 	 * Its origin needs to be rewired to point to the new origin, which is the matcher returned by {@link Matcher#and}.
 	 * The destination is context-requiring matcher, that does not need to be rewired.
@@ -106,12 +131,12 @@ public final class Context {
 	 * @return the contextualized origin, which is potentially the same origin if both destinations contextualized into themselves.
 	 */
 	public Matcher fork(Matcher newOrigin, Matcher oldOrigin, Matcher destination, BiFunction<Matcher, Matcher, Matcher> contextualizer) {
-		destination = new ImplicitMatcher(new ImplicitForwardingMatcher(oldOrigin.name(), destination));
+		final Matcher contextualizedOldOrigin = oldOrigin.contextualize(this);
+		final MatcherFactory oldOriginMatcherFactory = matcherFactoriesByOrigin.get(oldOrigin);
+		final MatcherFactory newOriginMatcherFactory = new ImplicitMatcherFactory(oldOriginMatcherFactory);
+		matcherFactoriesByOrigin.put(newOrigin, newOriginMatcherFactory);
 		originsByDestination.put(oldOrigin, newOrigin);
 		originsByDestination.put(destination, newOrigin);
-		final Matcher contextualizedOldOrigin = oldOrigin.contextualize(this);
-		final MatcherFactory matcherFactory = matcherFactoriesByOrigin.get(oldOrigin);
-		matcherFactoriesByOrigin.put(newOrigin, matcherFactory);
 		final Matcher contextualizedDestination = destination.contextualize(this);
 		return contextualizer.apply(contextualizedOldOrigin, contextualizedDestination);
 	}
@@ -274,6 +299,6 @@ public final class Context {
 	}
 
 	public static Matcher forwardMatcherFactory(CharSequence name, Matcher destination) {
-		return forwardMatcherFactory(d -> new ImplicitForwardingMatcher(name, d), name, destination);
+		return forwardMatcherFactory(d -> new ForwardingMatcher(name, d), name, destination);
 	}
 }

@@ -4,9 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import internal.su.pernova.assertions.matchers.ImplicitMatcher;
 
-class ImplicitMatcherFactory implements MatcherFactory {
-
-	final MatcherFactory destination;
+record ImplicitMatcherFactory(MatcherFactory destination) implements MatcherFactory {
 
 	ImplicitMatcherFactory(MatcherFactory destination) {
 		this.destination = requireNonNull(destination, "destination is null");
@@ -55,6 +53,11 @@ class ImplicitMatcherFactory implements MatcherFactory {
 	@Override
 	public Matcher create(boolean expectedValue) {
 		return imply(destination.create(expectedValue));
+	}
+
+	@Override
+	public Matcher create(Matcher matcher) {
+		return imply(destination.create(matcher));
 	}
 
 	private static Matcher imply(Matcher matcher) {

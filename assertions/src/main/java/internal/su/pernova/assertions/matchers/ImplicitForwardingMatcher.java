@@ -21,7 +21,7 @@ public class ImplicitForwardingMatcher extends ForwardingDescribable<Matcher> im
 
 	@Override
 	public Matcher contextualize(Context context) {
-		context.forward(this, destination);
+		context.forward(this, null, destination);
 		final Matcher contextualizedDestination = destination.contextualize(context);
 		if (contextualizedDestination == destination) {
 			// Preserve object identity.

@@ -1,6 +1,12 @@
 package su.pernova.assertions;
 
 /**
+ * This interface defines a matcher factory for value matchers and forwarding matchers.
+ * A factory for value matchers must implement at least {@link #create(Object)}.
+ * Primitive values are auto-boxed by default, and further delegated to {@link #create(Object)}.
+ * If primitive values need to be treated differently, the implementation must override the corresponding {@link #create} method(s).
+ * A factory for forwarding matchers must implement {@link #create(Matcher)}.
+ *
  * @since 2.0.0
  */
 public interface MatcherFactory {
@@ -40,6 +46,6 @@ public interface MatcherFactory {
 	}
 
 	default Matcher create(Matcher matcher) {
-		throw new UnsupportedOperationException();
+		return matcher;
 	}
 }
