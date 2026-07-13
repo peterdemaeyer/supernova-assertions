@@ -14,7 +14,7 @@ public class ObjectMatcher extends ExpectedValueMatcher {
 	}
 
 	public ObjectMatcher(Object expectedValue) {
-		this("?Object", true, expectedValue);
+		this("", true, expectedValue);
 	}
 
 	@Override

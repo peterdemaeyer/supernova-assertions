@@ -81,7 +81,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(Object expectedValue) {
-		return new And(this, new ObjectMatcher("?", true, expectedValue));
+		return new And(this, new ObjectMatcher(expectedValue));
 	}
 
 	/**
@@ -92,7 +92,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(double expectedValue) {
-		return new And(this, new DoubleMatcher("?", true, expectedValue));
+		return new And(this, new DoubleMatcher(expectedValue));
 	}
 
 	/**
@@ -103,7 +103,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(float expectedValue) {
-		return new And(this, new FloatMatcher("?", true, expectedValue));
+		return new And(this, new FloatMatcher(expectedValue));
 	}
 
 	/**
@@ -114,7 +114,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(long expectedValue) {
-		return new And(this, new LongMatcher("?", true, expectedValue));
+		return new And(this, new LongMatcher(expectedValue));
 	}
 
 	/**
@@ -125,7 +125,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(int expectedValue) {
-		return new And(this, new IntMatcher("?", true, expectedValue));
+		return new And(this, new IntMatcher(expectedValue));
 	}
 
 	/**
@@ -136,7 +136,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(short expectedValue) {
-		return new And(this, new ShortMatcher("?", true, expectedValue));
+		return new And(this, new ShortMatcher(expectedValue));
 	}
 
 	/**
@@ -147,7 +147,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(byte expectedValue) {
-		return new And(this, new ByteMatcher("?", true, expectedValue));
+		return new And(this, new ByteMatcher(expectedValue));
 	}
 
 	/**
@@ -158,7 +158,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(char expectedValue) {
-		return new And(this, new CharMatcher("?", true, expectedValue));
+		return new And(this, new CharMatcher(expectedValue));
 	}
 
 	/**
@@ -169,7 +169,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher and(boolean expectedValue) {
-		return new And(this, new BooleanMatcher("?", true, expectedValue));
+		return new And(this, new BooleanMatcher(expectedValue));
 	}
 
 	/**
@@ -193,7 +193,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher or(Object expectedValue) {
-		return new Or(this, new ObjectMatcher("?", true, expectedValue));
+		return new Or(this, new ObjectMatcher(expectedValue));
 	}
 
 	/**
@@ -204,7 +204,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher or(double expectedValue) {
-		return new Or(this, new DoubleMatcher("?", true, expectedValue));
+		return new Or(this, new DoubleMatcher(expectedValue));
 	}
 
 	/**
@@ -215,7 +215,7 @@ public interface Matcher extends Describable {
 	 * @since 2.0.0
 	 */
 	default Matcher or(float expectedValue) {
-		return new Or(this, new FloatMatcher("?", true, expectedValue));
+		return new Or(this, new FloatMatcher(expectedValue));
 	}
 
 	/**

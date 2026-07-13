@@ -13,6 +13,10 @@ public class CharMatcher extends ExpectedValueMatcher {
 		this.expectedValue = expectedValue;
 	}
 
+	public CharMatcher(char expectedValue) {
+		this("", true, expectedValue);
+	}
+
 	@Override
 	public Description describe(Description description) {
 		return super.describe(description).appendExpectedValue(expectedValue);

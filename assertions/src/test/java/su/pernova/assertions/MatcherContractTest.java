@@ -163,6 +163,11 @@ public interface MatcherContractTest extends ContractTest {
 	}
 
 	@Test
+	default void contextualizedMatcherIsNotNull() {
+		assertNotNull(getInstance().contextualize(new Context()));
+	}
+
+	@Test
 	default void matchingIsConsistent() {
 		final Matcher matcher = getInstance().contextualize(new Context());
 		assertEquals(matcher.match(null), matcher.match(null));
@@ -213,5 +218,17 @@ public interface MatcherContractTest extends ContractTest {
 				future.get();
 			}
 		}
+	}
+
+	@Test
+	default void contextualizationDoesNotAffectDescription() {
+		final Matcher matcher = getInstance();
+		final Description description = matcher.describe(newDescription());
+		final Description contextualizedDescription = matcher.contextualize(new Context()).describe(newDescription());
+		assertEquals(description.toString(), contextualizedDescription.toString());
+	}
+
+	static Description newDescription() {
+		return new AppendableDescription(new StringBuilder());
 	}
 }

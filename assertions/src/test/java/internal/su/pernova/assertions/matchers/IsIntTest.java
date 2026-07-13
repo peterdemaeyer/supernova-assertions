@@ -12,6 +12,7 @@ import java.math.BigInteger;
 
 import org.junit.jupiter.api.Test;
 
+import su.pernova.assertions.Matcher;
 import su.pernova.assertions.MatcherContractTest;
 
 class IsIntTest implements MatcherContractTest {

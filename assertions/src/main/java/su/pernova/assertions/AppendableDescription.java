@@ -239,6 +239,19 @@ public class AppendableDescription implements Description {
 	}
 
 	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof AppendableDescription other)) {
+			return false;
+		}
+		return appendable.equals(other.appendable);
+	}
+
+	@Override
+	public int hashCode() {
+		return appendable.hashCode();
+	}
+
+	@Override
 	public String toString() {
 		return appendable.toString();
 	}

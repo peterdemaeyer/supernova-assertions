@@ -49,4 +49,19 @@ public class DelegatingDescription implements Description {
 	public Description setAppendIdentity(boolean appendIdentity) {
 		return delegatee.setAppendIdentity(appendIdentity);
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return getClass().equals(obj.getClass()) && delegatee.equals(((DelegatingDescription) obj).delegatee);
+	}
+
+	@Override
+	public int hashCode() {
+		return delegatee.hashCode();
+	}
+
+	@Override
+	public String toString() {
+		return delegatee.toString();
+	}
 }

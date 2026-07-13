@@ -13,6 +13,10 @@ public class BooleanMatcher extends ExpectedValueMatcher {
 		this.expectedValue = expectedValue;
 	}
 
+	public BooleanMatcher(boolean expectedValue) {
+		this("", true, expectedValue);
+	}
+
 	@Override
 	public Description describe(Description description) {
 		return super.describe(description).appendExpectedValue(expectedValue);

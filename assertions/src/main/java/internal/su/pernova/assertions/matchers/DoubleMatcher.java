@@ -14,7 +14,7 @@ public class DoubleMatcher extends ExpectedValueMatcher {
 	}
 
 	public DoubleMatcher(double expectedValue) {
-		this("?", true, expectedValue);
+		this("", true, expectedValue);
 	}
 
 	@Override

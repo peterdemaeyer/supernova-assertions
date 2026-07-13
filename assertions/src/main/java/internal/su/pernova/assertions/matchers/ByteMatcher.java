@@ -13,6 +13,10 @@ public class ByteMatcher extends ExpectedValueMatcher {
 		this.expectedValue = expectedValue;
 	}
 
+	public ByteMatcher(byte expectedValue) {
+		this("", true, expectedValue);
+	}
+
 	@Override
 	public Description describe(Description description) {
 		return super.describe(description).appendExpectedValue(expectedValue);

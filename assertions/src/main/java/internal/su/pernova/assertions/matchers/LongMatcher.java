@@ -13,6 +13,10 @@ public class LongMatcher extends ExpectedValueMatcher {
 		this.expectedValue = expectedValue;
 	}
 
+	public LongMatcher(long expectedValue) {
+		this("", true, expectedValue);
+	}
+
 	@Override
 	public Description describe(Description description) {
 		return super.describe(description).appendExpectedValue(expectedValue);

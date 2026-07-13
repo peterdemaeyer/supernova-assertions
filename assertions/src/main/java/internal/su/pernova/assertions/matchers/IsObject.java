@@ -19,7 +19,7 @@ public class IsObject extends ObjectMatcher {
 	}
 
 	public IsObject(Object expectedValue) {
-		this(null, expectedValue);
+		this("is", expectedValue);
 	}
 
 	@Override

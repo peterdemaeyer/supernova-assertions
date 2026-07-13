@@ -42,7 +42,7 @@ class OrTest implements MatcherContractTest {
 	@Test
 	void contextualizedIsIntOrIntDescription() {
 		assertEquals("is: 1 or: 2",
-				is(1).or(2).describe(newDescription()).toString());
+				is(1).or(2).contextualize(new Context()).describe(newDescription()).toString());
 	}
 
 	@Test
