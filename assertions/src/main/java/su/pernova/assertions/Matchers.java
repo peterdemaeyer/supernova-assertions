@@ -2,6 +2,7 @@ package su.pernova.assertions;
 
 import static java.util.Objects.requireNonNull;
 
+import static internal.su.pernova.assertions.matchers.MultiMatcher.toMatchers;
 import static internal.su.pernova.assertions.matchers.MultiMatcher.create;
 
 import java.util.Objects;
@@ -563,8 +564,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher anyOf(Object... expectedValues) {
-		requireNonNull(expectedValues, "array of expected values is null");
-		return Context.newIncompleteMatcher(matcherFactory -> create(AnyOf::new, matcherFactory, expectedValues));
+		return new AnyOf(toMatchers(expectedValues));
 	}
 
 	/**
@@ -690,8 +690,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher allOf(Object... expectedValues) {
-		requireNonNull(expectedValues, "array of expected values is null");
-		return Context.newIncompleteMatcher(matcherFactory -> create(AllOf::new, matcherFactory, expectedValues));
+		return new AllOf(toMatchers(expectedValues));
 	}
 
 	/**
@@ -814,8 +813,7 @@ public final class Matchers {
 	 * @since 2.0.0
 	 */
 	public static Matcher noneOf(Object... expectedValues) {
-		requireNonNull(expectedValues, "array of expected values is null");
-		return Context.newIncompleteMatcher(matcherFactory -> create(NoneOf::new, matcherFactory, expectedValues));
+		return new NoneOf(toMatchers(expectedValues));
 	}
 
 	/**

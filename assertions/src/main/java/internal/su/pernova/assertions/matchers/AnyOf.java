@@ -8,6 +8,15 @@ public class AnyOf extends MultiMatcher {
 		super(startDelimiter, separator, endDelimiter, destinations);
 	}
 
+	public AnyOf(Matcher... destinations) {
+		super(destinations);
+	}
+
+	@Override
+	protected AnyOf newInstance(Matcher[] contextualizedDestinations) {
+		return new AnyOf(startDelimiter, separator, endDelimiter, contextualizedDestinations);
+	}
+
 	@Override
 	public boolean match(Object actualValue) {
 		for (Matcher destination : destinations) {

@@ -1,11 +1,13 @@
 package internal.su.pernova.assertions.matchers;
 
+import static java.lang.System.arraycopy;
 import static java.util.Arrays.stream;
 import static java.util.Objects.requireNonNull;
 
 import static internal.su.pernova.assertions.DescribableUtils.getDefaultName;
 import static internal.su.pernova.assertions.DescribableUtils.toLowerCamelCase;
 
+import su.pernova.assertions.Context;
 import su.pernova.assertions.DelegatingDescription;
 import su.pernova.assertions.Description;
 import su.pernova.assertions.Matcher;
@@ -26,6 +28,10 @@ public abstract class MultiMatcher implements Matcher {
 		this.startDelimiter = startDelimiter;
 		this.separator = separator;
 		this.endDelimiter = endDelimiter;
+	}
+
+	public MultiMatcher(Matcher... destinations) {
+		this("[", ", ", "]", destinations);
 	}
 
 	@Override
@@ -53,8 +59,10 @@ public abstract class MultiMatcher implements Matcher {
 		return description.appendText(endDelimiter);
 	}
 
-	public static Matcher create(Constructor constructor, MatcherFactory matcherFactory, Object[] expectedValues) {
-		return createSingleLine(constructor, stream(expectedValues).map(matcherFactory::create).toArray(Matcher[]::new));
+	public static Matcher[] toMatchers(Object[] expectedValues) {
+		return stream(requireNonNull(expectedValues, "array of expected values is null"))
+				.map(expectedValue -> new ObjectMatcher("", false, expectedValue))
+				.toArray(Matcher[]::new);
 	}
 
 	public static Matcher create(Constructor constructor, MatcherFactory matcherFactory, double[] expectedValues) {
@@ -129,4 +137,24 @@ public abstract class MultiMatcher implements Matcher {
 		}
 		return builder.append('}').toString();
 	}
+
+	@Override
+	public Matcher contextualize(Context context) {
+		Matcher[] contextualizedDestinations = null;
+		int i = 0;
+		for (Matcher destination : destinations) {
+			Matcher contextualizedDestination = destination.contextualize(context);
+			if (contextualizedDestination != destination) {
+				if (contextualizedDestinations == null) {
+					contextualizedDestinations = new Matcher[destinations.length];
+					arraycopy(destinations, 0, contextualizedDestinations, 0, destinations.length);
+				}
+				contextualizedDestinations[i] = contextualizedDestination;
+			}
+			i++;
+		}
+		return contextualizedDestinations != null ? newInstance(contextualizedDestinations) : this;
+	}
+
+	protected abstract MultiMatcher newInstance(Matcher[] contextualizedDestinations);
 }

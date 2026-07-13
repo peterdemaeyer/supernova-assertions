@@ -8,6 +8,15 @@ public class AllOf extends MultiMatcher {
 		super(startDelimiter, separator, endDelimiter, destinations);
 	}
 
+	public AllOf(Matcher... destinations) {
+		super(destinations);
+	}
+
+	@Override
+	protected AllOf newInstance(Matcher[] contextualizedDestinations) {
+		return new AllOf(startDelimiter, separator, endDelimiter, contextualizedDestinations);
+	}
+
 	@Override
 	public boolean match(Object actualValue) {
 		for (Matcher destination : destinations) {
