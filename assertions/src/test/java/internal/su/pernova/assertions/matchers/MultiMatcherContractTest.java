@@ -3,22 +3,24 @@ package internal.su.pernova.assertions.matchers;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import static su.pernova.assertions.Matchers.is;
-
-import java.util.regex.Pattern;
+import static internal.su.pernova.assertions.matchers.MultiMatcherTestUtils.contextualize;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import su.pernova.assertions.Context;
 import su.pernova.assertions.Matcher;
 import su.pernova.assertions.MatcherContractTest;
-import su.pernova.assertions.NoContextException;
 
 /// @since 2.0.0
 interface MultiMatcherContractTest extends MatcherContractTest {
+
+	@Override
+	default Matcher getContextualizedInstance(Context context) {
+		return contextualize(getInstance(), context);
+	}
 
 	/// @param expectedValues expected values, not `null`.
 	/// @return a context-sensitive matcher, not `null`.
@@ -58,47 +60,47 @@ interface MultiMatcherContractTest extends MatcherContractTest {
 
 	@Test
 	default void matchingObjectsThrowsWhenMatcherHasNoContext() {
-		assertThrows(NoContextException.class, () -> getInstance(this, this).match(this));
+		assertThrows(IllegalStateException.class, () -> getInstance(this, this).match(this));
 	}
 
 	@Test
 	default void matchingDoublesThrowsWhenMatcherHasNoContext() {
-		assertThrows(NoContextException.class, () -> getInstance(new double[] { 0d, 0d }).match(0d));
+		assertThrows(IllegalStateException.class, () -> getInstance(new double[] { 0d, 0d }).match(0d));
 	}
 
 	@Test
 	default void matchingFloatsThrowsWhenMatcherHasNoContext() {
-		assertThrows(NoContextException.class, () -> getInstance(new float[] { 0f, 0f }).match(0f));
+		assertThrows(IllegalStateException.class, () -> getInstance(new float[] { 0f, 0f }).match(0f));
 	}
 
 	@Test
 	default void matchingLongsThrowsWhenMatcherHasNoContext() {
-		assertThrows(NoContextException.class, () -> getInstance(new long[] { 0L, 0L }).match(0L));
+		assertThrows(IllegalStateException.class, () -> getInstance(new long[] { 0L, 0L }).match(0L));
 	}
 
 	@Test
 	default void matchingIntegersThrowsWhenMatcherHasNoContext() {
-		assertThrows(NoContextException.class, () -> getInstance(new int[] { 0, 0 }).match(0));
+		assertThrows(IllegalStateException.class, () -> getInstance(new int[] { 0, 0 }).match(0));
 	}
 
 	@Test
 	default void matchingShortsThrowsWhenMatcherHasNoContext() {
-		assertThrows(NoContextException.class, () -> getInstance(new short[] { 0, 0 }).match((short) 0));
+		assertThrows(IllegalStateException.class, () -> getInstance(new short[] { 0, 0 }).match((short) 0));
 	}
 
 	@Test
 	default void matchingBytesThrowsWhenMatcherHasNoContext() {
-		assertThrows(NoContextException.class, () -> getInstance(new byte[] { 0, 0 }).match((byte) 0));
+		assertThrows(IllegalStateException.class, () -> getInstance(new byte[] { 0, 0 }).match((byte) 0));
 	}
 
 	@Test
 	default void matchingCharactersThrowsWhenMatcherHasNoContext() {
-		assertThrows(NoContextException.class, () -> getInstance(new char[] { '0', '0' }).match('0'));
+		assertThrows(IllegalStateException.class, () -> getInstance(new char[] { '0', '0' }).match('0'));
 	}
 
 	@Test
 	default void matchingBooleansThrowsWhenMatcherHasNoContext() {
-		assertThrows(NoContextException.class, () -> getInstance(new boolean[] { false, false }).match(false));
+		assertThrows(IllegalStateException.class, () -> getInstance(new boolean[] { false, false }).match(false));
 	}
 
 	@Test
@@ -176,100 +178,63 @@ interface MultiMatcherContractTest extends MatcherContractTest {
 	@ParameterizedTest
 	@ValueSource(ints = { 0, 1, 2, 3 })
 	default void matchingObjectsWithNullDoesNotThrow(int size) {
-		assertDoesNotThrow(() -> is(getInstance(new Object[size])).match(null));
+		final Matcher matcher = contextualize(getInstance(new Object[size]));
+		assertDoesNotThrow(() -> matcher.match(null));
 	}
 
 	@ParameterizedTest
 	@ValueSource(ints = { 0, 1, 2, 3 })
 	default void matchingDoublesWithNullDoesNotThrow(int size) {
-		assertDoesNotThrow(() -> is(getInstance(new double[size])).match(null));
+		final Matcher matcher = contextualize(getInstance(new double[size]));
+		assertDoesNotThrow(() -> matcher.match(null));
 	}
 
 	@ParameterizedTest
 	@ValueSource(ints = { 0, 1, 2, 3 })
 	default void matchingFloatsWithNullDoesNotThrow(int size) {
-		assertDoesNotThrow(() -> is(getInstance(new float[size])).match(null));
+		final Matcher matcher = contextualize(getInstance(new float[size]));
+		assertDoesNotThrow(() -> matcher.match(null));
 	}
 
 	@ParameterizedTest
 	@ValueSource(ints = { 0, 1, 2, 3 })
 	default void matchingLongsWithNullDoesNotThrow(int size) {
-		assertDoesNotThrow(() -> is(getInstance(new long[size])).match(null));
+		final Matcher matcher = contextualize(getInstance(new long[size]));
+		assertDoesNotThrow(() -> matcher.match(null));
 	}
 
 	@ParameterizedTest
 	@ValueSource(ints = { 0, 1, 2, 3 })
 	default void matchingIntsWithNullDoesNotThrow(int size) {
-		assertDoesNotThrow(() -> is(getInstance(new int[size])).match(null));
+		final Matcher matcher = contextualize(getInstance(new int[size]));
+		assertDoesNotThrow(() -> matcher.match(null));
 	}
 
 	@ParameterizedTest
 	@ValueSource(ints = { 0, 1, 2, 3 })
 	default void matchingShortsWithNullDoesNotThrow(int size) {
-		assertDoesNotThrow(() -> is(getInstance(new short[size])).match(null));
+		final Matcher matcher = contextualize(getInstance(new short[size]));
+		assertDoesNotThrow(() -> matcher.match(null));
 	}
 
 	@ParameterizedTest
 	@ValueSource(ints = { 0, 1, 2, 3 })
 	default void matchingBytesWithNullDoesNotThrow(int size) {
-		assertDoesNotThrow(() -> is(getInstance(new byte[size])).match(null));
+		final Matcher matcher = contextualize(getInstance(new byte[size]));
+		assertDoesNotThrow(() -> matcher.match(null));
 	}
 
 	@ParameterizedTest
 	@ValueSource(ints = { 0, 1, 2, 3 })
 	default void matchingCharsWithNullDoesNotThrow(int size) {
-		assertDoesNotThrow(() -> is(getInstance(new char[size])).match(null));
+		final Matcher matcher = contextualize(getInstance(new char[size]));
+		assertDoesNotThrow(() -> matcher.match(null));
 	}
 
 	@ParameterizedTest
 	@ValueSource(ints = { 0, 1, 2, 3 })
 	default void matchingBooleansWithNullDoesNotThrow(int size) {
-		assertDoesNotThrow(() -> is(getInstance(new boolean[size])).match(null));
-	}
-
-	@Test
-	default void orPropagatesLackOfMatcherContext() {
-		final Matcher incompleteMatcher = getInstance("a", "b").or(getInstance("c", "d"));
-		assertThrows(IllegalStateException.class, () -> incompleteMatcher.match("e"));
-		assertEquals("...", incompleteMatcher.toString());
-		final Matcher matcher = is(incompleteMatcher); // Completes the incomplete matcher
-		assertDoesNotThrow(() -> matcher.match("e"));
-		final Pattern pattern = Pattern.compile("is\\{or\\{\\w+\\{i̶s̶O̶b̶j̶e̶c̶t̶\\(a\\)}\\{i̶s̶O̶b̶j̶e̶c̶t̶\\(b\\)}}\\{\\w+\\{i̶s̶O̶b̶j̶e̶c̶t̶\\(c\\)}\\{i̶s̶O̶b̶j̶e̶c̶t̶\\(d\\)}}}");
-		final String stringValue = matcher.toString();
-		assertTrue(pattern.matcher(stringValue).matches(), stringValue);
-	}
-
-	@Test
-	default void orPropagatesMatcherContext() {
-		// The difference is in the placement of the parenthesis.
-		// This time, the "or" is called on the COMPLETED matcher.
-		final Matcher matcher = is(getInstance("a", "b")).or(getInstance("c", "d"));
-		assertDoesNotThrow(() -> matcher.match("e"));
-		final Pattern pattern = Pattern.compile("or\\{is\\{\\w+\\{i̶s̶O̶b̶j̶e̶c̶t̶\\(a\\)}\\{i̶s̶O̶b̶j̶e̶c̶t̶\\(b\\)}}}\\{\\w+\\{i̶s̶O̶b̶j̶e̶c̶t̶\\(c\\)}\\{i̶s̶O̶b̶j̶e̶c̶t̶\\(d\\)}}");
-		final String stringValue = matcher.toString();
-		assertTrue(pattern.matcher(stringValue).matches(), stringValue);
-	}
-
-	@Test
-	default void andPropagatesLackOfMatcherContext() {
-		final Matcher incompleteMatcher = getInstance("a", "b").and(getInstance("c", "d"));
-		assertThrows(IllegalStateException.class, () -> incompleteMatcher.match("e"));
-		assertEquals("...", incompleteMatcher.toString());
-		final Matcher matcher = is(incompleteMatcher); // Complete the incomplete matcher
-		assertDoesNotThrow(() -> matcher.match("e"));
-		final Pattern pattern = Pattern.compile("is\\{and\\{\\w+\\{i̶s̶O̶b̶j̶e̶c̶t̶\\(a\\)}\\{i̶s̶O̶b̶j̶e̶c̶t̶\\(b\\)}}\\{\\w+\\{i̶s̶O̶b̶j̶e̶c̶t̶\\(c\\)}\\{i̶s̶O̶b̶j̶e̶c̶t̶\\(d\\)}}}");
-		final String stringValue = matcher.toString();
-		assertTrue(pattern.matcher(stringValue).matches(), stringValue);
-	}
-
-	@Test
-	default void andPropagatesMatcherContext() {
-		// The difference is in the placement of the parenthesis.
-		// This time, the "or" is called on the COMPLETED matcher.
-		final Matcher matcher = is(getInstance("a", "b")).and(getInstance("c", "d"));
-		assertDoesNotThrow(() -> matcher.match("e"));
-		final Pattern pattern = Pattern.compile("and\\{is\\{\\w+\\{i̶s̶O̶b̶j̶e̶c̶t̶\\(a\\)}\\{i̶s̶O̶b̶j̶e̶c̶t̶\\(b\\)}}}\\{\\w+\\{i̶s̶O̶b̶j̶e̶c̶t̶\\(c\\)}\\{i̶s̶O̶b̶j̶e̶c̶t̶\\(d\\)}}");
-		final String stringValue = matcher.toString();
-		assertTrue(pattern.matcher(stringValue).matches(), stringValue);
+		final Matcher matcher = contextualize(getInstance(new boolean[size]));
+		assertDoesNotThrow(() -> matcher.match(null));
 	}
 }

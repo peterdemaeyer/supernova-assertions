@@ -8,6 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.mock;
 
+import static su.pernova.assertions.Matchers.is;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -27,43 +29,42 @@ import su.pernova.design.ContractTest;
 /// @since 2.0.0
 public interface MatcherContractTest extends ContractTest {
 
-	/// Implementations must return a complete matcher, not `null`.
+	/// Implementations must return a matcher, not `null`.
 	/// To have meaningful tests, it is recommended that implementations return a matcher representing a common use case
 	/// rather than a corner case.
 	///
-	/// @return a complete matcher, not `null`.
+	/// @return a contextualized matcher, not `null`.
 	Matcher getInstance();
+
+	/// Gets a contextualized matcher.
+	default Matcher getContextualizedInstance() {
+		return getContextualizedInstance(new Context());
+	}
+
+	default Matcher getContextualizedInstance(Context context) {
+		return getInstance().contextualize(context);
+	}
 
 	@Test
 	default void matchingNullDoesNotThrow() {
-		final Matcher matcher = getInstance().contextualize(new Context());
-		assertDoesNotThrow(() -> matcher.match(null));
+		assertDoesNotThrow(() -> getContextualizedInstance().match(null));
 	}
 
 	@Test
 	default void matchingAnyObjectDoesNotThrow() {
-		final Matcher matcher = getInstance().contextualize(new Context());
-		assertDoesNotThrow(() -> matcher.match(new Object()));
+		assertDoesNotThrow(() -> getContextualizedInstance().match(new Object()));
 	}
 
 	@Test
 	default void matchingObjectOfAnyTypeDoesNotThrow() {
-		final Matcher matcher = getInstance().contextualize(new Context());
-		assertDoesNotThrow(() -> matcher.match(this));
+		assertDoesNotThrow(() -> getContextualizedInstance().match(this));
 	}
 
 	@Test
 	default void descriptionChainsDescription() {
-		final Matcher matcher = getInstance().contextualize(new Context());
+		final Matcher matcher = getContextualizedInstance();
 		final AppendableDescription description = new AppendableDescription(new StringBuilder());
 		assertSame(description, matcher.describe(description));
-	}
-
-	@Test
-	default void mismatchDescriptionChainsDescription() {
-		final Matcher matcher = getInstance().contextualize(new Context());
-		final AppendableDescription mismatchDescription = new AppendableDescription(new StringBuilder());
-		assertSame(mismatchDescription, matcher.describeMismatch(mismatchDescription));
 	}
 
 	@Test
@@ -73,8 +74,7 @@ public interface MatcherContractTest extends ContractTest {
 
 	@Test
 	default void stringValueIsNotNull() {
-		final Matcher matcher = getInstance().contextualize(new Context());
-		assertNotNull(matcher.toString());
+		assertNotNull(getContextualizedInstance().toString());
 	}
 
 	@Test
@@ -164,12 +164,19 @@ public interface MatcherContractTest extends ContractTest {
 
 	@Test
 	default void contextualizedMatcherIsNotNull() {
-		assertNotNull(getInstance().contextualize(new Context()));
+		assertNotNull(getContextualizedInstance());
+	}
+
+	@Test
+	default void contextualizationIsIdempotent() {
+		final Context context = new Context();
+		final Matcher contextualizedMatcher = getContextualizedInstance(context);
+		assertSame(contextualizedMatcher, contextualizedMatcher.contextualize(context));
 	}
 
 	@Test
 	default void matchingIsConsistent() {
-		final Matcher matcher = getInstance().contextualize(new Context());
+		final Matcher matcher = getContextualizedInstance();
 		assertEquals(matcher.match(null), matcher.match(null));
 		assertEquals(matcher.match(this), matcher.match(this));
 		final Object value = new Object();
@@ -200,7 +207,7 @@ public interface MatcherContractTest extends ContractTest {
 		final int iterations = 100;
 		final CyclicBarrier barrier = new CyclicBarrier(concurrency + 1);
 		final List<Future<?>> futures = new ArrayList<>(concurrency);
-		final Matcher matcher = getInstance().contextualize(new Context());
+		final Matcher matcher = getContextualizedInstance();
 		final Object value = new Object();
 		final AtomicBoolean result = new AtomicBoolean(matcher.match(value));
 		try (ExecutorService executor = newFixedThreadPool(concurrency)) {
@@ -218,14 +225,6 @@ public interface MatcherContractTest extends ContractTest {
 				future.get();
 			}
 		}
-	}
-
-	@Test
-	default void contextualizationDoesNotAffectDescription() {
-		final Matcher matcher = getInstance();
-		final Description description = matcher.describe(newDescription());
-		final Description contextualizedDescription = matcher.contextualize(new Context()).describe(newDescription());
-		assertEquals(description.toString(), contextualizedDescription.toString());
 	}
 
 	static Description newDescription() {

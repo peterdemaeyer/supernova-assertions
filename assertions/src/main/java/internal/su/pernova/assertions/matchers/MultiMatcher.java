@@ -1,6 +1,5 @@
 package internal.su.pernova.assertions.matchers;
 
-import static java.lang.System.arraycopy;
 import static java.util.Arrays.stream;
 import static java.util.Objects.requireNonNull;
 
@@ -11,7 +10,6 @@ import su.pernova.assertions.Context;
 import su.pernova.assertions.DelegatingDescription;
 import su.pernova.assertions.Description;
 import su.pernova.assertions.Matcher;
-import su.pernova.assertions.MatcherFactory;
 
 public abstract class MultiMatcher implements Matcher {
 
@@ -59,71 +57,73 @@ public abstract class MultiMatcher implements Matcher {
 		return description.appendText(endDelimiter);
 	}
 
-	public static Matcher[] toMatchers(Object[] expectedValues) {
+	public static ObjectMatcher[] toMatchers(Object[] expectedValues) {
 		return stream(requireNonNull(expectedValues, "array of expected values is null"))
-				.map(expectedValue -> new ObjectMatcher("", false, expectedValue))
-				.toArray(Matcher[]::new);
+				.map(v -> new ObjectMatcher("", false, v))
+				.toArray(ObjectMatcher[]::new);
 	}
 
-	public static Matcher create(Constructor constructor, MatcherFactory matcherFactory, double[] expectedValues) {
-		return createSingleLine(constructor, stream(expectedValues).mapToObj(matcherFactory::create).toArray(Matcher[]::new));
+	public static DoubleMatcher[] toMatchers(double[] expectedValues) {
+		return stream(requireNonNull(expectedValues, "array of expected values is null"))
+				.mapToObj(v -> new DoubleMatcher("", false, v))
+				.toArray(DoubleMatcher[]::new);
 	}
 
-	public static Matcher create(Constructor constructor, MatcherFactory matcherFactory, float[] expectedValues) {
-		final Matcher[] matchers = new Matcher[expectedValues.length];
+	public static FloatMatcher[] toMatchers(float[] expectedValues) {
+		requireNonNull(expectedValues, "array of expected values is null");
+		final FloatMatcher[] matchers = new FloatMatcher[expectedValues.length];
 		for (int i = 0, n = matchers.length; i != n; i++) {
-			matchers[i] = matcherFactory.create(expectedValues[i]);
+			matchers[i] = new FloatMatcher("", false, expectedValues[i]);
 		}
-		return createSingleLine(constructor, matchers);
+		return matchers;
 	}
 
-	public static Matcher create(Constructor constructor, MatcherFactory matcherFactory, long[] expectedValues) {
-		return createSingleLine(constructor, stream(expectedValues).mapToObj(matcherFactory::create).toArray(Matcher[]::new));
+	public static LongMatcher[] toMatchers(long[] expectedValues) {
+		return stream(requireNonNull(expectedValues, "array of expected values is null"))
+				.mapToObj(v -> new LongMatcher("", false, v))
+				.toArray(LongMatcher[]::new);
 	}
 
-	public static Matcher create(Constructor constructor, MatcherFactory matcherFactory, int[] expectedValues) {
-		return createSingleLine(constructor, stream(expectedValues).mapToObj(matcherFactory::create).toArray(Matcher[]::new));
+	public static IntMatcher[] toMatchers(int[] expectedValues) {
+		return stream(requireNonNull(expectedValues, "array of expected values is null"))
+				.mapToObj(v -> new IntMatcher("", false, v))
+				.toArray(IntMatcher[]::new);
 	}
 
-	public static Matcher create(Constructor constructor, MatcherFactory matcherFactory, short[] expectedValues) {
-		final Matcher[] matchers = new Matcher[expectedValues.length];
+	public static ShortMatcher[] toMatchers(short[] expectedValues) {
+		requireNonNull(expectedValues, "array of expected values is null");
+		final ShortMatcher[] matchers = new ShortMatcher[expectedValues.length];
 		for (int i = 0, n = matchers.length; i != n; i++) {
-			matchers[i] = matcherFactory.create(expectedValues[i]);
+			matchers[i] = new ShortMatcher("", false, expectedValues[i]);
 		}
-		return createSingleLine(constructor, matchers);
+		return matchers;
 	}
 
-	public static Matcher create(Constructor constructor, MatcherFactory matcherFactory, byte[] expectedValues) {
-		final Matcher[] matchers = new Matcher[expectedValues.length];
+	public static ByteMatcher[] toMatchers(byte[] expectedValues) {
+		requireNonNull(expectedValues, "array of expected values is null");
+		final ByteMatcher[] matchers = new ByteMatcher[expectedValues.length];
 		for (int i = 0, n = matchers.length; i != n; i++) {
-			matchers[i] = matcherFactory.create(expectedValues[i]);
+			matchers[i] = new ByteMatcher("", false, expectedValues[i]);
 		}
-		return createSingleLine(constructor, matchers);
+		return matchers;
 	}
 
-	public static Matcher create(Constructor constructor, MatcherFactory matcherFactory, char[] expectedValues) {
-		final Matcher[] matchers = new Matcher[expectedValues.length];
+	public static CharMatcher[] toMatchers(char[] expectedValues) {
+		requireNonNull(expectedValues, "array of expected values is null");
+		final CharMatcher[] matchers = new CharMatcher[expectedValues.length];
 		for (int i = 0, n = matchers.length; i != n; i++) {
-			matchers[i] = matcherFactory.create(expectedValues[i]);
+			matchers[i] = new CharMatcher("", false, expectedValues[i]);
 		}
-		return createSingleLine(constructor, matchers);
+		return matchers;
 	}
 
-	public static Matcher create(Constructor constructor, MatcherFactory matcherFactory, boolean[] expectedValues) {
-		final Matcher[] matchers = new Matcher[expectedValues.length];
+	public static BooleanMatcher[] toMatchers(boolean[] expectedValues) {
+		requireNonNull(expectedValues, "array of expected values is null");
+		final BooleanMatcher[] matchers = new BooleanMatcher[expectedValues.length];
 		for (int i = 0, n = matchers.length; i != n; i++) {
-			matchers[i] = matcherFactory.create(expectedValues[i]);
+			matchers[i] = new BooleanMatcher("", false, expectedValues[i]);
 		}
-		return createSingleLine(constructor, matchers);
-	}
-
-	private static Matcher createSingleLine(Constructor constructor, Matcher... matchers) {
-		return constructor.construct("[", ", ", "]", matchers);
-	}
-
-	public interface Constructor {
-
-		Matcher construct(CharSequence startDelimiter, CharSequence separator, CharSequence endDelimiter, Matcher... matchers);
+		return matchers;
 	}
 
 	@Override
@@ -140,20 +140,7 @@ public abstract class MultiMatcher implements Matcher {
 
 	@Override
 	public Matcher contextualize(Context context) {
-		Matcher[] contextualizedDestinations = null;
-		int i = 0;
-		for (Matcher destination : destinations) {
-			Matcher contextualizedDestination = destination.contextualize(context);
-			if (contextualizedDestination != destination) {
-				if (contextualizedDestinations == null) {
-					contextualizedDestinations = new Matcher[destinations.length];
-					arraycopy(destinations, 0, contextualizedDestinations, 0, destinations.length);
-				}
-				contextualizedDestinations[i] = contextualizedDestination;
-			}
-			i++;
-		}
-		return contextualizedDestinations != null ? newInstance(contextualizedDestinations) : this;
+		return context.resolve(this, destinations, this::newInstance);
 	}
 
 	protected abstract MultiMatcher newInstance(Matcher[] contextualizedDestinations);

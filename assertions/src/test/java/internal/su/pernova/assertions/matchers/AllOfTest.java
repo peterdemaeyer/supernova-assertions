@@ -186,8 +186,16 @@ class AllOfTest implements MultiMatcherContractTest {
 	}
 
 	@Test
-	void allOfOr() {
-		final Matcher matcher = is(allOf(new int[] { 0, 0, 0 }).or(allOf(new int[] { 0, 0 })));
-		matcher.match(0);
+	void isAllOfOrAllOf() {
+		assertThat(0, is(allOf(new int[] { 0, 0, 0 }).or(allOf(new int[] { 0, 0 }))));
+	}
+
+	@Test
+	void isAllOfOrAllOfThrows() {
+		assertThrowsAssertionErrorWithMessage(
+				() -> assertThat(0, is(allOf(new int[] { 0, 1, 2 }).or(allOf(new int[] { 0, 1 })))),
+				"expected that subject is all of: [0, 1, 2] or all of: [0, 1]",
+				"but was: 0"
+		);
 	}
 }

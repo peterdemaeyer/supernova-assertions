@@ -7,7 +7,8 @@ import su.pernova.assertions.Description;
 
 public class ForwardingDescribable<D extends Describable> extends NamedDescribable implements Describable {
 
-	protected final D destination;
+	// Visible for testing.
+	public final D destination;
 
 	public ForwardingDescribable(CharSequence name, D destination) {
 		super(name);

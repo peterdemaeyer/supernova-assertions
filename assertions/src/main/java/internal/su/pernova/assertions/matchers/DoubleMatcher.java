@@ -8,8 +8,8 @@ public class DoubleMatcher extends ExpectedValueMatcher {
 
 	protected final double expectedValue;
 
-	public DoubleMatcher(CharSequence description, boolean prompt, double expectedValue) {
-		super(description, prompt);
+	public DoubleMatcher(CharSequence name, boolean prompt, double expectedValue) {
+		super(name, prompt);
 		this.expectedValue = expectedValue;
 	}
 

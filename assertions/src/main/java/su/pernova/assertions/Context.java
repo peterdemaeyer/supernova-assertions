@@ -1,5 +1,6 @@
 package su.pernova.assertions;
 
+import static java.lang.System.arraycopy;
 import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
@@ -124,21 +125,73 @@ public final class Context {
 	 * Its origin needs to be rewired to point to the new origin, which is the matcher returned by {@link Matcher#and}.
 	 * The destination is context-requiring matcher, that does not need to be rewired.
 	 *
-	 * @param newOrigin an uncontextualized new origin, not {@code null}.
-	 * @param oldOrigin an uncontextualized old origin, not {@code null}.
-	 * @param destination an uncontextualized destination, not {@code null}.
-	 * @param contextualizer a contextualizer (contextualization function) which is a factory for contextualized origin instances.
-	 * @return the contextualized origin, which is potentially the same origin if both destinations contextualized into themselves.
+	 * @param origin an origin bi-matcher, not {@code null}.
+	 * @param destination1 a destination 1, not {@code null}.
+	 * @param destination2 a destination 2, not {@code null}.
+	 * @param factory a factory for contextualized origin bi-matcher instances.
+	 * @return the contextualized origin, which is potentially the same origin if both destinations are already contextualized.
 	 */
-	public Matcher fork(Matcher newOrigin, Matcher oldOrigin, Matcher destination, BiFunction<Matcher, Matcher, Matcher> contextualizer) {
-		final Matcher contextualizedOldOrigin = oldOrigin.contextualize(this);
-		final MatcherFactory oldOriginMatcherFactory = matcherFactoriesByOrigin.get(oldOrigin);
-		final MatcherFactory newOriginMatcherFactory = new ImplicitMatcherFactory(oldOriginMatcherFactory);
-		matcherFactoriesByOrigin.put(newOrigin, newOriginMatcherFactory);
-		originsByDestination.put(oldOrigin, newOrigin);
-		originsByDestination.put(destination, newOrigin);
-		final Matcher contextualizedDestination = destination.contextualize(this);
-		return contextualizer.apply(contextualizedOldOrigin, contextualizedDestination);
+	public Matcher fork(Matcher origin, Matcher destination1, Matcher destination2, BiFunction<Matcher, Matcher, Matcher> factory) {
+		// If destination2 is an ImplicitMatcher, it means that the origin BiMatcher
+		if (destination2 instanceof ImplicitMatcher) {
+			return origin;
+		}
+		requireNonNull(origin, "origin is null");
+		requireNonNull(destination1, "destination 1 is null");
+		requireNonNull(destination2, "destination 2 is null");
+		requireNonNull(factory, "factory is null");
+		originsByDestination.put(destination1, origin);
+		final Matcher contextualizedDestination1 = destination1.contextualize(this);
+		final MatcherFactory destination1MatcherFactory = matcherFactoriesByOrigin.get(destination1);
+		// If destination1 is a multi-matcher such as AnyOf, destination1MatcherFactory is null.
+		if (destination1MatcherFactory != null) {
+			final MatcherFactory originMatcherFactory = new ImplicitMatcherFactory(destination1MatcherFactory);
+			matcherFactoriesByOrigin.put(origin, originMatcherFactory);
+		}
+		originsByDestination.put(destination2, origin);
+		final Matcher contextualizedDestination2 = destination2.contextualize(this);
+		if (contextualizedDestination1 != destination1 || contextualizedDestination2 != destination2) {
+			return factory.apply(contextualizedDestination1, contextualizedDestination2);
+		}
+		return origin;
+	}
+
+	/// Contextualizes a multi-matcher such as "all of", "any of" or "none of".
+	/// A multi-matcher, for example "any of: [1, 2]", consists of a multi-matcher "any of" and destination matchers for
+	/// "1" and "2".
+	/// The abstract syntax tree is given by the string representation "anyOf{(1)}{(2)}"
+	/// These destination matchers have no context of their own, so they need to be contextualized
+	///
+	/// If all destinations have already been resolved, this method returns the origin.
+	/// If not, this method will use a given factory to instantiate a new multi-matcher for the resolved destinations.
+	///
+	/// @param origin a multi-matcher origin to resolve, not {@code null}.
+	/// @param destinations an array of destinations, not {@code null}.
+	/// @param factory a factory function to create a new multi-matcher with for the contextualized destinations, not {@code null}.
+	/// @return a resolved multi-matcher, potentially the origin itself, not {@code null}.
+	public Matcher resolve(Matcher origin, Matcher[] destinations, Function<Matcher[], Matcher> factory) {
+		requireNonNull(origin, "origin is null");
+		requireNonNull(destinations, "array of destinations is null");
+		// We wouldn't need a factory if we would type the origin as MultiMatcher.
+		// We can't do that however, because MultiMatcher is NOT on the API while this class, Context, IS.
+		// We can't bleed non-API classes onto the API, so origin remains a Matcher type.
+		// This also allows users to implement their own MyMultiMatcher types should they wish to do so.
+		requireNonNull(factory, "factory is null");
+		Matcher[] contextualizedDestinations = null;
+		int i = 0;
+		for (Matcher destination : destinations) {
+			originsByDestination.put(destination, origin);
+			Matcher contextualizedDestination = destination.contextualize(this);
+			if (contextualizedDestination != destination) {
+				if (contextualizedDestinations == null) {
+					contextualizedDestinations = new Matcher[destinations.length];
+					arraycopy(destinations, 0, contextualizedDestinations, 0, destinations.length);
+				}
+				contextualizedDestinations[i] = contextualizedDestination;
+			}
+			i++;
+		}
+		return contextualizedDestinations != null ? factory.apply(contextualizedDestinations) : origin;
 	}
 
 	public Context forwardMatcherFactory(Matcher origin, MatcherFactory matcherFactory) {
@@ -259,12 +312,6 @@ public final class Context {
 				return contextualizedMatcher;
 			}
 		}
-		return matcher;
-	}
-
-	public static Matcher newIncompleteMatcher(ContextProvidingFunction contextProvidingFunction) {
-		final ContextSensitiveMatcher matcher = new ContextSensitiveMatcher();
-		COMPLETION_FUNCTIONS_BY_MATCHER.put(matcher, contextProvidingFunction);
 		return matcher;
 	}
 
