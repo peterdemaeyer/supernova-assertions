@@ -4,10 +4,14 @@ import static java.lang.Math.nextDown;
 import static java.lang.Math.nextUp;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static su.pernova.assertions.AssertionTestUtils.assertThrowsAssertionErrorWithMessage;
 import static su.pernova.assertions.AssertionTestUtils.assertThrowsWithMessage;
 import static su.pernova.assertions.Assertions.assertThat;
+import static su.pernova.assertions.Matchers.anyOf;
 import static su.pernova.assertions.Matchers.closeTo;
 import static su.pernova.assertions.Matchers.is;
 
@@ -18,34 +22,36 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.Test;
 
 import su.pernova.assertions.Matcher;
+import su.pernova.assertions.MatcherContractTest;
 
-class CloseToTest {
+class CloseToTest implements MatcherContractTest {
+
+	@Override
+	public CloseTo getInstance() {
+		return assertInstanceOf(CloseTo.class, closeTo(1d, .01));
+	}
 
 	@Test
 	void closeToDoesNotMatchNull() {
-		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(null, is(closeTo(1d, 0d))),
-				String.format("expected that subject is close to: 1.0 ± 0.0 [1.0, 1.0]%nbut was: null")
-		);
+		assertEquals(String.format("expected that subject is close to: 1.0 ± 0.0 [1.0, 1.0]%nbut was: null"),
+				assertThrows(AssertionError.class,
+						() -> assertThat(null, is(closeTo(1d, 0d)))).getMessage());
 	}
 
 	@Test
 	void closeToDoesNotMatchAnyObject() {
-		Object anyObject = new Object();
-		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(anyObject, is(closeTo(1d, 0d))),
-				String.format("expected that subject is close to: 1.0 ± 0.0 [1.0, 1.0]%nbut was: \"%s\"", anyObject)
-		);
+		final Object anyObject = new Object();
+		assertEquals(String.format("expected that subject is close to: 1.0 ± 0.0 [1.0, 1.0]%nbut was: \"%s\"", anyObject),
+				assertThrows(AssertionError.class,
+						() -> assertThat(anyObject, is(closeTo(1d, 0d)))).getMessage());
 	}
 
 	@Test
 	void closeToDoesNotMatchAnyNumber() {
-		AtomicLong anyNumber = new AtomicLong(0L);
-		assertThrowsWithMessage(
-				IllegalArgumentException.class,
-				() -> assertThat(anyNumber, is(closeTo(new AtomicLong(0L), new AtomicLong(0L)))),
-				"illegal number class: java.util.concurrent.atomic.AtomicLong"
-		);
+		final AtomicLong anyNumber = new AtomicLong(0L);
+		assertEquals("illegal number class: java.util.concurrent.atomic.AtomicLong",
+				assertThrows(AssertionError.class,
+						() -> assertThat(anyNumber, is(closeTo(new AtomicLong(0L), new AtomicLong(0L))))));
 	}
 
 	@Test
@@ -64,29 +70,32 @@ class CloseToTest {
 
 	@Test
 	void closeToDoesNotMatchOutOfBoundsValue() {
-		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(nextUp(1.1f), is(closeTo(1f, 0.1f))),
-				String.format("expected that subject is close to: 1.0 ± 0.1 [0.9, 1.1]%nbut was: 1.1000001")
-		);
-		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(nextDown(0.9), is(closeTo(1d, 0.1))),
-				String.format("expected that subject is close to: 1.0 ± 0.1 [0.9, 1.1]%nbut was: 0.8999999999999999")
-		);
+		assertEquals(String.format("expected that subject is close to: 1.0 ± 0.1 [0.9, 1.1]%nbut was: 1.1000001"),
+				assertThrows(AssertionError.class,
+						() -> assertThat(nextUp(1.1f), is(closeTo(1f, 0.1f)))).getMessage());
+		assertEquals(String.format("expected that subject is close to: 1.0 ± 0.1 [0.9, 1.1]%nbut was: 0.8999999999999999"),
+				assertThrows(AssertionError.class,
+						() -> assertThat(nextDown(0.9), is(closeTo(1d, 0.1)))).getMessage());
 	}
 
 	@Test
 	void closeToDoesNotMatchNan() {
-		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(Float.NaN, is(closeTo(1f, 0.1f))),
-				String.format("expected that subject is close to: 1.0 ± 0.1 [0.9, 1.1]%nbut was: NaN")
-		);
+		assertEquals(String.format("expected that subject is close to: 1.0 ± 0.1 [0.9, 1.1]%nbut was: NaN"),
+				assertThrows(AssertionError.class,
+						() -> assertThat(Float.NaN, is(closeTo(1f, 0.1f)))).getMessage());
 	}
 
 	@Test
 	void constructionThrows() {
-		assertThrowsWithMessage(IllegalArgumentException.class, () -> closeTo(1, 0.1), "tolerance is not an instance of java.lang.Integer");
-		assertThrowsWithMessage(NullPointerException.class, () -> closeTo(null, 0.1), "expected is null");
-		assertThrowsWithMessage(NullPointerException.class, () -> closeTo(1.0, null), "tolerance is null");
+		assertThrowsWithMessage(IllegalArgumentException.class,
+				() -> closeTo(1, 0.1),
+				"tolerance is not an instance of java.lang.Integer");
+		assertThrowsWithMessage(NullPointerException.class,
+				() -> closeTo(null, 0.1),
+				"expected value is null");
+		assertThrowsWithMessage(NullPointerException.class,
+				() -> closeTo(1.0, null),
+				"tolerance is null");
 	}
 
 	@Test
@@ -104,14 +113,12 @@ class CloseToTest {
 	}
 
 	@Test
-	void closeToProvidesContext() {
+	void closeToProvidesContextForBiMatcher() {
 		Matcher isCloseToOneOrTwo = is(closeTo(1., .01).or(2.));
 		assertThat(.995, isCloseToOneOrTwo);
 		assertThat(2.005, isCloseToOneOrTwo);
-		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(1.5, isCloseToOneOrTwo),
-				"expected that subject is close to: 1.0 ± 0.01 [0.99, 1.01] or: 2.0",
-						"but was: 1.5"
-		);
+		assertEquals(String.format("expected that subject is close to: 1.0 ± 0.01 [0.99, 1.01] or: 2.0%nbut was: 1.5"),
+				assertThrows(AssertionError.class,
+						() -> assertThat(1.5, isCloseToOneOrTwo)).getMessage());
 	}
 }

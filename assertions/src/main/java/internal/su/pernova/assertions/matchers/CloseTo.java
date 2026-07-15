@@ -5,7 +5,10 @@ import static java.util.Objects.requireNonNull;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import su.pernova.assertions.Context;
 import su.pernova.assertions.Description;
+import su.pernova.assertions.Matcher;
+import su.pernova.assertions.MatcherFactory;
 
 public class CloseTo extends ExpectedValueMatcher {
 
@@ -18,6 +21,19 @@ public class CloseTo extends ExpectedValueMatcher {
 
 	@SuppressWarnings("rawtypes")
 	private final Comparable maximum;
+
+	private final MatcherFactory matcherFactory = new MatcherFactory() {
+
+		@Override
+		public Matcher create(Object expectedValue) {
+			return new CloseTo((Number) expectedValue, tolerance);
+		}
+
+		@Override
+		public Matcher create(Matcher matcher) {
+			return new ForwardingMatcher("close to", matcher, matcherFactory);
+		}
+	};
 
 	public CloseTo(Number expectedValue, Number tolerance) {
 		super(null, true);
@@ -105,10 +121,15 @@ public class CloseTo extends ExpectedValueMatcher {
 	@Override
 	public Description describe(Description description) {
 		return super.describe(description)
-				.appendPrompt()
 				.appendArgument(expectedValue)
 				.appendText(" ± ")
 				.appendText(tolerance.toString())
 				.appendText(" [" + minimum + ", " + maximum + "]");
+	}
+
+	@Override
+	public Matcher contextualize(Context context) {
+		return context.forwardMatcherFactory(this, matcherFactory)
+				.contextualizeExpectedValue(this, expectedValue, matcherFactory);
 	}
 }
