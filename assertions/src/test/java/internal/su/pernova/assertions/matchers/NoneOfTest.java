@@ -1,8 +1,6 @@
 package internal.su.pernova.assertions.matchers;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static su.pernova.assertions.AssertionTestUtils.assertThrowsAssertionErrorWithMessage;
 import static su.pernova.assertions.Assertions.assertThat;
@@ -66,15 +64,17 @@ class NoneOfTest implements MultiMatcherContractTest {
 	}
 
 	@Test
-	void matchingNoneOf() {
+	void matchingNoneOfObjects() {
 		final Object one = new Object();
 		final Object two = new Object();
 		final Object three = new Object();
 		final Object four = new Object();
-		final Matcher isNoneOfExpectedValues = is(noneOf(one, two, three));
-		assertTrue(isNoneOfExpectedValues.match(four));
-		assertFalse(isNoneOfExpectedValues.match(one));
-		assertThrowsAssertionErrorWithMessage(() -> assertThat(one, isNoneOfExpectedValues),
-				String.format("expected that subject is none of: [\"%s\", \"%s\", \"%s\"]%nbut was: \"%s\"", one, two, three, one));
+		final Matcher isNoneOfOneTwoThree = is(noneOf(one, two, three));
+		assertThat(four, isNoneOfOneTwoThree);
+		assertThrowsAssertionErrorWithMessage(
+				() -> assertThat(one, isNoneOfOneTwoThree),
+				String.format("expected that subject is none of: [\"%s\", \"%s\", \"%s\"]", one, two, three),
+				String.format("but was: \"%s\"", one)
+		);
 	}
 }
