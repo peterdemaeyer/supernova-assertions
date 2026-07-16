@@ -152,7 +152,7 @@ public class AppendableDescription implements Description {
 	private <A extends Appendable> A appendQuoted(A appendable, Object argument) throws IOException {
 		appendSpace();
 		if (appendIdentity) {
-			appendable.append(toIdentityString(argument));
+			appendable.append(argument != null ? toIdentityString(argument) : null);
 		} else {
 			recursivelyAppendQuoted(appendable, argument);
 		}

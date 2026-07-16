@@ -3,6 +3,7 @@ package internal.su.pernova.assertions.matchers;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static su.pernova.assertions.AssertionTestUtils.assertThrowsAssertionErrorWithMessage;
 import static su.pernova.assertions.Assertions.assertThat;
@@ -23,43 +24,41 @@ class IsDoubleTest implements MatcherContractTest {
 	}
 
 	@Test
-	void isDoubleMatchesDecimalNumber() {
-		assertThat(Double.valueOf(5.2), is(5.2d));
+	void decimalNumberMatchesDouble() {
+		assertThat(5.2, is(5.2d));
 		// Pick a float carefully so that we don't suffer from precision loss.
-		assertThat(Float.valueOf(5.5f), is(5.5d));
-		assertThat(BigDecimal.valueOf(5.31e123), is(5.31e123d));
+		assertThat(5.5f, is(5.5d));
+		assertThat(BigDecimal.valueOf(5.31e123d), is(5.31e123d));
 	}
 
 	@Test
-	void isDoubleMatchesIntegerNumber() {
-		assertThat(Long.valueOf(-984985465165L), is(-984985465165d));
-		assertThat(Integer.valueOf(-56), is(-56d));
-		assertThat(Short.valueOf((short) -1000), is(-1000d));
-		assertThat(Byte.valueOf((byte) 75), is(75d));
+	void integerNumberMatchesDouble() {
+		assertThat(-984985465165L, is(-984985465165d));
+		assertThat(-56, is(-56d));
+		assertThat((short) -1000, is(-1000d));
+		assertThat((byte) 75, is(75d));
 		assertThat(BigInteger.valueOf(-685464L), is(-685464d));
 	}
 
 	@Test
-	void isDoubleMatchesCharacter() {
-		assertThat(Character.valueOf('T'), is(84d));
-		// Hexadecimal character '\u5000' is decimal 20480.
-		assertThat(Character.valueOf('\u5000'), is(20480d));
+	void characterMatchesDouble() {
+		assertThat('T', is(84d));
+		// '倀' is decimal 20480.
+		assertThat('倀', is(20480d));
 	}
 
 	@Test
-	void isDoubleDoesNotMatchCharacter() {
-		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(Character.valueOf('z'), is(10d)),
-				String.format("expected that subject is: 10.0%nbut was: 'z'")
-		);
+	void characterDoesNotMatchDouble() {
+		assertEquals("expected that subject is: 10.0%nbut was: 'z'".formatted(),
+				assertThrows(AssertionError.class,
+						() -> assertThat('z', is(10d))).getMessage());
 	}
 
 	@Test
-	void isDoubleDoesNotMatchDouble() {
-		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(Double.valueOf(5d), is(6d)),
-				String.format("expected that subject is: 6.0%nbut was: 5.0")
-		);
+	void doubleDoesNotMatchDouble() {
+		assertEquals("expected that subject is: 6.0%nbut was: 5.0".formatted(),
+				assertThrows(AssertionError.class,
+						() -> assertThat(5d, is(6d))).getMessage());
 	}
 
 	@Test

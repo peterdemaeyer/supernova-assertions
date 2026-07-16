@@ -1,16 +1,20 @@
 package internal.su.pernova.assertions.matchers;
 
+import static java.util.Objects.toIdentityString;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static su.pernova.assertions.AssertionTestUtils.assertThrowsAssertionErrorWithMessage;
 import static su.pernova.assertions.Assertions.assertThat;
 import static su.pernova.assertions.Matchers.is;
 
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import org.junit.jupiter.api.Test;
 
@@ -26,45 +30,51 @@ class IsObjectTest implements MatcherContractTest {
 	}
 
 	@Test
-	void isMatchesNull() {
-		assertDoesNotThrow(() -> assertThat((Subject) null, is(null)));
-		assertDoesNotThrow(() -> assertThat((Object) null, is(null)));
+	void nullMatchesNull() {
+		assertDoesNotThrow(() -> assertThat((Object) null, is((Object) null)));
 	}
 
 	@Test
-	void isDoesNotMatchNull() {
-		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(this, is(null)),
-				"expected that subject is: null",
-				String.format("but was: \"%s\"", this)
-		);
+	void nullSubjectMatchesNull() {
+		assertDoesNotThrow(() -> assertThat((Subject) null, is((Object) null)));
 	}
 
 	@Test
-	void isDoesNotMatchAnyObject() {
-		final Object anyObject = new Object();
-		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(anyObject, is(this)),
-				String.format("expected that subject is: \"%s\"", this),
-				String.format("but was: \"%s\"", anyObject)
-		);
+	void nullMatchesNullMatcher() {
+		assertDoesNotThrow(() -> assertThat((Object) null, is((Matcher) null)));
 	}
 
 	@Test
-	void isMatchesIdenticalObjects() {
+	void nonNullDoesNotMatchNull() {
+		final Object nonNull = new Object();
+		assertEquals("expected that subject is: null%nbut was: %s".formatted(nonNull),
+				assertThrows(AssertionError.class,
+						() -> assertThat(nonNull, is((Object) null))).getMessage());
+	}
+
+	@Test
+	void mismatchDescriptionDoesNotQuoteObjectValues() {
+		final Object object = new Object();
+		final Object anotherObject = new Object();
+		assertEquals("expected that subject is: %s%nbut was: %s".formatted(object, anotherObject),
+				assertThrows(AssertionError.class,
+						() -> assertThat(anotherObject, is(object))).getMessage());
+	}
+
+	@Test
+	void identicalObjectsMatch() {
 		final Object object = new Object();
 		assertThat(object, is(object));
 	}
 
 	@Test
-	void isDoesNotMatchEqualObjects() {
-		final Object object = new String("abc");
-		final Object equalObject = new String("abc");
+	void equalObjectsDoNotMatch() {
+		final Object object = new Date(1784193306391L);
+		final Object equalObject = new Date(1784193306391L);
 		assertEquals(object, equalObject); // Precondition assertion.
-		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(object, is(equalObject)),
-				String.format("expected that subject is: \"abc\"%nbut was: \"abc\"")
-		);
+		assertEquals("expected that subject is: %s%nbut was: %s".formatted(toIdentityString(equalObject), toIdentityString(object)),
+				assertThrows(AssertionError.class,
+						() -> assertThat(object, is(equalObject))).getMessage());
 	}
 
 	@Test
