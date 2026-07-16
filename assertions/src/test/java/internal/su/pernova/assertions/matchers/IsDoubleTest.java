@@ -1,11 +1,12 @@
 package internal.su.pernova.assertions.matchers;
 
+import static java.lang.String.format;
+
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import static su.pernova.assertions.AssertionTestUtils.assertThrowsAssertionErrorWithMessage;
 import static su.pernova.assertions.Assertions.assertThat;
 import static su.pernova.assertions.Matchers.is;
 
@@ -49,61 +50,50 @@ class IsDoubleTest implements MatcherContractTest {
 
 	@Test
 	void characterDoesNotMatchDouble() {
-		assertEquals("expected that subject is: 10.0%nbut was: 'z'".formatted(),
+		assertEquals(format("expected that subject is: 10.0%nbut was: 'z'"),
 				assertThrows(AssertionError.class,
 						() -> assertThat('z', is(10d))).getMessage());
 	}
 
 	@Test
 	void doubleDoesNotMatchDouble() {
-		assertEquals("expected that subject is: 6.0%nbut was: 5.0".formatted(),
+		assertEquals(format("expected that subject is: 6.0%nbut was: 5.0"),
 				assertThrows(AssertionError.class,
 						() -> assertThat(5d, is(6d))).getMessage());
 	}
 
 	@Test
-	void isDoubleDoesNotMatchFloat() {
-		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(Float.valueOf(5f), is(6d)),
-				String.format("expected that subject is: 6.0%nbut was: 5.0")
-		);
+	void floatDoesNotMatchDouble() {
+		assertEquals(format("expected that subject is: 6.0%nbut was: 5.0"),
+				assertThrows(AssertionError.class,
+						() -> assertThat(5f, is(6d))).getMessage());
 	}
 
 	@Test
-	void isDoubleDoesNotMatchNull() {
-		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(null, is(6d)),
-				String.format("expected that subject is: 6.0%nbut was: null")
-		);
+	void nullDoesNotMatchDouble() {
+		assertEquals(format("expected that subject is: 6.0%nbut was: null"),
+				assertThrows(AssertionError.class,
+						() -> assertThat(null, is(6d))).getMessage());
 	}
 
 	@Test
-	void isDoubleDoesNotMatchAnyObject() {
-		final Object anyObject = new Object();
-		assertThrowsAssertionErrorWithMessage(
-				() -> assertThat(anyObject, is(6d)),
-				String.format("expected that subject is: 6.0%nbut was: \"%s\"", anyObject)
-		);
+	void objectDoesNotMatchDouble() {
+		final Object object = new Object();
+		assertEquals(format("expected that subject is: 6.0%nbut was: \"%s\"", object),
+				assertThrows(AssertionError.class,
+						() -> assertThat(object, is(6d))).getMessage());
 	}
 
 	@Test
-	void isDoubleMatchesPositiveZeroWithNegativeZero() {
-		assertDoesNotThrow(
-				() -> assertThat(-0d, is(0d))
-		);
-		assertDoesNotThrow(
-				() -> assertThat(-0f, is(0d))
-		);
+	void positiveZeroMatchesNegativeZero() {
+		assertDoesNotThrow(() -> assertThat(-0d, is(0d)));
+		assertDoesNotThrow(() -> assertThat(-0f, is(0d)));
 	}
 
 	@Test
-	void isDoubleMatchesFloatInfinity() {
-		assertDoesNotThrow(
-				() -> assertThat(Float.NEGATIVE_INFINITY, is(Double.NEGATIVE_INFINITY))
-		);
-		assertDoesNotThrow(
-				() -> assertThat(Float.POSITIVE_INFINITY, is(Double.POSITIVE_INFINITY))
-		);
+	void floatInfinityMatchesDoubleInfinity() {
+		assertDoesNotThrow(() -> assertThat(Float.NEGATIVE_INFINITY, is(Double.NEGATIVE_INFINITY)));
+		assertDoesNotThrow(() -> assertThat(Float.POSITIVE_INFINITY, is(Double.POSITIVE_INFINITY)));
 	}
 
 	@Test
