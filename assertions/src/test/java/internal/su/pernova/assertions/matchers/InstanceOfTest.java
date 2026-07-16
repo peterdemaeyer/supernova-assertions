@@ -52,10 +52,11 @@ class InstanceOfTest implements MatcherContractTest {
 
 	@Test
 	void objectThatIsInstanceOfSuperclassDoesNotMatch() {
+		final Exception instanceOfSuperclass = new Exception();
 		assertEquals(format("expected that subject is instance of: java.lang.RuntimeException%n" +
-						"but was: \"java.lang.Exception\""),
+						"but was: \"%s\"", instanceOfSuperclass),
 				assertThrows(AssertionError.class,
-						() -> assertThat(new Exception(), is(instanceOf(RuntimeException.class)))).getMessage());
+						() -> assertThat(instanceOfSuperclass, is(instanceOf(RuntimeException.class)))).getMessage());
 	}
 
 	@Test

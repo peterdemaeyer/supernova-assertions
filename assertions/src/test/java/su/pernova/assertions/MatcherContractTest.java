@@ -68,12 +68,12 @@ public interface MatcherContractTest extends ContractTest {
 	}
 
 	@Test
-	default void stringValueIsNotNullWhenNotContextualized() {
+	default void stringValueIsNotNull() {
 		assertNotNull(getInstance().toString());
 	}
 
 	@Test
-	default void stringValueIsNotNull() {
+	default void contextualizedStringValueIsNotNull() {
 		assertNotNull(getContextualizedInstance().toString());
 	}
 
